@@ -16,8 +16,8 @@ function Home() {
     >
       <View style={styles.container}>
         <Text style={styles.odigaText}>ODIGA</Text>
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Button title="Login" onPress={() => {}} />
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => {}}>
+          <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <Text style={styles.signupText}>Create New Account</Text>
       </View>
@@ -45,9 +45,15 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: "80%",
     marginBottom: 16,
-    color: "#ffffff",
-    borderRadius: 5,
+    padding: 16,
+    backgroundColor: "#424242",
+    borderRadius: 16,
     overflow: "hidden",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#ffffff",
+    fontSize: 20,
   },
   signupText: {
     color: "#959494",
