@@ -4,11 +4,13 @@ import {
   Text,
   ImageBackground,
   StyleSheet,
-  Button,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 function Home() {
+  const navigation = useNavigation();
+
   return (
     <ImageBackground
       source={require("../assets/LoadingImg.png")}
@@ -16,10 +18,18 @@ function Home() {
     >
       <View style={styles.container}>
         <Text style={styles.odigaText}>ODIGA</Text>
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => navigation.navigate("Login")}
+        >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        <Text style={styles.signupText}>Create New Account</Text>
+        <Text
+          style={styles.registerText}
+          onPress={() => navigation.navigate("Register")}
+        >
+          Create New Account
+        </Text>
       </View>
     </ImageBackground>
   );
@@ -55,7 +65,7 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 20,
   },
-  signupText: {
+  registerText: {
     color: "#959494",
     fontWeight: "bold",
     fontSize: 16,
