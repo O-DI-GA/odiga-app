@@ -10,6 +10,7 @@ import Register from "./pages/User/Register";
 const Stack = createStackNavigator();
 
 function App() {
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -20,11 +21,11 @@ function App() {
       >
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Login" component={Register} />
+        <Stack.Screen name="Register" component={Register} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
-//
+
+};
 
 export default App;

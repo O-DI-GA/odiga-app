@@ -9,6 +9,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 function Home() {
+  
   const navigation = useNavigation();
 
   return (
