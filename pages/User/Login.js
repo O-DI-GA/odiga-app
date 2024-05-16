@@ -40,7 +40,12 @@ function Login() {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Login</Text>
+        <Text
+          style={styles.loginButtonText}
+          onPress={() => navigation.navigate("Main")}
+        >
+          Login
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity>
         <Text
