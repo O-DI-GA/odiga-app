@@ -1,14 +1,20 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
 
 const NavBar = ({ activeTab, setActiveTab }) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.navContainer}>
       <View style={styles.navBar}>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => setActiveTab("home")}
+          onPress={() => {
+            setActiveTab("home");
+            navigation.navigate("Main");
+          }}
         >
           <Icon
             name="home"
@@ -18,7 +24,10 @@ const NavBar = ({ activeTab, setActiveTab }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => setActiveTab("clock")}
+          onPress={() => {
+            setActiveTab("clock");
+            navigation.navigate("WaitingList");
+          }}
         >
           <Icon
             name="clock-o"
@@ -29,14 +38,20 @@ const NavBar = ({ activeTab, setActiveTab }) => {
         <View style={styles.qrButtonWrapper}>
           <TouchableOpacity
             style={styles.qrButton}
-            onPress={() => setActiveTab("qrcode")}
+            onPress={() => {
+              setActiveTab("qrcode");
+              navigation.navigate("QRScan");
+            }}
           >
             <Icon name="qrcode" size={30} color="#ffffff" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => setActiveTab("map")}
+          onPress={() => {
+            setActiveTab("map");
+            navigation.navigate("Map");
+          }}
         >
           <Icon
             name="map-marker"
@@ -46,7 +61,10 @@ const NavBar = ({ activeTab, setActiveTab }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => setActiveTab("user")}
+          onPress={() => {
+            setActiveTab("user");
+            navigation.navigate("MyPage");
+          }}
         >
           <Icon
             name="user-o"
