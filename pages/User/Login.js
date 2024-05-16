@@ -67,10 +67,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#FFC107",
-    marginBottom: 10,
+    marginBottom: 20,
   },
   welcomeText: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 100,
   },
