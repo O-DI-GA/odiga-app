@@ -1,75 +1,66 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-const NavBar = ({ activeTab, setActiveTab }) => {
+const NavBar = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const [activeTab, setActiveTab] = useState(route.name);
+
+  useEffect(() => {
+    setActiveTab(route.name);
+  }, [route.name]);
 
   return (
     <View style={styles.navContainer}>
       <View style={styles.navBar}>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => {
-            setActiveTab("home");
-            navigation.navigate("Main");
-          }}
+          onPress={() => navigation.navigate("Main")}
         >
           <Icon
             name="home"
             size={25}
-            color={activeTab === "home" ? "#000000" : "#aaaaaa"}
+            color={activeTab === "Main" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => {
-            setActiveTab("clock");
-            navigation.navigate("WaitingList");
-          }}
+          onPress={() => navigation.navigate("WaitingList")}
         >
           <Icon
             name="clock-o"
             size={25}
-            color={activeTab === "clock" ? "#000000" : "#aaaaaa"}
+            color={activeTab === "WaitingList" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
         <View style={styles.qrButtonWrapper}>
           <TouchableOpacity
             style={styles.qrButton}
-            onPress={() => {
-              setActiveTab("qrcode");
-              navigation.navigate("QRScan");
-            }}
+            onPress={() => navigation.navigate("QRScan")}
           >
             <Icon name="qrcode" size={30} color="#ffffff" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => {
-            setActiveTab("map");
-            navigation.navigate("Map");
-          }}
+          onPress={() => navigation.navigate("Map")}
         >
           <Icon
             name="map-marker"
             size={25}
-            color={activeTab === "map" ? "#000000" : "#aaaaaa"}
+            color={activeTab === "Map" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => {
-            setActiveTab("user");
-            navigation.navigate("MyPage");
-          }}
+          onPress={() => navigation.navigate("MyPage")}
         >
           <Icon
             name="user-o"
             size={25}
-            color={activeTab === "user" ? "#000000" : "#aaaaaa"}
+            color={activeTab === "MyPage" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
       </View>
