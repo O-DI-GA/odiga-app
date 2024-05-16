@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Header from "../component/Header";
 import NavBar from "../component/NavBar";
 import WaitingContainer from "../component/WaitingContainer";
 
 const Main = () => {
-  const [activeTab, setActiveTab] = useState("home"); // NavBar 아이콘 색깔
-
   return (
     <View style={styles.container}>
       <Header />
@@ -17,7 +15,7 @@ const Main = () => {
         <Text style={styles.label}>후기 많은 순</Text>
         <Text style={styles.label}>인기순</Text>
       </ScrollView>
-      <NavBar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <NavBar />
     </View>
   );
 };
