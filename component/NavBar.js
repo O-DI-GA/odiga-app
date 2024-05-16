@@ -2,26 +2,57 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const NavBar = () => {
+const NavBar = ({ activeTab, setActiveTab }) => {
   return (
     <View style={styles.navContainer}>
       <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navItem}>
-          <Icon name="home" size={25} color="#97A2B0" />
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => setActiveTab("home")}
+        >
+          <Icon
+            name="home"
+            size={25}
+            color={activeTab === "home" ? "#000000" : "#aaaaaa"}
+          />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Icon name="clock-o" size={25} color="#97A2B0" />
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => setActiveTab("clock")}
+        >
+          <Icon
+            name="clock-o"
+            size={25}
+            color={activeTab === "clock" ? "#000000" : "#aaaaaa"}
+          />
         </TouchableOpacity>
         <View style={styles.qrButtonWrapper}>
-          <TouchableOpacity style={styles.qrButton}>
+          <TouchableOpacity
+            style={styles.qrButton}
+            onPress={() => setActiveTab("qrcode")}
+          >
             <Icon name="qrcode" size={30} color="#ffffff" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.navItem}>
-          <Icon name="map-marker" size={25} color="#97A2B0" />
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => setActiveTab("map")}
+        >
+          <Icon
+            name="map-marker"
+            size={25}
+            color={activeTab === "map" ? "#000000" : "#aaaaaa"}
+          />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Icon name="user-o" size={25} color="#97A2B0" />
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => setActiveTab("user")}
+        >
+          <Icon
+            name="user-o"
+            size={25}
+            color={activeTab === "user" ? "#000000" : "#aaaaaa"}
+          />
         </TouchableOpacity>
       </View>
     </View>
