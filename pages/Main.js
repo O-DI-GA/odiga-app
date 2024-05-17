@@ -1,4 +1,5 @@
 import React from "react";
+
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Header from "../component/Header";
 import NavBar from "../component/NavBar";
