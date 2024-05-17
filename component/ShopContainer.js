@@ -2,6 +2,8 @@ import React from "react";
 import { StyleSheet, ScrollView, View, Image, Text } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 
+import KeepBtn from "./KeepBtn";
+
 /* 추가할 기능
     1. API url props 추가하기
     2. 각 컨테이너 클릭 시 해당 가게의 상세페이지로 이동 link 추가하기
@@ -45,6 +47,9 @@ const ShopContainer = ({ type }) => {
                                         <Text> 찜 {data.keep}개 </Text>
                                     )}
                                 </View>
+                                <View style={styles.keepBtnContainer}>
+                                    <KeepBtn />
+                                </View>
                             </View>
                         </Shadow>
                     </View>
@@ -72,6 +77,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#f9f9f9",
         backgroundColor: "white",
+        position: "relative",
     },
     shopImg: {
         resizeMode: "cover",
@@ -89,6 +95,12 @@ const styles = StyleSheet.create({
         marginLeft: -5,
         marginBottom: 30,
         flexWrap: "wrap",
+    },
+    keepBtnContainer: {
+        position: "absolute",
+        top: 20,
+        right: 20,
+        zIndex: 1,
     },
 });
 
