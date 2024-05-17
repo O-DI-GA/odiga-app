@@ -39,7 +39,10 @@ function Login() {
           비밀번호를 잊어버리셨나요?
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={() => navigation.navigate("Main")}
+      >
         <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity>
