@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 10,
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 15,
     elevation: 3,
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 2 },
@@ -39,11 +39,12 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     marginLeft: 10,
+    height: 70,
   },
   shopName: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 10,
   },
   statusMsg: {
     fontSize: 15,
