@@ -56,7 +56,8 @@ const ShopContainer = ({ type }) => {
 
 const styles = StyleSheet.create({
     scrollView: {
-        margin: 15,
+        marginTop: 10,
+        marginBottom: 10,
     },
     shadowWrapper: {
         marginHorizontal: 10,
