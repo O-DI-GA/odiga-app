@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 import ReserveContainer from "../../component/ReserveContainer";
@@ -8,7 +8,7 @@ const WaitingList = () => {
   return (
     <View style={styles.container}>
       <Header />
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.label}>내 웨이팅 정보</Text>
         <ReserveContainer
           imageUrl="#"
@@ -29,7 +29,7 @@ const WaitingList = () => {
           statusMsg="5월 5일 18시"
           onPress={() => console.log("가게 상세 페이지로 이동")}
         />
-      </View>
+      </ScrollView>
       <NavBar />
     </View>
   );
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     paddingTop: 0,
+    paddingBottom: 110,
   },
   label: {
     fontSize: 20,
