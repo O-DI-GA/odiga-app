@@ -57,7 +57,9 @@ const WaitingList = () => {
           onPress={() =>
             handlePress({
               shopName: "가게 이름",
-              statusMsg: "날짜: 5월 5일 시간: 18시 인원수: 6명",
+              date: "5월 5일",
+              time: "18시",
+              numPeople: "6명",
               type: "reservation",
             })
           }
@@ -79,7 +81,7 @@ const WaitingList = () => {
             >
               <Text style={styles.closeButtonText}>×</Text>
             </TouchableOpacity>
-            {selectedShop && (
+            {selectedShop && selectedShop.type === "waiting" && (
               <>
                 <View style={styles.modalHeader}>
                   <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
@@ -89,8 +91,35 @@ const WaitingList = () => {
                 </View>
                 <Text style={styles.modalCodeLabel}>내 인증코드</Text>
                 <Text style={styles.modalCode}>Z4C6BS</Text>
-                <TouchableOpacity style={styles.cancelButton}>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => setModalVisible(false)}
+                >
                   <Text style={styles.cancelButtonText}>웨이팅 취소</Text>
+                </TouchableOpacity>
+              </>
+            )}
+            {selectedShop && selectedShop.type === "reservation" && (
+              <>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
+                  <Text style={styles.modalMessage}>
+                    날짜: {selectedShop.date}
+                  </Text>
+                  <Text style={styles.modalMessage}>
+                    시간: {selectedShop.time}
+                  </Text>
+                  <Text style={styles.modalMessage}>
+                    인원수: {selectedShop.numPeople}
+                  </Text>
+                </View>
+                <Text style={styles.modalCodeLabel}>내 인증코드</Text>
+                <Text style={styles.modalCode}>Z4C6BS</Text>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.cancelButtonText}>예약 취소</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -143,6 +172,7 @@ const styles = StyleSheet.create({
   modalHeader: {
     alignSelf: "flex-start",
     marginBottom: 20,
+    paddingLeft: 20,
   },
   modalTitle: {
     fontSize: 25,
@@ -151,11 +181,10 @@ const styles = StyleSheet.create({
   },
   modalMessage: {
     fontSize: 16,
-    marginBottom: 20,
   },
   modalCodeLabel: {
     fontSize: 16,
-    marginBottom: 10,
+    marginVertical: 15,
   },
   modalCode: {
     fontSize: 25,
