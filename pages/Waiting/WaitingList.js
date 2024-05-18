@@ -1,10 +1,25 @@
-import React from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { React, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 import ReserveContainer from "../../component/ReserveContainer";
 
 const WaitingList = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedShop, setSelectedShop] = useState(null);
+
+  const handlePress = (shop) => {
+    setSelectedShop(shop);
+    setModalVisible(true);
+  };
+
   return (
     <View style={styles.container}>
       <Header />
@@ -14,23 +29,74 @@ const WaitingList = () => {
           imageUrl="#"
           shopName="가게 이름"
           statusMsg="현재 5팀 남았어요!"
-          onPress={() => console.log("가게 상세 페이지로 이동")}
+          onPress={() =>
+            handlePress({
+              shopName: "가게 이름",
+              statusMsg: "현재 5팀 남았어요!",
+              type: "waiting",
+            })
+          }
         />
         <ReserveContainer
           imageUrl="#"
           shopName="가게 이름"
           statusMsg="현재 8팀 남았어요!"
-          onPress={() => console.log("가게 상세 페이지로 이동")}
+          onPress={() =>
+            handlePress({
+              shopName: "가게 이름",
+              statusMsg: "현재 8팀 남았어요!",
+              type: "waiting",
+            })
+          }
         />
         <Text style={styles.label}>내 예약 정보</Text>
         <ReserveContainer
           imageUrl="#"
           shopName="가게 이름"
           statusMsg="5월 5일 18시"
-          onPress={() => console.log("가게 상세 페이지로 이동")}
+          onPress={() =>
+            handlePress({
+              shopName: "가게 이름",
+              statusMsg: "날짜: 5월 5일 시간: 18시 인원수: 6명",
+              type: "reservation",
+            })
+          }
         />
       </ScrollView>
       <NavBar />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>×</Text>
+            </TouchableOpacity>
+            {selectedShop && (
+              <>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
+                  <Text style={styles.modalMessage}>
+                    {selectedShop.statusMsg}
+                  </Text>
+                </View>
+                <Text style={styles.modalCodeLabel}>내 인증코드</Text>
+                <Text style={styles.modalCode}>Z4C6BS</Text>
+                <TouchableOpacity style={styles.cancelButton}>
+                  <Text style={styles.cancelButtonText}>웨이팅 취소</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -49,6 +115,63 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginVertical: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  closeButton: {
+    alignSelf: "flex-end",
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: "#C4C4C4",
+    paddingHorizontal: 10,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "#000000",
+  },
+  modalHeader: {
+    alignSelf: "flex-start",
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 25,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  modalCodeLabel: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  modalCode: {
+    fontSize: 25,
+    marginBottom: 30,
+    textAlign: "center",
+  },
+  cancelButton: {
+    backgroundColor: "#FFD600",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#ffffff",
   },
 });
 
