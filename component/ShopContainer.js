@@ -1,6 +1,14 @@
 import React from "react";
-import { StyleSheet, ScrollView, View, Image, Text } from "react-native";
+import {
+    StyleSheet,
+    ScrollView,
+    View,
+    Image,
+    Text,
+    TouchableOpacity,
+} from "react-native";
 import { Shadow } from "react-native-shadow-2";
+import { useNavigation } from "@react-navigation/native";
 
 import KeepBtn from "./KeepBtn";
 
@@ -11,6 +19,8 @@ import KeepBtn from "./KeepBtn";
 */
 
 const ShopContainer = ({ type }) => {
+    const navigation = useNavigation();
+
     return (
         <ScrollView
             horizontal={true}
@@ -19,39 +29,47 @@ const ShopContainer = ({ type }) => {
             {storeList.map((data) => {
                 return (
                     <View key={data.id} style={styles.shadowWrapper}>
-                        <Shadow key={data.id} startColor={"#06333610"}>
-                            <View key={data.id} style={styles.container}>
-                                <Image
-                                    style={styles.shopImg}
-                                    source={data.image}
-                                />
-                                <View style={styles.textContainer}>
-                                    <Text style={{ fontSize: 10 }}>
-                                        {" "}
-                                        {data.category}{" "}
-                                    </Text>
-                                    <Text style={styles.shopName}>
-                                        {" "}
-                                        {data.name}{" "}
-                                    </Text>
-                                    {type === "waiting" && (
-                                        <Text>
+                        <TouchableOpacity
+                            style={styles.navItem}
+                            onPress={() =>
+                                navigation.navigate("ShopDetail", {
+                                    id: data.id,
+                                })
+                            }>
+                            <Shadow key={data.id} startColor={"#06333610"}>
+                                <View key={data.id} style={styles.container}>
+                                    <Image
+                                        style={styles.shopImg}
+                                        source={data.image}
+                                    />
+                                    <View style={styles.textContainer}>
+                                        <Text style={{ fontSize: 10 }}>
                                             {" "}
-                                            현재 {data.waiting}팀 웨이팅 중{" "}
+                                            {data.category}{" "}
                                         </Text>
-                                    )}
-                                    {type === "review" && (
-                                        <Text> 후기 {data.review}개 </Text>
-                                    )}
-                                    {type === "popular" && (
-                                        <Text> 찜 {data.keep}개 </Text>
-                                    )}
+                                        <Text style={styles.shopName}>
+                                            {" "}
+                                            {data.name}{" "}
+                                        </Text>
+                                        {type === "waiting" && (
+                                            <Text>
+                                                {" "}
+                                                현재 {data.waiting}팀 웨이팅 중{" "}
+                                            </Text>
+                                        )}
+                                        {type === "review" && (
+                                            <Text> 후기 {data.review}개 </Text>
+                                        )}
+                                        {type === "popular" && (
+                                            <Text> 찜 {data.keep}개 </Text>
+                                        )}
+                                    </View>
+                                    <View style={styles.keepBtnContainer}>
+                                        <KeepBtn />
+                                    </View>
                                 </View>
-                                <View style={styles.keepBtnContainer}>
-                                    <KeepBtn />
-                                </View>
-                            </View>
-                        </Shadow>
+                            </Shadow>
+                        </TouchableOpacity>
                     </View>
                 );
             })}
@@ -101,6 +119,12 @@ const styles = StyleSheet.create({
         top: 20,
         right: 20,
         zIndex: 1,
+        borderRadius: 10,
+        width: 35,
+        height: 33,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
     },
 });
 

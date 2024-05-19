@@ -16,6 +16,8 @@ import KeepHistory from "./pages/User/KeepHistory";
 import Reviews from "./pages/User/Reviews";
 import Setting from "./pages/User/Setting";
 
+import ShopDetail from "./pages/Shop/ShopDetail";
+
 const Stack = createStackNavigator();
 
 function App() {
@@ -39,6 +41,7 @@ function App() {
         <Stack.Screen name="KeepHistory" component={KeepHistory} />
         <Stack.Screen name="Reviews" component={Reviews} />
         <Stack.Screen name="Setting" component={Setting} />
+        <Stack.Screen name="ShopDetail" component={ShopDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );
