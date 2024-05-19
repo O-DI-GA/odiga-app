@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Text, FlatList } from "react-native";
+import { View, StyleSheet, Text, Image, FlatList } from "react-native";
 import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 
@@ -12,22 +12,22 @@ const DATA = [
 const UsageHistory = () => {
   const renderItem = ({ item }) => {
     const isWaiting = item.type === "웨이팅";
-    const typeContainerStyle = [
-      styles.type,
-      { backgroundColor: isWaiting ? "#FFF9C4" : "#E57373" },
-    ];
     const typeTextStyle = [
       styles.typeText,
-      { color: isWaiting ? "#000000" : "#FFFFFF" },
+      {
+        color: isWaiting ? "#000000" : "#FFFFFF",
+        backgroundColor: isWaiting ? "#FFF9C4" : "#E57373",
+      },
     ];
 
     return (
       <View style={styles.item}>
-        <View style={typeContainerStyle}>
-          <Text style={typeTextStyle}>{item.type}</Text>
-        </View>
+        <Image source={require("../../assets/icon.png")} style={styles.image} />
         <View style={styles.info}>
-          <Text style={styles.name}>{item.name}</Text>
+          <View style={styles.nameRow}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={typeTextStyle}>{item.type}</Text>
+          </View>
           <Text style={styles.date}>방문 날짜: {item.date}</Text>
         </View>
       </View>
@@ -70,32 +70,40 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 15,
     marginBottom: 10,
-    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 8,
   },
-  type: {
+  image: {
     width: 60,
-    height: 30,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    height: 60,
     borderRadius: 8,
     marginRight: 15,
   },
-  typeText: {
-    textAlign: "center",
-  },
   info: {
     flex: 1,
+    flexDirection: "column",
+  },
+  nameRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
   },
   name: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginRight: 10,
+  },
+  typeText: {
+    fontSize: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
   },
   date: {
     fontSize: 14,
+    marginTop: 5,
   },
 });
 
