@@ -11,6 +11,10 @@ import WaitingList from "./pages/Waiting/WaitingList";
 import QRScan from "./component/QRScan";
 import Map from "./pages/Map";
 import MyPage from "./pages/User/MyPage";
+import UsageHistory from "./pages/User/UsageHistory";
+import KeepHistory from "./pages/User/KeepHistory";
+import Reviews from "./pages/User/Reviews";
+import Setting from "./pages/User/Setting";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +35,10 @@ function App() {
         <Stack.Screen name="QRScan" component={QRScan} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="MyPage" component={MyPage} />
+        <Stack.Screen name="UsageHistory" component={UsageHistory} />
+        <Stack.Screen name="KeepHistory" component={KeepHistory} />
+        <Stack.Screen name="Reviews" component={Reviews} />
+        <Stack.Screen name="Setting" component={Setting} />
       </Stack.Navigator>
     </NavigationContainer>
   );
