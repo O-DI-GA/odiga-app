@@ -1,8 +1,52 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import SwitchToggle from "react-native-switch-toggle";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
+
+const ToggleSwitch = ({ isEnabled, onToggle }) => {
+  const [animation] = useState(new Animated.Value(isEnabled ? 1 : 0));
+
+  const toggleSwitch = () => {
+    Animated.timing(animation, {
+      toValue: isEnabled ? 0 : 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      onToggle(!isEnabled);
+    });
+  };
+
+  const toggleColor = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["#f0f0f0", "#ffd600"],
+  });
+
+  const circlePosition = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 25],
+  });
+
+  return (
+    <TouchableOpacity onPress={toggleSwitch} style={styles.toggleContainer}>
+      <Animated.View
+        style={[styles.toggleBackground, { backgroundColor: toggleColor }]}
+      >
+        <Animated.View
+          style={[
+            styles.toggleCircle,
+            { transform: [{ translateX: circlePosition }] },
+          ]}
+        />
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
 
 const Setting = () => {
   const [isNotificationEnabled, setNotificationEnabled] = useState(false);
@@ -14,42 +58,21 @@ const Setting = () => {
       <Header />
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>알림</Text>
-        <SwitchToggle
-          switchOn={isNotificationEnabled}
-          onPress={() => setNotificationEnabled(!isNotificationEnabled)}
-          circleColorOff="#f4f3f4"
-          circleColorOn="#ffffff"
-          backgroundColorOn="#ffd600"
-          backgroundColorOff="#767577"
-          containerStyle={styles.toggleContainer}
-          circleStyle={styles.toggleCircle}
+        <ToggleSwitch
+          isEnabled={isNotificationEnabled}
+          onToggle={setNotificationEnabled}
         />
       </View>
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>위치 정보</Text>
-        <SwitchToggle
-          switchOn={isLocationEnabled}
-          onPress={() => setLocationEnabled(!isLocationEnabled)}
-          circleColorOff="#f4f3f4"
-          circleColorOn="#ffffff"
-          backgroundColorOn="#ffd600"
-          backgroundColorOff="#767577"
-          containerStyle={styles.toggleContainer}
-          circleStyle={styles.toggleCircle}
+        <ToggleSwitch
+          isEnabled={isLocationEnabled}
+          onToggle={setLocationEnabled}
         />
       </View>
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>카메라 권한</Text>
-        <SwitchToggle
-          switchOn={isCameraEnabled}
-          onPress={() => setCameraEnabled(!isCameraEnabled)}
-          circleColorOff="#f4f3f4"
-          circleColorOn="#ffffff"
-          backgroundColorOn="#ffd600"
-          backgroundColorOff="#767577"
-          containerStyle={styles.toggleContainer}
-          circleStyle={styles.toggleCircle}
-        />
+        <ToggleSwitch isEnabled={isCameraEnabled} onToggle={setCameraEnabled} />
       </View>
       <NavBar />
     </View>
@@ -73,15 +96,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   toggleContainer: {
-    width: 50,
-    height: 25,
+    width: 55,
+    height: 33,
     borderRadius: 25,
-    padding: 5,
+    justifyContent: "center",
+    padding: 3,
+  },
+  toggleBackground: {
+    flex: 1,
+    borderRadius: 25,
+    justifyContent: "center",
   },
   toggleCircle: {
     width: 20,
     height: 20,
     borderRadius: 10,
+    backgroundColor: "#ffffff",
   },
 });
 
