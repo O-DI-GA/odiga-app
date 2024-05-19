@@ -21,7 +21,7 @@ const NavBar = () => {
         >
           <Icon
             name="home"
-            size={25}
+            size={30}
             color={activeTab === "Main" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
@@ -31,7 +31,7 @@ const NavBar = () => {
         >
           <Icon
             name="clock-o"
-            size={25}
+            size={30}
             color={activeTab === "WaitingList" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
@@ -49,7 +49,7 @@ const NavBar = () => {
         >
           <Icon
             name="map-marker"
-            size={25}
+            size={30}
             color={activeTab === "Map" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
@@ -59,7 +59,7 @@ const NavBar = () => {
         >
           <Icon
             name="user-o"
-            size={25}
+            size={30}
             color={activeTab === "MyPage" ? "#000000" : "#aaaaaa"}
           />
         </TouchableOpacity>
