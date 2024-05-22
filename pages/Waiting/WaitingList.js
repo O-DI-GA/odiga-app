@@ -26,43 +26,28 @@ const WaitingList = () => {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.label}>내 웨이팅 정보</Text>
         <ReserveContainer
-          imageUrl="#"
+          imageUrl={require("../../assets/icon.png")}
           shopName="가게 이름"
-          statusMsg="현재 5팀 남았어요!"
-          onPress={() =>
-            handlePress({
-              shopName: "가게 이름",
-              statusMsg: "현재 5팀 남았어요!",
-              type: "waiting",
-            })
-          }
+          type="waiting"
+          waitingCnt={5}
+          onPress={handlePress}
         />
         <ReserveContainer
-          imageUrl="#"
+          imageUrl={require("../../assets/icon.png")}
           shopName="가게 이름"
-          statusMsg="현재 8팀 남았어요!"
-          onPress={() =>
-            handlePress({
-              shopName: "가게 이름",
-              statusMsg: "현재 8팀 남았어요!",
-              type: "waiting",
-            })
-          }
+          type="waiting"
+          waitingCnt={8}
+          onPress={handlePress}
         />
         <Text style={styles.label}>내 예약 정보</Text>
         <ReserveContainer
-          imageUrl="#"
+          imageUrl={require("../../assets/icon.png")}
           shopName="가게 이름"
-          statusMsg="5월 5일 18시"
-          onPress={() =>
-            handlePress({
-              shopName: "가게 이름",
-              date: "5월 5일",
-              time: "18시",
-              numPeople: "6명",
-              type: "reservation",
-            })
-          }
+          type="reservation"
+          date="5월 5일"
+          time="18시"
+          numPeople="6명"
+          onPress={handlePress}
         />
       </ScrollView>
       <NavBar />
@@ -86,17 +71,15 @@ const WaitingList = () => {
                 <View style={styles.modalHeader}>
                   <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
                   <Text style={styles.modalMessage}>
-                    {selectedShop.statusMsg}
+                    현재{" "}
+                    <Text style={styles.highlightText}>
+                      {selectedShop.waitingCnt}팀{" "}
+                    </Text>
+                    남았어요!
                   </Text>
                 </View>
                 <Text style={styles.modalCodeLabel}>내 인증코드</Text>
                 <Text style={styles.modalCode}>Z4C6BS</Text>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.cancelButtonText}>웨이팅 취소</Text>
-                </TouchableOpacity>
               </>
             )}
             {selectedShop && selectedShop.type === "reservation" && (
@@ -115,12 +98,6 @@ const WaitingList = () => {
                 </View>
                 <Text style={styles.modalCodeLabel}>내 인증코드</Text>
                 <Text style={styles.modalCode}>Z4C6BS</Text>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.cancelButtonText}>예약 취소</Text>
-                </TouchableOpacity>
               </>
             )}
           </View>
@@ -180,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalMessage: {
-    fontSize: 16,
+    fontSize: 18,
   },
   modalCodeLabel: {
     fontSize: 16,
@@ -188,6 +165,7 @@ const styles = StyleSheet.create({
   },
   modalCode: {
     fontSize: 25,
+    fontWeight: "bold",
     marginBottom: 30,
     textAlign: "center",
   },
@@ -201,6 +179,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#ffffff",
+  },
+  highlightText: {
+    color: "#FF9900",
+    fontWeight: "bold",
   },
 });
 
