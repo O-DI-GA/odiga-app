@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, FlatList } from "react-native";
 import NavBar from "../../component/NavBar";
+import KeepBtn from "../../component/KeepBtn";
 
 const DATA = [
   {
@@ -55,7 +56,7 @@ const KeepHistory = () => {
         <Text style={styles.category}>{item.category}</Text>
         <Text style={styles.name}>{item.name}</Text>
       </View>
-      {/* 찜 컴포넌트 */}
+      <KeepBtn />
     </View>
   );
 
