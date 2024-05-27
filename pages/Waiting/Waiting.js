@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -30,26 +31,9 @@ const Waiting = () => {
       quantity: 3,
       image: "https://via.placeholder.com/50",
     },
-    {
-      id: 4,
-      name: "Tortilla Chips",
-      quantity: 2,
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 5,
-      name: "Avocado",
-      quantity: 1,
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 6,
-      name: "New Menu",
-      quantity: 3,
-      image: "https://via.placeholder.com/50",
-    },
   ]);
   const [totalPrice, setTotalPrice] = useState(20000);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleQuantityChange = (id, amount) => {
     setMenu(
@@ -63,6 +47,10 @@ const Waiting = () => {
 
   const handlePeopleChange = (amount) => {
     setPeople(Math.max(0, people + amount));
+  };
+
+  const toggleModal = () => {
+    setModalVisible(true);
   };
 
   return (
@@ -122,13 +110,29 @@ const Waiting = () => {
         </Text>
       </View>
       <TouchableOpacity style={styles.waitingButton}>
-        <Text
-          style={styles.waitingButtonText}
-          onPress={() => console.log("웨이팅하기")}
-        >
+        <Text style={styles.waitingButtonText} onPress={toggleModal}>
           웨이팅하기
         </Text>
       </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalCodeLabel}>내 인증코드</Text>
+            <Text style={styles.modalCode}>Z4C6BS</Text>
+            <TouchableOpacity
+              style={styles.okButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.okButtonText}>확인</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -239,6 +243,42 @@ const styles = StyleSheet.create({
   waitingButtonText: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: 250,
+    padding: 20,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  okButton: {
+    alignSelf: "center",
+    borderRadius: 8,
+    backgroundColor: "#FFD600",
+    paddingHorizontal: 28,
+    paddingVertical: 4,
+  },
+  okButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#000000",
+  },
+  modalCodeLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginTop: 20,
+  },
+  modalCode: {
+    fontSize: 25,
+    fontWeight: "bold",
+    marginVertical: 30,
+    textAlign: "center",
   },
 });
 
