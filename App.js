@@ -15,6 +15,8 @@ import UsageHistory from "./pages/User/UsageHistory";
 import KeepHistory from "./pages/User/KeepHistory";
 import Reviews from "./pages/User/Reviews";
 import Setting from "./pages/User/Setting";
+import Reservation from "./pages/Waiting/Reservation";
+import Waiting from "./pages/Waiting/Waiting";
 
 import ShopDetail from "./pages/Shop/ShopDetail";
 import ShopHome from "./pages/Shop/ShopHome";
@@ -99,10 +101,19 @@ function App() {
         <Stack.Screen name="ShopImage" component={ShopImage} />
         <Stack.Screen name="ShopMenu" component={ShopMenu} />
         <Stack.Screen name="ShopReview" component={ShopReview} />
+        <Stack.Screen
+          name="Reservation"
+          component={Reservation}
+          options={{ title: "예약" }}
+        />
+        <Stack.Screen
+          name="Waiting"
+          component={Waiting}
+          options={{ title: "웨이팅" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
-
 }
 
 export default App;
