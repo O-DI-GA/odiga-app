@@ -17,34 +17,41 @@ import Reviews from "./pages/User/Reviews";
 import Setting from "./pages/User/Setting";
 
 import ShopDetail from "./pages/Shop/ShopDetail";
+import ShopHome from "./pages/Shop/ShopHome";
+import ShopImage from "./pages/Shop/ShopImage";
+import ShopMenu from "./pages/Shop/ShopMenu";
+import ShopReview from "./pages/Shop/ShopReview";
 
 const Stack = createStackNavigator();
 
 function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerShown: false, // 헤더 숨김
-        }}
-      >
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="WaitingList" component={WaitingList} />
-        <Stack.Screen name="QRScan" component={QRScan} />
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="MyPage" component={MyPage} />
-        <Stack.Screen name="UsageHistory" component={UsageHistory} />
-        <Stack.Screen name="KeepHistory" component={KeepHistory} />
-        <Stack.Screen name="Reviews" component={Reviews} />
-        <Stack.Screen name="Setting" component={Setting} />
-        <Stack.Screen name="ShopDetail" component={ShopDetail} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                    headerShown: false, // 헤더 숨김
+                }}>
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Register" component={Register} />
+                <Stack.Screen name="Main" component={Main} />
+                <Stack.Screen name="WaitingList" component={WaitingList} />
+                <Stack.Screen name="QRScan" component={QRScan} />
+                <Stack.Screen name="Map" component={Map} />
+                <Stack.Screen name="MyPage" component={MyPage} />
+                <Stack.Screen name="UsageHistory" component={UsageHistory} />
+                <Stack.Screen name="KeepHistory" component={KeepHistory} />
+                <Stack.Screen name="Reviews" component={Reviews} />
+                <Stack.Screen name="Setting" component={Setting} />
+                <Stack.Screen name="ShopDetail" component={ShopDetail} />
+                <Stack.Screen name="ShopHome" component={ShopHome} />
+                <Stack.Screen name="ShopImage" component={ShopImage} />
+                <Stack.Screen name="ShopMenu" component={ShopMenu} />
+                <Stack.Screen name="ShopReview" component={ShopReview} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
 
 export default App;
