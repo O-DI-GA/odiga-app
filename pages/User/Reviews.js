@@ -6,7 +6,6 @@ import NavBar from "../../component/NavBar";
 const Reviews = () => {
   return (
     <View style={styles.container}>
-      <Header />
       <Text>리뷰 관리 화면</Text>
       <NavBar />
     </View>

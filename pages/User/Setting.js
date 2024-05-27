@@ -55,7 +55,6 @@ const Setting = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>알림</Text>
         <ToggleSwitch

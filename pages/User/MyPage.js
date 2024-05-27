@@ -9,7 +9,6 @@ const MyPage = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
       <View style={styles.box}>
         <View style={styles.profileContainer}>
           <Image

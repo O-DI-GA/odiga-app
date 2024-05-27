@@ -26,22 +26,73 @@ function App() {
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
-          headerShown: false, // 헤더 숨김
+          headerTitleAlign: "center", // 헤더 타이틀 가운데 정렬
+          headerStyle: {
+            backgroundColor: "#FFFFFF",
+          },
         }}
       >
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Main" component={Main} />
-        <Stack.Screen name="WaitingList" component={WaitingList} />
-        <Stack.Screen name="QRScan" component={QRScan} />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ title: "로그인" }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{ title: "회원가입" }}
+        />
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="WaitingList"
+          component={WaitingList}
+          options={{ title: "웨이팅 목록" }}
+        />
+        <Stack.Screen
+          name="QRScan"
+          component={QRScan}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="MyPage" component={MyPage} />
-        <Stack.Screen name="UsageHistory" component={UsageHistory} />
-        <Stack.Screen name="KeepHistory" component={KeepHistory} />
-        <Stack.Screen name="Reviews" component={Reviews} />
-        <Stack.Screen name="Setting" component={Setting} />
-        <Stack.Screen name="ShopDetail" component={ShopDetail} />
+        <Stack.Screen
+          name="MyPage"
+          component={MyPage}
+          options={{ title: "마이페이지" }}
+        />
+        <Stack.Screen
+          name="UsageHistory"
+          component={UsageHistory}
+          options={{ title: "이용 내역" }}
+        />
+        <Stack.Screen
+          name="KeepHistory"
+          component={KeepHistory}
+          options={{ title: "찜 내역" }}
+        />
+        <Stack.Screen
+          name="Reviews"
+          component={Reviews}
+          options={{ title: "리뷰 관리" }}
+        />
+        <Stack.Screen
+          name="Setting"
+          component={Setting}
+          options={{ title: "설정" }}
+        />
+        <Stack.Screen
+          name="ShopDetail"
+          component={ShopDetail}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

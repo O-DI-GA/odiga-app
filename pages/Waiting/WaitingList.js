@@ -22,7 +22,6 @@ const WaitingList = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.label}>내 웨이팅 정보</Text>
         <ReserveContainer

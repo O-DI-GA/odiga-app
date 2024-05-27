@@ -6,7 +6,6 @@ import NavBar from "../component/NavBar";
 const Map = () => {
   return (
     <View style={styles.container}>
-      <Header />
       <Text>지도 화면</Text>
       <NavBar />
     </View>

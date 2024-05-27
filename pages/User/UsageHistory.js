@@ -36,7 +36,6 @@ const UsageHistory = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
       <Text style={styles.title}>이용 내역</Text>
       <FlatList
         data={DATA}

@@ -70,7 +70,6 @@ const KeepHistory = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
       <Text style={styles.title}>찜 내역</Text>
       <Text style={styles.totalCount}>총 {DATA.length}개</Text>
       <FlatList
