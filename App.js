@@ -1,5 +1,6 @@
 import "react-native-gesture-handler";
 import React from "react";
+import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -27,9 +28,7 @@ function App() {
         initialRouteName="Home"
         screenOptions={{
           headerTitleAlign: "center", // 헤더 타이틀 가운데 정렬
-          headerStyle: {
-            backgroundColor: "#FFFFFF",
-          },
+          headerTransparent: true, // 헤더 투명하게
         }}
       >
         <Stack.Screen
@@ -62,7 +61,7 @@ function App() {
           component={QRScan}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Map" component={Map} />
+        <Stack.Screen name="Map" component={Map} options={{ title: "" }} />
         <Stack.Screen
           name="MyPage"
           component={MyPage}

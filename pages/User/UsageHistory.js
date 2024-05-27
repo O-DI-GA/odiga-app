@@ -1,6 +1,5 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, FlatList } from "react-native";
-import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 
 const DATA = [
@@ -36,7 +35,6 @@ const UsageHistory = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>이용 내역</Text>
       <FlatList
         data={DATA}
         renderItem={renderItem}
@@ -52,15 +50,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginLeft: 20,
-    marginVertical: 10,
+    paddingTop: 80,
   },
   listContainer: {
     paddingHorizontal: 20,
+    paddingVertical: 30,
   },
   item: {
     flexDirection: "row",

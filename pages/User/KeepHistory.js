@@ -1,15 +1,6 @@
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  FlatList,
-  TextInput,
-} from "react-native";
-import Header from "../../component/Header";
+import { View, StyleSheet, Text, Image, FlatList } from "react-native";
 import NavBar from "../../component/NavBar";
-import Icon from "react-native-vector-icons/Ionicons";
 
 const DATA = [
   {
@@ -70,7 +61,6 @@ const KeepHistory = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>찜 내역</Text>
       <Text style={styles.totalCount}>총 {DATA.length}개</Text>
       <FlatList
         data={DATA}
@@ -87,17 +77,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginLeft: 20,
-    marginBottom: 10,
+    paddingTop: 80,
   },
   totalCount: {
     fontSize: 16,
     marginLeft: 20,
-    marginBottom: 10,
+    marginVertical: 10,
   },
   listContainer: {
     paddingHorizontal: 20,

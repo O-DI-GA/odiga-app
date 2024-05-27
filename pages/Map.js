@@ -1,21 +1,34 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import Header from "../component/Header";
+import { View, StyleSheet, ImageBackground } from "react-native";
 import NavBar from "../component/NavBar";
 
 const Map = () => {
   return (
-    <View style={styles.container}>
-      <Text>지도 화면</Text>
-      <NavBar />
-    </View>
+    <ImageBackground
+      source={require("../assets/mapimg.png")} // 가짜 지도
+      style={styles.background}
+    >
+      <View style={styles.overlay}>
+        <NavBar />
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    width: "100%",
+    height: "100%",
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
 

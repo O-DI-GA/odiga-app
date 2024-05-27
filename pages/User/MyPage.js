@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 
 const MyPage = () => {
@@ -58,6 +57,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+    paddingTop: 80,
   },
   box: {
     padding: 20,

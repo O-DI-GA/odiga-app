@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 
 const ToggleSwitch = ({ isEnabled, onToggle }) => {
@@ -82,6 +81,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+    paddingTop: 80,
   },
   settingItem: {
     flexDirection: "row",

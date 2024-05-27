@@ -1,6 +1,5 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 
 const Reviews = () => {
@@ -16,6 +15,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+    paddingTop: 80,
   },
 });
 

@@ -7,7 +7,6 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import Header from "../../component/Header";
 import NavBar from "../../component/NavBar";
 import ReserveContainer from "../../component/ReserveContainer";
 
@@ -110,6 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+    paddingTop: 80,
   },
   content: {
     padding: 20,
