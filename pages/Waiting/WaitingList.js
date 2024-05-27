@@ -1,14 +1,8 @@
-import { React, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  ScrollView,
-  Modal,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
 import NavBar from "../../component/NavBar";
 import ReserveContainer from "../../component/ReserveContainer";
+import ModalComponent from "../../component/ModalComponent";
 
 const WaitingList = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,14 +22,30 @@ const WaitingList = () => {
           shopName="가게 이름"
           type="waiting"
           waitingCnt={5}
-          onPress={handlePress}
+          code="ABC123"
+          onPress={() =>
+            handlePress({
+              shopName: "가게 이름",
+              type: "waiting",
+              waitingCnt: 5,
+              code: "ABC123",
+            })
+          }
         />
         <ReserveContainer
           imageUrl={require("../../assets/icon.png")}
           shopName="가게 이름"
           type="waiting"
           waitingCnt={8}
-          onPress={handlePress}
+          code="XYZ789"
+          onPress={() =>
+            handlePress({
+              shopName: "가게 이름",
+              type: "waiting",
+              waitingCnt: 8,
+              code: "XYZ789",
+            })
+          }
         />
         <Text style={styles.label}>내 예약 정보</Text>
         <ReserveContainer
@@ -45,62 +55,26 @@ const WaitingList = () => {
           date="5월 5일"
           time="18시"
           numPeople="6명"
-          onPress={handlePress}
+          code="RES456"
+          onPress={() =>
+            handlePress({
+              shopName: "가게 이름",
+              type: "reservation",
+              date: "5월 5일",
+              time: "18시",
+              numPeople: "6명",
+              code: "RES456",
+            })
+          }
         />
       </ScrollView>
       <NavBar />
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
+      <ModalComponent
+        modalVisible={modalVisible}
+        selectedShop={selectedShop}
         onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.closeButtonText}>×</Text>
-            </TouchableOpacity>
-            {selectedShop && selectedShop.type === "waiting" && (
-              <>
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
-                  <Text style={styles.modalMessage}>
-                    현재{" "}
-                    <Text style={styles.highlightText}>
-                      {selectedShop.waitingCnt}팀{" "}
-                    </Text>
-                    남았어요!
-                  </Text>
-                </View>
-                <Text style={styles.modalCodeLabel}>내 인증코드</Text>
-                <Text style={styles.modalCode}>Z4C6BS</Text>
-              </>
-            )}
-            {selectedShop && selectedShop.type === "reservation" && (
-              <>
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
-                  <Text style={styles.modalMessage}>
-                    날짜: {selectedShop.date}
-                  </Text>
-                  <Text style={styles.modalMessage}>
-                    시간: {selectedShop.time}
-                  </Text>
-                  <Text style={styles.modalMessage}>
-                    인원수: {selectedShop.numPeople}
-                  </Text>
-                </View>
-                <Text style={styles.modalCodeLabel}>내 인증코드</Text>
-                <Text style={styles.modalCode}>Z4C6BS</Text>
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
+      />
     </View>
   );
 };
@@ -120,68 +94,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginVertical: 10,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContainer: {
-    width: 300,
-    padding: 20,
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  closeButton: {
-    alignSelf: "flex-end",
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#C4C4C4",
-    paddingHorizontal: 10,
-  },
-  closeButtonText: {
-    fontSize: 24,
-    color: "#000000",
-  },
-  modalHeader: {
-    alignSelf: "flex-start",
-    marginBottom: 20,
-    paddingLeft: 20,
-  },
-  modalTitle: {
-    fontSize: 25,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  modalMessage: {
-    fontSize: 18,
-  },
-  modalCodeLabel: {
-    fontSize: 16,
-    marginVertical: 15,
-  },
-  modalCode: {
-    fontSize: 25,
-    fontWeight: "bold",
-    marginBottom: 30,
-    textAlign: "center",
-  },
-  cancelButton: {
-    backgroundColor: "#FFD600",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-  },
-  cancelButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#ffffff",
-  },
-  highlightText: {
-    color: "#FF9900",
-    fontWeight: "bold",
   },
 });
 
