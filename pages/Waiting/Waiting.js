@@ -10,6 +10,16 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+const generateRandomCode = () => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
+  for (let i = 0; i < 6; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+  return result;
+};
+
 const Waiting = () => {
   const [people, setPeople] = useState(2);
   const [menu, setMenu] = useState([
@@ -34,6 +44,7 @@ const Waiting = () => {
   ]);
   const [totalPrice, setTotalPrice] = useState(20000);
   const [modalVisible, setModalVisible] = useState(false);
+  const [code, setCode] = useState("");
 
   const handleQuantityChange = (id, amount) => {
     setMenu(
@@ -50,6 +61,7 @@ const Waiting = () => {
   };
 
   const toggleModal = () => {
+    setCode(generateRandomCode());
     setModalVisible(true);
   };
 
@@ -123,7 +135,7 @@ const Waiting = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalCodeLabel}>내 인증코드</Text>
-            <Text style={styles.modalCode}>Z4C6BS</Text>
+            <Text style={styles.modalCode}>{code}</Text>
             <TouchableOpacity
               style={styles.okButton}
               onPress={() => setModalVisible(false)}

@@ -4,11 +4,22 @@ import NavBar from "../../component/NavBar";
 import ReserveContainer from "../../component/ReserveContainer";
 import ModalComponent from "../../component/ModalComponent";
 
+const generateRandomCode = () => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
+  for (let i = 0; i < 6; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+  return result;
+};
+
 const WaitingList = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
 
   const handlePress = (shop) => {
+    shop.code = generateRandomCode();
     setSelectedShop(shop);
     setModalVisible(true);
   };
@@ -28,7 +39,6 @@ const WaitingList = () => {
               shopName: "가게 이름",
               type: "waiting",
               waitingCnt: 5,
-              code: "ABC123",
             })
           }
         />
@@ -43,7 +53,6 @@ const WaitingList = () => {
               shopName: "가게 이름",
               type: "waiting",
               waitingCnt: 8,
-              code: "XYZ789",
             })
           }
         />
@@ -63,7 +72,6 @@ const WaitingList = () => {
               date: "5월 5일",
               time: "18시",
               numPeople: "6명",
-              code: "RES456",
             })
           }
         />
