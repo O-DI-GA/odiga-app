@@ -19,7 +19,7 @@ function Login() {
       <Text style={styles.welcomeText}>돌아오신 것을 환영합니다!</Text>
       <TextInput
         style={[styles.input, { borderColor: emailBorderColor }]}
-        placeholder="Email"
+        placeholder="이메일"
         keyboardType="email-address"
         autoCapitalize="none"
         placeholderTextColor="#626262"
@@ -28,7 +28,7 @@ function Login() {
       />
       <TextInput
         style={[styles.input, { borderColor: passwordBorderColor }]}
-        placeholder="Password"
+        placeholder="비밀번호"
         secureTextEntry
         placeholderTextColor="#626262"
         onFocus={() => setPasswordBorderColor("#424242")}
@@ -43,7 +43,7 @@ function Login() {
         style={styles.loginButton}
         onPress={() => navigation.navigate("Main")}
       >
-        <Text style={styles.loginButtonText}>Login</Text>
+        <Text style={styles.loginButtonText}>로그인</Text>
       </TouchableOpacity>
       <TouchableOpacity>
         <Text
@@ -67,15 +67,15 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   loginText: {
-    fontSize: 24,
+    fontSize: 45,
     fontWeight: "bold",
     color: "#FFC107",
     marginBottom: 20,
   },
   welcomeText: {
     fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 100,
+    fontWeight: "500",
+    marginBottom: 80,
   },
   input: {
     width: "100%",
