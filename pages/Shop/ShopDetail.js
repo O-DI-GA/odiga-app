@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Linking } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icons from "react-native-vector-icons/Ionicons";
+import { useRoute } from "@react-navigation/native";
 
 /* API 통신
     1. 선택한 가게의 id 받아오기
@@ -16,6 +17,14 @@ import KeepBtn from "../../component/KeepBtn";
 
 const ShopDetail = ({ route, navigation }) => {
     const { id } = route.params; // 선택한 가게의 id
+
+    // 메뉴 이동
+    const router = useRoute();
+    const [activeMenu, setActiveMenu] = React.useState(router.name);
+
+    React.useState(() => {
+        setActiveMenu(router.name);
+    }, [router.name]);
 
     // mock 데이터에서 가게 찾기 → API 요청하는 로직으로 수정 필요
     const shop = shpoList.find((item) => item.id === id);
@@ -61,8 +70,17 @@ const ShopDetail = ({ route, navigation }) => {
 
     const MenuBtn = () => (
         <View style={styles.menuContainer}>
-            <TouchableOpacity>
-                <Text> 홈 </Text>
+            <TouchableOpacity style={styles.menuBox}>
+                <Text style={styles.menuText}> 홈 </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuBox}>
+                <Text style={styles.menuText}> 메뉴 </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuBox}>
+                <Text style={styles.menuText}> 사진 </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuBox}>
+                <Text style={styles.menuText}> 리뷰 </Text>
             </TouchableOpacity>
         </View>
     );
@@ -80,6 +98,15 @@ const ShopDetail = ({ route, navigation }) => {
                     <Text style={styles.star}> {shop.star}</Text>
                 </View>
                 <ShopInfoButton />
+                <View
+                    style={{
+                        backgroundColor: "#F0F0F0",
+                        paddingVertical: 5,
+                        paddingHorizontal: 0,
+                        marginTop: 15,
+                        marginLeft: -50,
+                        width: "150%",
+                    }}></View>
                 <MenuBtn />
             </View>
             <View style={{ flex: 3, backgroundColor: "white" }} />
@@ -118,11 +145,11 @@ const styles = StyleSheet.create({
     },
     name: {
         fontWeight: "bold",
-        fontSize: 30,
+        fontSize: 28,
         margin: -5,
     },
     starContainer: {
-        marginTop: 15,
+        marginTop: 20,
         paddingLeft: 3,
         flexDirection: "row",
         alignItems: "left",
@@ -148,10 +175,18 @@ const styles = StyleSheet.create({
         marginTop: -5,
     },
     menuContainer: {
-        marginTop: 15,
-        paddingLeft: 3,
+        alignItems: "center",
         flexDirection: "row",
-        backgroundColor: "#FFF9C4",
+        marginLeft: -25,
+    },
+    menuBox: {
+        borderWidth: 1,
+        paddingHorizontal: 30,
+        paddingVertical: 10,
+        borderColor: "#ffffff",
+    },
+    menuText: {
+        fontSize: 18,
     },
 });
 

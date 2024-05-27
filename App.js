@@ -1,6 +1,5 @@
 import "react-native-gesture-handler";
 import React from "react";
-import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -18,6 +17,10 @@ import Reviews from "./pages/User/Reviews";
 import Setting from "./pages/User/Setting";
 
 import ShopDetail from "./pages/Shop/ShopDetail";
+import ShopHome from "./pages/Shop/ShopHome";
+import ShopImage from "./pages/Shop/ShopImage";
+import ShopMenu from "./pages/Shop/ShopMenu";
+import ShopReview from "./pages/Shop/ShopReview";
 
 const Stack = createStackNavigator();
 
@@ -92,9 +95,14 @@ function App() {
           component={ShopDetail}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="ShopHome" component={ShopHome} />
+        <Stack.Screen name="ShopImage" component={ShopImage} />
+        <Stack.Screen name="ShopMenu" component={ShopMenu} />
+        <Stack.Screen name="ShopReview" component={ShopReview} />
       </Stack.Navigator>
     </NavigationContainer>
   );
+
 }
 
 export default App;
