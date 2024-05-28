@@ -5,7 +5,7 @@ import ReserveContainer from "../../component/ReserveContainer";
 import ModalComponent from "../../component/ModalComponent";
 
 const generateRandomCode = () => {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // I,1,O,0 비슷해서 제외
   let result = "";
   for (let i = 0; i < 6; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
