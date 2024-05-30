@@ -1,14 +1,51 @@
 import React from "react";
-import { View, StyleSheet, Text, Image, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import NavBar from "../../component/NavBar";
+import { useNavigation } from "@react-navigation/native";
+
+const USAGE_DETAILS = [
+  { id: "1", name: "Red Cabbage", quantity: 2, price: 180000 },
+  { id: "2", name: "Red Cabbage", quantity: 2, price: 180000 },
+  { id: "3", name: "Red Cabbage", quantity: 2, price: 180000 },
+];
 
 const DATA = [
-  { id: "1", type: "웨이팅", name: "가게이름", date: "2024년 5월 12일" },
-  { id: "2", type: "웨이팅", name: "가게이름", date: "2024년 5월 12일" },
-  { id: "3", type: "예약", name: "가게이름", date: "2024년 5월 12일" },
+  {
+    id: "1",
+    type: "웨이팅",
+    name: "가게이름",
+    date: "2024년 5월 12일",
+    time: "18시 45분 23초",
+    details: USAGE_DETAILS,
+  },
+  {
+    id: "2",
+    type: "웨이팅",
+    name: "가게이름",
+    date: "2024년 5월 12일",
+    time: "18시 45분 23초",
+    details: USAGE_DETAILS,
+  },
+  {
+    id: "3",
+    type: "예약",
+    name: "가게이름",
+    date: "2024년 5월 12일",
+    time: "18시 45분 23초",
+    details: USAGE_DETAILS,
+  },
 ];
 
 const UsageHistory = () => {
+  const navigation = useNavigation();
+
   const renderItem = ({ item }) => {
     const isWaiting = item.type === "웨이팅";
     const typeTextStyle = [
@@ -20,7 +57,10 @@ const UsageHistory = () => {
     ];
 
     return (
-      <View style={styles.item}>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => navigation.navigate("UsageDetail", { item })}
+      >
         <Image source={require("../../assets/icon.png")} style={styles.image} />
         <View style={styles.info}>
           <View style={styles.nameRow}>
@@ -29,7 +69,7 @@ const UsageHistory = () => {
           </View>
           <Text style={styles.date}>방문 날짜: {item.date}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -38,7 +78,7 @@ const UsageHistory = () => {
       <FlatList
         data={DATA}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
       />
       <NavBar />
@@ -50,7 +90,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
-    paddingTop: 80,
   },
   listContainer: {
     paddingHorizontal: 20,
@@ -91,7 +130,7 @@ const styles = StyleSheet.create({
   typeText: {
     fontSize: 14,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 2,
     borderRadius: 8,
   },
   date: {
