@@ -15,14 +15,20 @@ import { useRoute } from "@react-navigation/native";
 import { shpoList } from "../../assets/ShopList";
 import KeepBtn from "../../component/KeepBtn";
 
+import ShopHome from "./ShopHome";
+import ShopMenu from "./ShopMenu";
+import ShopImage from "./ShopImage";
+import ShopReview from "./ShopReview";
+
 const ShopDetail = ({ route, navigation }) => {
     const { id } = route.params; // 선택한 가게의 id
 
     // 메뉴 이동
     const router = useRoute();
     const [activeMenu, setActiveMenu] = React.useState(router.name);
+    const [selectedMenu, setSelectedMenu] = React.useState("home");
 
-    React.useState(() => {
+    React.useEffect(() => {
         setActiveMenu(router.name);
     }, [router.name]);
 
@@ -51,7 +57,6 @@ const ShopDetail = ({ route, navigation }) => {
             <View style={styles.infoBtn}>
                 <KeepBtn />
                 <Text style={{ fontSize: 18, marginLeft: 10 }}>
-                    {" "}
                     {shop.keep}
                 </Text>
             </View>
@@ -70,20 +75,46 @@ const ShopDetail = ({ route, navigation }) => {
 
     const MenuBtn = () => (
         <View style={styles.menuContainer}>
-            <TouchableOpacity style={styles.menuBox}>
-                <Text style={styles.menuText}> 홈 </Text>
+            <TouchableOpacity
+                style={styles.menuBox}
+                onPress={() => setSelectedMenu("home")}>
+                <Text style={styles.menuText}>홈</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuBox}>
-                <Text style={styles.menuText}> 메뉴 </Text>
+            <TouchableOpacity
+                style={styles.menuBox}
+                onPress={() => setSelectedMenu("menu")}>
+                <Text style={styles.menuText}>메뉴</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuBox}>
-                <Text style={styles.menuText}> 사진 </Text>
+            <TouchableOpacity
+                style={styles.menuBox}
+                onPress={() => setSelectedMenu("image")}>
+                <Text style={styles.menuText}>사진</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuBox}>
-                <Text style={styles.menuText}> 리뷰 </Text>
+            <TouchableOpacity
+                style={styles.menuBox}
+                onPress={() => setSelectedMenu("review")}>
+                <Text style={styles.menuText}>리뷰</Text>
             </TouchableOpacity>
         </View>
     );
+
+    let RenderComponent;
+    switch (selectedMenu) {
+        case "home":
+            RenderComponent = ShopHome;
+            break;
+        case "menu":
+            RenderComponent = ShopMenu;
+            break;
+        case "image":
+            RenderComponent = ShopImage;
+            break;
+        case "review":
+            RenderComponent = ShopReview;
+            break;
+        default:
+            RenderComponent = ShopHome;
+    }
 
     return (
         <View style={styles.container}>
@@ -91,11 +122,11 @@ const ShopDetail = ({ route, navigation }) => {
                 <Image style={styles.image} source={shop.image} />
             </View>
             <View style={styles.infoContainer}>
-                <Text style={styles.category}> {shop.category} </Text>
-                <Text style={styles.name}> {shop.name} </Text>
+                <Text style={styles.category}>{shop.category}</Text>
+                <Text style={styles.name}>{shop.name}</Text>
                 <View style={styles.starContainer}>
                     {stars}
-                    <Text style={styles.star}> {shop.star}</Text>
+                    <Text style={styles.star}>{shop.star}</Text>
                 </View>
                 <ShopInfoButton />
                 <View
@@ -107,9 +138,16 @@ const ShopDetail = ({ route, navigation }) => {
                         marginLeft: -50,
                         width: "150%",
                     }}></View>
-                <MenuBtn />
+                <MenuBtn setSelectedMenu={setSelectedMenu} />
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        width: "100%",
+                    }}>
+                    <RenderComponent />
+                </View>
             </View>
-            <View style={{ flex: 3, backgroundColor: "white" }} />
         </View>
     );
 };
@@ -120,19 +158,17 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         flexDirection: "column",
     },
-    imageContainer: {
-        flex: 1,
-    },
+    imageContainer: { flex: 1 },
     image: {
         width: "100%",
         height: "100%",
     },
     infoContainer: {
         position: "absolute",
-        top: "25%",
+        top: "10%",
         left: 0,
         right: 0,
-        height: "70%",
+        height: "95%",
         backgroundColor: "white",
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
@@ -150,7 +186,6 @@ const styles = StyleSheet.create({
     },
     starContainer: {
         marginTop: 20,
-        paddingLeft: 3,
         flexDirection: "row",
         alignItems: "left",
     },
@@ -177,12 +212,12 @@ const styles = StyleSheet.create({
     menuContainer: {
         alignItems: "center",
         flexDirection: "row",
-        marginLeft: -25,
+        justifyContent: "space-between",
     },
     menuBox: {
         borderWidth: 1,
         paddingHorizontal: 30,
-        paddingVertical: 10,
+        paddingVertical: 15,
         borderColor: "#ffffff",
     },
     menuText: {
