@@ -121,10 +121,8 @@ const Waiting = () => {
           {totalPrice.toLocaleString("ko-KR")}원
         </Text>
       </View>
-      <TouchableOpacity style={styles.waitingButton}>
-        <Text style={styles.waitingButtonText} onPress={toggleModal}>
-          웨이팅하기
-        </Text>
+      <TouchableOpacity style={styles.waitingButton} onPress={toggleModal}>
+        <Text style={styles.waitingButtonText}>웨이팅하기</Text>
       </TouchableOpacity>
       <Modal
         animationType="slide"
@@ -154,7 +152,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 16,
     backgroundColor: "#fff",
-    paddingTop: 80,
   },
   header: {
     alignItems: "flex-start",

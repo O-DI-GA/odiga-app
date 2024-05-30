@@ -182,13 +182,11 @@ const Reservation = () => {
           {totalPrice.toLocaleString("ko-KR")}원
         </Text>
       </View>
-      <TouchableOpacity style={styles.reserveButton}>
-        <Text
-          style={styles.reserveButtonText}
-          onPress={() => console.log("예약하기")}
-        >
-          예약하기
-        </Text>
+      <TouchableOpacity
+        style={styles.reserveButton}
+        onPress={() => console.log("예약하기")}
+      >
+        <Text style={styles.reserveButtonText}>예약하기</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -199,7 +197,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 16,
     backgroundColor: "#fff",
-    paddingTop: 80,
   },
   header: {
     alignItems: "flex-start",
