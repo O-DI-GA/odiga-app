@@ -119,7 +119,7 @@ function App() {
         <Stack.Screen
           name="UsageDetail"
           component={UsageDetail}
-          options={{ title: "이용내역 상세페이지" }}
+          options={{ title: "이용 내역" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
