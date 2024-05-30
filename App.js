@@ -17,6 +17,7 @@ import Reviews from "./pages/User/Reviews";
 import Setting from "./pages/User/Setting";
 import Reservation from "./pages/Waiting/Reservation";
 import Waiting from "./pages/Waiting/Waiting";
+import UsageDetail from "./pages/User/UsageDetail";
 
 import ShopDetail from "./pages/Shop/ShopDetail";
 import ShopHome from "./pages/Shop/ShopHome";
@@ -33,7 +34,7 @@ function App() {
         initialRouteName="Home"
         screenOptions={{
           headerTitleAlign: "center", // 헤더 타이틀 가운데 정렬
-          headerTransparent: true, // 헤더 투명하게
+          headerTransparent: false, // 헤더 불투명하게
         }}
       >
         <Stack.Screen
@@ -66,7 +67,11 @@ function App() {
           component={QRScan}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Map" component={Map} options={{ title: "" }} />
+        <Stack.Screen
+          name="Map"
+          component={Map}
+          options={{ title: "", headerTransparent: true }} // Map 화면에서만 헤더 투명하게
+        />
         <Stack.Screen
           name="MyPage"
           component={MyPage}
@@ -110,6 +115,11 @@ function App() {
           name="Waiting"
           component={Waiting}
           options={{ title: "웨이팅" }}
+        />
+        <Stack.Screen
+          name="UsageDetail"
+          component={UsageDetail}
+          options={{ title: "이용내역 상세페이지" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
