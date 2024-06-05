@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 
 import profile from "../assets/icon.png";
@@ -25,6 +32,7 @@ const review = [
     content: "전 그저 그랬네요~",
     photo: test_img,
     nickname: "동영배",
+    store: "명륜진사갈비",
     profile: profile,
   },
   {
@@ -34,6 +42,7 @@ const review = [
     content: "너무 맛있습니다",
     photo: test_img2,
     nickname: "강대성",
+    store: "명륜진사갈비",
     profile: profile,
   },
   {
@@ -43,11 +52,14 @@ const review = [
     content: "너무 더워요",
     photo: test_img,
     nickname: "권지용",
+    store: "명륜진사갈비",
     profile: profile,
   },
 ];
 
-const ReviewContainer = ({ item }) => {
+const ReviewContainer = ({ item, type, onDelete, onEdit }) => {
+  const isMyReview = type === "myReview";
+
   // 평점 별 찍기
   const stars = Array.from({ length: 5 }, (_, index) =>
     index < Math.floor(item.star) ? (
@@ -59,16 +71,30 @@ const ReviewContainer = ({ item }) => {
 
   return (
     <View style={styles.reviewContainer}>
-      <View>
+      {true ? (
+        <Text style={styles.storeName}>{item.store}</Text>
+      ) : (
         <View style={styles.user}>
           <Image source={item.profile} style={styles.profile} />
           <Text>{item.nickname}</Text>
         </View>
+      )}
+      <View style={styles.row}>
         <Text style={styles.date}>작성 일자 : {item.date}</Text>
+        {true && (
+          <View style={styles.actionButtons}>
+            <TouchableOpacity onPress={() => onEdit(item)}>
+              <Text style={styles.editButton}>수정</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => onDelete(item.id)}>
+              <Text style={styles.deleteButton}>삭제</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <Image source={item.photo} style={styles.reviewPhoto} />
       <View style={styles.starContainer}>{stars}</View>
-      <Text> {item.content} </Text>
+      <Text>{item.content}</Text>
     </View>
   );
 };
@@ -100,11 +126,16 @@ const styles = StyleSheet.create({
     padding: 20,
     borderColor: "#ccc",
     borderRadius: 16,
-    gap: 20,
+    gap: 10,
     marginBottom: 10,
   },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   date: {
-    fontSize: 11,
+    fontSize: 13,
   },
   starContainer: {
     flexDirection: "row",
@@ -126,5 +157,27 @@ const styles = StyleSheet.create({
     height: 150, // 고정된 높이 설정
     maxHeight: 200, // 최대 높이 설정
     resizeMode: "cover",
+  },
+  storeName: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  actionButtons: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 10,
+  },
+  editButton: {
+    marginRight: 10,
+    backgroundColor: "#FFF9c4",
+    padding: 5,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  deleteButton: {
+    backgroundColor: "#FFF9c4",
+    padding: 5,
+    paddingHorizontal: 10,
+    borderRadius: 8,
   },
 });
