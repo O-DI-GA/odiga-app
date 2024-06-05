@@ -71,7 +71,7 @@ const ReviewContainer = ({ item, type, onDelete, onEdit }) => {
 
   return (
     <View style={styles.reviewContainer}>
-      {true ? (
+      {isMyReview ? (
         <Text style={styles.storeName}>{item.store}</Text>
       ) : (
         <View style={styles.user}>
@@ -81,7 +81,7 @@ const ReviewContainer = ({ item, type, onDelete, onEdit }) => {
       )}
       <View style={styles.row}>
         <Text style={styles.date}>작성 일자 : {item.date}</Text>
-        {true && (
+        {isMyReview && (
           <View style={styles.actionButtons}>
             <TouchableOpacity onPress={() => onEdit(item)}>
               <Text style={styles.editButton}>수정</Text>
