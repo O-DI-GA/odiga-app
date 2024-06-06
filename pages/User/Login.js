@@ -5,8 +5,10 @@ import {
     TextInput,
     TouchableOpacity,
     StyleSheet,
+    Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { loginAPI } from "../../utils/useAuthUtils";
 
 function Login() {
     const navigation = useNavigation();
@@ -27,11 +29,16 @@ function Login() {
 
     // 로그인 API
     const handleSubmit = async () => {
-        console.log(loginData); // login Data 콘솔 확인
-        try {
+        const response = await loginAPI(loginData);
+        console.log(response); //응답 콘솔 확인
+        if (response === "success") {
             navigation.navigate("Main");
-        } catch (error) {
-            console.error("로그인 에러 : ", error); // 로그인 에러 콘솔 확인
+        }
+        if (response === "notMatch") {
+            Alert.alert("비밀번호가 일치하지 않습니다.");
+        }
+        if (response === "notExist") {
+            Alert.alert("존재하지 않는 계정입니다.");
         }
     };
 
@@ -47,6 +54,7 @@ function Login() {
                 placeholderTextColor="#626262"
                 onFocus={() => setEmailBorderColor("#424242")}
                 onBlur={() => setEmailBorderColor("#cccccc")}
+                onChangeText={(text) => handleInputChange("email", text)}
             />
             <TextInput
                 style={[styles.input, { borderColor: passwordBorderColor }]}
@@ -55,6 +63,7 @@ function Login() {
                 placeholderTextColor="#626262"
                 onFocus={() => setPasswordBorderColor("#424242")}
                 onBlur={() => setPasswordBorderColor("#cccccc")}
+                onChangeText={(text) => handleInputChange("password", text)}
             />
             <TouchableOpacity style={styles.forgotPasswordContainer}>
                 <Text style={styles.forgotPasswordText}>
