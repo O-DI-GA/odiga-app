@@ -5,11 +5,32 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ShopHome() {
+import { getRequest } from "../../utils/api/api";
+
+export default function ShopHome({ route }) {
+  const { id } = route.params || {}; // 선택한 가게의 id
+
   const navigation = useNavigation();
+  const [storeInfo, setStoreInfo] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!id) return; // id가 없으면 바로 종료
+
+        const fetchInfo = await getRequest(`api/v1/store/${id}`);
+        const storeInfo = fetchInfo.data;
+        setStoreInfo(storeInfo);
+        console.log(storeInfo);
+      } catch (error) {
+        console.error("Fetching error:", error);
+      }
+    };
+    fetchData();
+  }, [id]);
 
   return (
     <View style={styles.container}>
@@ -17,17 +38,17 @@ export default function ShopHome() {
         <View style={styles.stateView}>
           <View style={styles.stateContainer}>
             <Text style={styles.stateName}> 웨이팅 현황 </Text>
-            <Text style={styles.state}> 29팀 </Text>
+            <Text style={styles.state}> {storeInfo.waitingCount}팀 </Text>
           </View>
           <View style={styles.stateContainer}>
             <Text style={styles.stateName}> 빈 테이블 현황 </Text>
-            <Text style={styles.state}> 0 테이블 </Text>
+            <Text style={styles.state}>{storeInfo.emptyTableCount} 테이블</Text>
           </View>
         </View>
         <View style={styles.homeContainer}>
           <View style={styles.homeInfo}>
             <Text style={styles.infoName}> 전체 테이블 수 </Text>
-            <Text style={styles.info}>20개 </Text>
+            <Text style={styles.info}>{storeInfo.tableCount}개 </Text>
           </View>
           <View style={styles.homeInfo}>
             <Text style={styles.infoName}> 운영시간 </Text>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Linking } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -12,13 +12,14 @@ import { useRoute } from "@react-navigation/native";
     3. 지도 모달 띄우기
 */
 
-import { shpoList } from "../../assets/ShopList";
 import KeepBtn from "../../component/KeepBtn";
 
 import ShopHome from "./ShopHome";
 import ShopMenu from "./ShopMenu";
 import ShopImage from "./ShopImage";
 import ShopReview from "./ShopReview";
+
+import { getRequest } from "../../utils/api/api";
 
 const ShopDetail = ({ route, navigation }) => {
   const { id } = route.params; // 선택한 가게의 id
@@ -28,21 +29,53 @@ const ShopDetail = ({ route, navigation }) => {
   const [activeMenu, setActiveMenu] = React.useState(router.name);
   const [selectedMenu, setSelectedMenu] = React.useState("home");
 
+  const [storeInfo, setStoreInfo] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchInfo = await getRequest(`api/v1/store/${id}`);
+        if (fetchInfo && fetchInfo.data) {
+          const storeInfo = fetchInfo.data;
+          setStoreInfo(storeInfo);
+        } else {
+          if (!fetchInfo) {
+            console.error("fetchInfo is undefined");
+          } else if (!fetchInfo.data) {
+            console.error("fetchInfo.data is undefined");
+          } else {
+            console.error("Valid data was not returned");
+          }
+        }
+      } catch (error) {
+        console.error("Fetching error:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   React.useEffect(() => {
     setActiveMenu(router.name);
   }, [router.name]);
 
-  // mock 데이터에서 가게 찾기 → API 요청하는 로직으로 수정 필요
-  const shop = shpoList.find((item) => item.id === id);
+  let stars;
 
-  // 평점 별 찍기
-  const stars = Array.from({ length: 5 }, (_, index) =>
-    index < Math.floor(shop.star) ? (
-      <Icon key={index} name="star" size={18} />
-    ) : (
-      <Icon key={index} name="staro" size={18} />
-    )
-  );
+  if (
+    // storeInfo가 존재하고 averageRating이 0 이상인 경우
+    !storeInfo ||
+    (storeInfo.averageRating !== undefined && storeInfo.averageRating >= 0)
+  ) {
+    // 별점 아이콘을 출력
+    stars = Array.from({ length: 5 }, (_, index) =>
+      index < Math.floor(storeInfo.averageRating) ? (
+        <Icon key={index} name="star" size={18} />
+      ) : (
+        <Icon key={index} name="staro" size={18} />
+      )
+    );
+  } else {
+    return <Text>Loading...</Text>; // 데이터가 아직 받아지지 않은 경우 "Loading..."을 출력
+  }
 
   const ShopInfoButton = () => (
     <View style={styles.buttonContainer}>
@@ -56,7 +89,9 @@ const ShopDetail = ({ route, navigation }) => {
       </TouchableOpacity>
       <View style={styles.infoBtn}>
         <KeepBtn />
-        <Text style={{ fontSize: 18, marginLeft: 10 }}>{shop.keep}</Text>
+        <Text style={{ fontSize: 18, marginLeft: 10 }}>
+          {storeInfo.likeCount}
+        </Text>
       </View>
     </View>
   );
@@ -64,8 +99,8 @@ const ShopDetail = ({ route, navigation }) => {
   // 전화 걸기
   const handleCall = () => {
     // 전화번호가 있는 경우에만 전화 걸기
-    if (shop.tel) {
-      Linking.openURL(`tel:${shop.tel}`);
+    if (storeInfo.phoneNumber) {
+      Linking.openURL(`tel:${storeInfo.phoneNumber}`);
     } else {
       console.log("전화번호가 없습니다.");
     }
@@ -133,14 +168,17 @@ const ShopDetail = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={shop.image} />
+        <Image
+          style={styles.image}
+          source={{ uri: storeInfo.storeTitleImage }}
+        />
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.category}>{shop.category}</Text>
-        <Text style={styles.name}>{shop.name}</Text>
+        <Text style={styles.category}>{storeInfo.category}</Text>
+        <Text style={styles.name}>{storeInfo.storeName}</Text>
         <View style={styles.starContainer}>
           {stars}
-          <Text style={styles.star}>{shop.star}</Text>
+          <Text style={styles.star}>{storeInfo.averageRating}</Text>
         </View>
         <ShopInfoButton />
         <View
@@ -161,7 +199,7 @@ const ShopDetail = ({ route, navigation }) => {
             width: "100%",
           }}
         >
-          <RenderComponent />
+          <RenderComponent route={route} />
         </View>
       </View>
     </View>
