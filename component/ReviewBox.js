@@ -1,68 +1,31 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 
-import profile from "../assets/icon.png";
-import sushi_01 from "./test_img/sushi_01.jpg";
-import test_img from "./test_img/test_img.jpg";
-import test_img2 from "./test_img/test_img2.jpg";
-
-const review = [
-  {
-    id: 1,
-    date: "2024년 5월 10일",
-    star: 4,
-    content: "맛있어요^^ 정말^^ 최고의..맛!",
-    photo: sushi_01,
-    nickname: "김형준",
-    store: "명륜진사갈비",
-    profile: profile,
-  },
-  {
-    id: 2,
-    date: "2024년 5월 12일",
-    star: 3,
-    content: "전 그저 그랬네요~",
-    photo: test_img,
-    nickname: "동영배",
-    store: "명륜진사갈비",
-    profile: profile,
-  },
-  {
-    id: 3,
-    date: "2024년 5월 27일",
-    star: 5,
-    content: "너무 맛있습니다",
-    photo: test_img2,
-    nickname: "강대성",
-    store: "명륜진사갈비",
-    profile: profile,
-  },
-  {
-    id: 4,
-    date: "2024년 5월 30일",
-    star: 2,
-    content: "너무 더워요",
-    photo: test_img,
-    nickname: "권지용",
-    store: "명륜진사갈비",
-    profile: profile,
-  },
-];
-
-const ReviewContainer = ({ item, type, onDelete, onEdit }) => {
+const ReviewContainer = ({ item, navigation, type, onDelete, onEdit }) => {
   const isMyReview = type === "myReview";
+
+  const handleDelete = async () => {
+    try {
+      await deleteRequest(`api/v1/reviews/${item.reviewId}`); // 수정
+      onDelete(item.reviewId);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
+
+  const handleEdit = async (updatedReview) => {
+    try {
+      await putRequest(`api/v1/reviews/${item.reviewId}`, updatedReview); // 수정
+      onEdit(updatedReview);
+    } catch (error) {
+      console.error("Error editing review:", error);
+    }
+  };
 
   // 평점 별 찍기
   const stars = Array.from({ length: 5 }, (_, index) =>
-    index < Math.floor(item.star) ? (
+    index < Math.floor(item.rating) ? (
       <Icon key={index} name="star" size={18} color="#FFD600" />
     ) : (
       <Icon key={index} name="staro" size={18} color="#FFD600" />
@@ -75,39 +38,52 @@ const ReviewContainer = ({ item, type, onDelete, onEdit }) => {
         <Text style={styles.storeName}>{item.store}</Text>
       ) : (
         <View style={styles.user}>
-          <Image source={item.profile} style={styles.profile} />
-          <Text>{item.nickname}</Text>
+          <Image
+            source={{ uri: item.userProfileImageUrl }}
+            style={styles.profile}
+          />
+          <Text>{item.userNickname}</Text>
         </View>
       )}
       <View style={styles.row}>
-        <Text style={styles.date}>작성 일자 : {item.date}</Text>
+        <Text style={styles.date}>작성 일자 : {item.createDate}</Text>
         {isMyReview && (
           <View style={styles.actionButtons}>
-            <TouchableOpacity onPress={() => onEdit(item)}>
+            <TouchableOpacity onPress={() => handleEdit(item)}>
               <Text style={styles.editButton}>수정</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => onDelete(item.id)}>
+            <TouchableOpacity onPress={handleDelete}>
               <Text style={styles.deleteButton}>삭제</Text>
             </TouchableOpacity>
           </View>
         )}
       </View>
-      <Image source={item.photo} style={styles.reviewPhoto} />
+      <Image source={{ uri: item.imageUrl }} style={styles.reviewPhoto} />
       <View style={styles.starContainer}>{stars}</View>
       <Text>{item.content}</Text>
     </View>
   );
 };
 
-const ReviewBox = () => {
-  return (
-    <FlatList
-      data={review}
-      renderItem={({ item }) => <ReviewContainer item={item} />}
-      keyExtractor={(item) => item.id.toString()}
-      contentContainerStyle={styles.flatListContainer}
-    />
-  );
+const ReviewBox = ({
+  date,
+  star,
+  content,
+  photo,
+  nickname,
+  userProfileImageUrl,
+  navigation,
+}) => {
+  const item = {
+    createDate: date,
+    rating: star,
+    content: content,
+    imageUrl: photo,
+    userNickname: nickname,
+    userProfileImageUrl: userProfileImageUrl,
+  };
+
+  return <ReviewContainer item={item} navigation={navigation} />;
 };
 
 export default ReviewBox;
