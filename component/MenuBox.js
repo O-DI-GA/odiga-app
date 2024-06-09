@@ -1,30 +1,30 @@
-import { StyleSheet, View, Text, ScrollView, Image } from "react-native";
+import { StyleSheet, View, Text, FlatList, Image } from "react-native";
 import React from "react";
 
-const DATA = [
-    { id: "1", name: "양념갈비", price: "9,000원" },
-    { id: "2", name: "냉면", price: "6,000원" },
-    { id: "3", name: "소고기", price: "13,000원" },
-];
-
-export default function MenuBox() {
-    return (
-        <ScrollView contentContainerStyle={styles.listContainer}>
-            {DATA.map((item) => (
-                <View key={item.id} style={styles.item}>
-                    <Image
-                        source={require("../assets/icon.png")}
-                        style={styles.image}
-                    />
-                    <View style={styles.info}>
-                        <View style={styles.nameRow}>
-                            <Text style={styles.name}>{item.name}</Text>
-                        </View>
-                        <Text style={styles.price}>{item.price}</Text>
-                    </View>
+export default function MenuBox({ menuItems }) {
+    React.useEffect(() => {
+        console.log("메뉴박스 : ", menuItems);
+    }, []);
+    const renderMenuItem = ({ item }) => (
+        <View style={styles.item}>
+            <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
+            <View style={styles.info}>
+                <View style={styles.nameRow}>
+                    <Text style={styles.name}>{item.menuName}</Text>
                 </View>
-            ))}
-        </ScrollView>
+                <Text style={styles.price}>{item.menuPrice}원</Text>
+            </View>
+        </View>
+    );
+
+    return (
+        <FlatList
+            data={menuItems}
+            renderItem={renderMenuItem}
+            keyExtractor={(item) => item.menuId.toString()}
+            contentContainerStyle={styles.listContainer}
+            ListEmptyComponent={<Text>메뉴가 존재하지 않습니다.</Text>}
+        />
     );
 }
 
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     price: {
+        marginTop: 5,
         fontSize: 14,
         color: "#888",
     },
