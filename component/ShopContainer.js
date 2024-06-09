@@ -24,9 +24,12 @@ const ShopContainer = ({ type }) => {
   const [storeList, setStoreList] = useState([]);
 
   useEffect(() => {
+    console.log(type);
     const fetchData = async () => {
       try {
-        const fetchList = await getRequest("api/v1/store");
+        const fetchList = await getRequest(
+          `api/v1/store?longitude=128.7544&latitude=35.8306&orderCondition=${type}`
+        );
         const storeList = fetchList.data;
         setStoreList(storeList);
         console.log(fetchList);
@@ -68,11 +71,13 @@ const ShopContainer = ({ type }) => {
                     <View style={styles.textContainer}>
                       <Text style={{ fontSize: 10 }}> {data.category} </Text>
                       <Text style={styles.shopName}> {data.storeName} </Text>
-                      {type === "waiting" && (
-                        <Text> 현재 {data.waiting}팀 웨이팅 중 </Text>
+                      {type === "WAITING" && (
+                        <Text> 현재 {data.waitingCount}팀 웨이팅 중 </Text>
                       )}
-                      {type === "review" && <Text> 후기 {data.review}개 </Text>}
-                      {type === "popular" && <Text> 찜 {data.keep}개 </Text>}
+                      {type === "REVIEW" && (
+                        <Text> 리뷰 {data.reviewCount}개 </Text>
+                      )}
+                      {type === "LIKE" && <Text> 찜 {data.likeCount}개 </Text>}
                     </View>
                     <View style={styles.keepBtnContainer}>
                       <KeepBtn />
