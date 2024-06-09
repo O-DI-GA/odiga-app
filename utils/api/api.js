@@ -1,4 +1,4 @@
-import { getTokenFromStroage } from "../tokenUtils";
+import { getTokenFromStorage } from "../tokenUtils";
 
 const URL = "http://13.125.83.255:8080";
 
@@ -20,7 +20,7 @@ export const getRequest = async (endpoint) => {
 
 // GET with Token
 export const getTokenRequest = async (endpoint) => {
-  const token = await getTokenFromStroage();
+  const token = await getTokenFromStorage();
   console.log("token : ", token);
   try {
     const response = await fetch(`${URL}/${endpoint}`, {
