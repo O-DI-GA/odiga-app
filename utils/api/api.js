@@ -58,11 +58,14 @@ export const postRequest = async (endpoint, data) => {
 
 // PUT
 export const putRequest = async (endpoint, data) => {
+    const token = await getTokenFromStorage();
+    console.log("token : ", token);
     try {
         const response = await fetch(`${URL}/${endpoint}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(data),
         });
