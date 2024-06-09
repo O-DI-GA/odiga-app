@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import NavBar from "../component/NavBar";
+import { getRequest } from "../utils/api/api";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [region, setRegion] = useState(null);
+  const [stores, setStores] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -38,12 +40,27 @@ const Map = () => {
       setRegion({
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
-        latitudeDelta: 0.00075, // 줌 레벨
-        longitudeDelta: 0.00075, // 줌 레벨
+        latitudeDelta: 0.01, // 줌 레벨
+        longitudeDelta: 0.01, // 줌 레벨
       });
       console.log("Current Location:", currentLocation.coords);
     })();
   }, []);
+
+  useEffect(() => {
+    const fetchStoresData = async () => {
+      if (region) {
+        const radius = calculateRadius();
+        const fetchedStores = await fetchStores(
+          region.latitude,
+          region.longitude,
+          radius
+        );
+        setStores(fetchedStores);
+      }
+    };
+    fetchStoresData();
+  }, [region]);
 
   const calculateRadius = () => {
     // 현재 반경 계산
@@ -52,7 +69,6 @@ const Map = () => {
     const { latitudeDelta, longitudeDelta, latitude } = region;
 
     // 위도와 경도를 거리로 변환하는 데 사용하는 상수
-    const EARTH_RADIUS = 6371; // 지구 반지름 (킬로미터)
     const LATITUDE_DEGREE_TO_KM = 111.32; // 1도 위도의 거리는 약 111.32킬로미터
     const longitudeDegreeToKm =
       LATITUDE_DEGREE_TO_KM * Math.cos((latitude * Math.PI) / 180);
@@ -65,6 +81,25 @@ const Map = () => {
       ) / 2;
 
     return radiusInKm * 1000; // 미터로 변환
+  };
+
+  // 현재 위치와 반경 정보를 받아와서 가게 데이터를 가져오는 함수
+  const fetchStores = async (latitude, longitude, radius) => {
+    try {
+      const fetchData = await getRequest(
+        `api/v1/stores?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
+      );
+      console.log("fetchData:", fetchData);
+      if (fetchData && fetchData.data) {
+        return fetchData.data.stores;
+      } else {
+        console.error("Valid data was not returned");
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching stores:", error);
+      return [];
+    }
   };
 
   const radius = calculateRadius();
@@ -104,6 +139,17 @@ const Map = () => {
           title="Location"
           description="location description"
         />
+        {stores.map((store, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: store.latitude,
+              longitude: store.longitude,
+            }}
+            title={store.name}
+            description={store.description}
+          />
+        ))}
       </MapView>
       <NavBar />
       {radius && (
