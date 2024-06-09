@@ -1,5 +1,21 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// 토큰 저장
+export const storeTokens = async (accessToken, refreshToken) => {
+  try {
+    await AsyncStorage.setItem(
+      "tokens",
+      JSON.stringify({
+        accessToken,
+        refreshToken,
+      })
+    );
+  } catch (err) {
+    console.log("토큰 저장 오류 : ", err);
+  }
+};
+
+// 토큰 가져오기
 export const getTokenFromStorage = async () => {
   try {
     const value = await AsyncStorage.getItem("tokens");
