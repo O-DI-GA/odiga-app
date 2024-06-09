@@ -10,6 +10,8 @@ import {
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+import * as ImagePicker from "expo-image-picker";
+
 import { getTokenRequest } from "../../utils/api/api";
 
 // 화면 크기
@@ -20,6 +22,44 @@ const imageHeight = imageWidth;
 export default function EditProfile() {
     const [nickname, setNickname] = React.useState();
     const [profileImageUrl, setProfileImageUrl] = React.useState();
+
+    // 권한 요청
+    const [status, requestPermission] =
+        ImagePicker.useMediaLibraryPermissions();
+
+    const [imageUrl, setImageUrl] = React.useState(""); // 현재 이미지 주소
+
+    const uploadImage = async () => {
+        // 권한 확인
+        if (!status?.granted) {
+            const permission = await requestPermission();
+            if (!permission.granted) {
+                return null;
+            }
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            quality: 1,
+            aspect: [1, 1],
+        });
+
+        if (result.canceled) {
+            return null;
+        }
+
+        console.log(result);
+        handleImagePickerResult(result);
+    };
+
+    // img uri 가져오기
+    const handleImagePickerResult = (result) => {
+        if (result && result.assets && result.assets.length > 0) {
+            const { uri } = result.assets[0];
+            setImageUrl(uri);
+        }
+    };
 
     React.useEffect(() => {
         // 마이페이지 API
@@ -43,9 +83,13 @@ export default function EditProfile() {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.profileContainer}>
+            <TouchableOpacity
+                style={styles.profileContainer}
+                onPress={() => {
+                    uploadImage();
+                }}>
                 <Image
-                    source={{ uri: profileImageUrl }}
+                    source={{ uri: imageUrl ? imageUrl : profileImageUrl }}
                     style={styles.profileImage}
                 />
                 <Icon
@@ -59,6 +103,7 @@ export default function EditProfile() {
                 <Text style={styles.text}>닉네임</Text>
                 <TextInput
                     style={styles.textInput}
+                    onChange={setNickname}
                     placeholder={nickname}
                     placeholderTextColor="#8E8E93"
                 />
@@ -95,8 +140,8 @@ const styles = StyleSheet.create({
     },
     editIcon: {
         position: "absolute",
-        right: 0,
-        bottom: 0,
+        right: -20,
+        bottom: -30,
     },
     textContainer: {
         paddingHorizontal: 50,
