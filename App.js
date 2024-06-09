@@ -105,7 +105,7 @@ function App() {
                 <Stack.Screen
                     name="ShopDetail"
                     component={ShopDetail}
-                    options={{ headerShown: false }}
+                    options={{ title: "", headerTransparent: true }}
                 />
                 <Stack.Screen name="ShopHome" component={ShopHome} />
                 <Stack.Screen name="ShopImage" component={ShopImage} />
