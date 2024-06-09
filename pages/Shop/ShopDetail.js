@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
 import { Linking } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icons from "react-native-vector-icons/Ionicons";
@@ -30,6 +37,8 @@ const ShopDetail = ({ route, navigation }) => {
   const [selectedMenu, setSelectedMenu] = React.useState("home");
 
   const [storeInfo, setStoreInfo] = useState({});
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,9 +92,12 @@ const ShopDetail = ({ route, navigation }) => {
         <Icons name="call-outline" size={23} color={"#424242"} />
         <Text style={styles.infoTxt}> 전화 </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.infoBtn}>
+      <TouchableOpacity
+        style={styles.infoBtn}
+        onPress={() => setModalVisible(true)}
+      >
         <Icons name="map-outline" size={23} color={"#424242"} />
-        <Text style={styles.infoTxt}> 위치 </Text>
+        <Text style={styles.infoTxt}> 주소 </Text>
       </TouchableOpacity>
       <View style={styles.infoBtn}>
         <KeepBtn />
@@ -93,6 +105,31 @@ const ShopDetail = ({ route, navigation }) => {
           {storeInfo.likeCount}
         </Text>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                경상북도 경산시 북부동 청운로 13-2
+              </Text>
+              <TouchableOpacity
+                style={styles.buttonClose}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>X</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 
@@ -302,6 +339,43 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 18,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  modalView: {
+    backgroundColor: "white",
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    borderWidth: 2,
+    borderBottomWidth: 0,
+    borderColor: "#E6EBF2",
+    padding: 35,
+    alignItems: "center",
+    elevation: 5,
+    width: "100%",
+  },
+  buttonClose: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 5,
+    paddingHorizontal: 10,
+  },
+  textStyle: {
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    textAlign: "center",
   },
 });
 
