@@ -41,7 +41,11 @@ const MyPage = () => {
                     />
                     <View style={styles.profileInfo}>
                         <Text style={styles.nickname}>{nickname}</Text>
-                        <TouchableOpacity style={styles.profileButton}>
+                        <TouchableOpacity
+                            style={styles.profileButton}
+                            onPress={() => {
+                                navigation.navigate("EditProfile");
+                            }}>
                             <Text style={styles.profileButtonText}>
                                 프로필 수정
                             </Text>
