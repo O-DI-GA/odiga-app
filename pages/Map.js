@@ -1,19 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import NavBar from "../component/NavBar";
 import { getRequest } from "../utils/api/api";
+import { Picker } from "@react-native-picker/picker";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [region, setRegion] = useState(null);
   const [stores, setStores] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("waiting");
+  const [currentRegion, setCurrentRegion] = useState(null);
 
   useEffect(() => {
     (async () => {
-      // 위치 서비스가 활성화되어 있는지 확인
       const { locationServicesEnabled } =
         await Location.getProviderStatusAsync();
       if (!locationServicesEnabled) {
@@ -25,73 +34,63 @@ const Map = () => {
         return;
       }
 
-      // 위치 권한 요청
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
       }
 
-      // 현재 위치 가져오기
       let currentLocation = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
       setLocation(currentLocation.coords);
-      setRegion({
+      const initialRegion = {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
-        latitudeDelta: 0.01, // 줌 레벨
-        longitudeDelta: 0.01, // 줌 레벨
-      });
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      };
+      setRegion(initialRegion);
+      setCurrentRegion(initialRegion);
+      fetchStoresData(initialRegion); // 처음 지도 화면을 켰을 때 API 호출
       console.log("Current Location:", currentLocation.coords);
     })();
   }, []);
 
-  useEffect(() => {
-    const fetchStoresData = async () => {
-      if (region) {
-        const radius = calculateRadius();
-        const fetchedStores = await fetchStores(
-          region.latitude,
-          region.longitude,
-          radius
-        );
-        setStores(fetchedStores);
-      }
-    };
-    fetchStoresData();
-  }, [region]);
+  const fetchStoresData = async (region) => {
+    if (region) {
+      const radius = calculateRadius(region);
+      const fetchedStores = await fetchStores(
+        region.latitude,
+        region.longitude,
+        radius
+      );
+      setStores(fetchedStores);
+    }
+  };
 
-  const calculateRadius = () => {
-    // 현재 반경 계산
+  const calculateRadius = (region) => {
     if (!region) return null;
-
     const { latitudeDelta, longitudeDelta, latitude } = region;
-
-    // 위도와 경도를 거리로 변환하는 데 사용하는 상수
-    const LATITUDE_DEGREE_TO_KM = 111.32; // 1도 위도의 거리는 약 111.32킬로미터
+    const LATITUDE_DEGREE_TO_KM = 111.32;
     const longitudeDegreeToKm =
       LATITUDE_DEGREE_TO_KM * Math.cos((latitude * Math.PI) / 180);
-
-    // delta 값을 사용하여 화면의 반경 계산
     const radiusInKm =
       Math.sqrt(
         Math.pow(latitudeDelta * LATITUDE_DEGREE_TO_KM, 2) +
           Math.pow(longitudeDelta * longitudeDegreeToKm, 2)
       ) / 2;
-
-    return radiusInKm * 1000; // 미터로 변환
+    return radiusInKm * 1000;
   };
 
-  // 현재 위치와 반경 정보를 받아와서 가게 데이터를 가져오는 함수
   const fetchStores = async (latitude, longitude, radius) => {
     try {
       const fetchData = await getRequest(
-        `api/v1/stores?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
+        `api/v1/store/map?latitude=${latitude}&longitude=${longitude}`
       );
       console.log("fetchData:", fetchData);
       if (fetchData && fetchData.data) {
-        return fetchData.data.stores;
+        return fetchData.data;
       } else {
         console.error("Valid data was not returned");
         return [];
@@ -101,8 +100,6 @@ const Map = () => {
       return [];
     }
   };
-
-  const radius = calculateRadius();
 
   if (location === null) {
     return (
@@ -117,8 +114,8 @@ const Map = () => {
   const userLocation = {
     latitude: location.latitude,
     longitude: location.longitude,
-    latitudeDelta: 0.005, // 초기 줌 레벨
-    longitudeDelta: 0.005, // 초기 줌 레벨
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
   };
 
   return (
@@ -129,36 +126,50 @@ const Map = () => {
         region={region}
         showsUserLocation={true}
         followsUserLocation={true}
-        onRegionChangeComplete={(region) => setRegion(region)}
+        onRegionChangeComplete={(region) => setCurrentRegion(region)}
       >
-        <Marker
+        {/* <Marker
           coordinate={{
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
           }}
-          title="Location"
-          description="location description"
-        />
-        {stores.map((store, index) => (
+          title="현재 내 위치"
+          description="현재 내 위치"
+        /> */}
+        {stores.map((store) => (
           <Marker
-            key={index}
+            key={store.storeId}
             coordinate={{
               latitude: store.latitude,
               longitude: store.longitude,
             }}
-            title={store.name}
-            description={store.description}
+            title={store.storeName}
+            description={
+              selectedFilter === "waiting"
+                ? `웨이팅 수: ${store.waitingCount}`
+                : `빈자리 수: ${store.emptyTableCount}`
+            }
           />
         ))}
       </MapView>
       <NavBar />
-      {radius && (
-        <View style={styles.radiusContainer}>
-          <Text style={styles.radiusText}>
-            현재 반경: {radius.toFixed(2)} m
-          </Text>
-        </View>
-      )}
+      <View style={styles.filterContainer}>
+        <Text style={styles.filterText}>필터 선택: </Text>
+        <Picker
+          selectedValue={selectedFilter}
+          style={styles.picker}
+          onValueChange={(itemValue) => setSelectedFilter(itemValue)}
+        >
+          <Picker.Item label="웨이팅 현황" value="waiting" />
+          <Picker.Item label="빈자리 현황" value="empty" />
+        </Picker>
+      </View>
+      <TouchableOpacity
+        style={styles.reload}
+        onPress={() => fetchStoresData(currentRegion)}
+      >
+        <Text>현 지도에서 검색</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -177,16 +188,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  radiusContainer: {
+  filterContainer: {
     position: "absolute",
     bottom: 100,
     left: 10,
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "white",
     padding: 10,
     borderRadius: 5,
   },
-  radiusText: {
+  filterText: {
     fontSize: 16,
+  },
+  picker: {
+    height: 50,
+    width: 150,
+  },
+  reload: {
+    position: "absolute",
+    top: 40,
+    backgroundColor: "#FFF9C4",
+    padding: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
