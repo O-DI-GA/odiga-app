@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import NavBar from "../../component/NavBar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ToggleSwitch = ({ isEnabled, onToggle }) => {
   const [animation] = useState(new Animated.Value(isEnabled ? 1 : 0));
@@ -51,6 +53,52 @@ const Setting = () => {
   const [isNotificationEnabled, setNotificationEnabled] = useState(false);
   const [isLocationEnabled, setLocationEnabled] = useState(false);
   const [isCameraEnabled, setCameraEnabled] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const notification = await AsyncStorage.getItem(
+          "isNotificationEnabled"
+        );
+        const location = await AsyncStorage.getItem("isLocationEnabled");
+        const camera = await AsyncStorage.getItem("isCameraEnabled");
+        if (notification !== null)
+          setNotificationEnabled(JSON.parse(notification));
+        if (location !== null) setLocationEnabled(JSON.parse(location));
+        if (camera !== null) setCameraEnabled(JSON.parse(camera));
+      } catch (error) {
+        console.error("Failed to load settings", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  const handleToggleNotification = async (value) => {
+    setNotificationEnabled(value);
+    await AsyncStorage.setItem("isNotificationEnabled", JSON.stringify(value));
+  };
+
+  const handleToggleLocation = async (value) => {
+    setLocationEnabled(value);
+    await AsyncStorage.setItem("isLocationEnabled", JSON.stringify(value));
+  };
+
+  const handleToggleCamera = async (value) => {
+    setCameraEnabled(value);
+    await AsyncStorage.setItem("isCameraEnabled", JSON.stringify(value));
+  };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -58,19 +106,22 @@ const Setting = () => {
         <Text style={styles.settingText}>알림</Text>
         <ToggleSwitch
           isEnabled={isNotificationEnabled}
-          onToggle={setNotificationEnabled}
+          onToggle={handleToggleNotification}
         />
       </View>
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>위치 정보</Text>
         <ToggleSwitch
           isEnabled={isLocationEnabled}
-          onToggle={setLocationEnabled}
+          onToggle={handleToggleLocation}
         />
       </View>
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>카메라 권한</Text>
-        <ToggleSwitch isEnabled={isCameraEnabled} onToggle={setCameraEnabled} />
+        <ToggleSwitch
+          isEnabled={isCameraEnabled}
+          onToggle={handleToggleCamera}
+        />
       </View>
       <NavBar />
     </View>
@@ -81,6 +132,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+  },
+  loadingContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   settingItem: {
     flexDirection: "row",

@@ -14,11 +14,11 @@ const Main = () => {
         <Text style={styles.label}>내 웨이팅</Text>
         <WaitingContainer />
         <Text style={styles.label}>현재 내 주변에서 웨이팅 가장 많은 곳</Text>
-        <ShopContainer type="waiting" />
-        <Text style={styles.label}>후기 많은 순</Text>
-        <ShopContainer type="review" />
+        <ShopContainer type="WAITING" />
+        <Text style={styles.label}>리뷰 많은 순</Text>
+        <ShopContainer type="REVIEW" />
         <Text style={styles.label}>인기순</Text>
-        <ShopContainer type="popular" />
+        <ShopContainer type="LIKE" />
       </ScrollView>
       <NavBar />
     </View>
