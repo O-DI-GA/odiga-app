@@ -53,13 +53,17 @@ const Map = () => {
       setRegion(initialRegion);
       setCurrentRegion(initialRegion);
       fetchStoresData(initialRegion); // 처음 지도 화면을 켰을 때 API 호출
-      console.log("Current Location:", currentLocation.coords);
+      console.log(
+        `현재 내 위치 위도: ${currentLocation.coords.latitude}, 경도: ${currentLocation.coords.longitude}`
+      );
     })();
   }, []);
 
   const fetchStoresData = async (region) => {
     if (region) {
       const radius = calculateRadius(region);
+      const { latitude, longitude } = region;
+      console.log(`현재 지도의 위도: ${latitude}, 경도: ${longitude}`);
       const fetchedStores = await fetchStores(
         region.latitude,
         region.longitude,
@@ -126,16 +130,11 @@ const Map = () => {
         region={region}
         showsUserLocation={true}
         followsUserLocation={true}
-        onRegionChangeComplete={(region) => setCurrentRegion(region)}
+        onRegionChangeComplete={(region) => {
+          setCurrentRegion(region);
+          // fetchStoresData(region); // 지도 위치나 반경 바뀌면 새로 데이터 가져오기
+        }}
       >
-        {/* <Marker
-          coordinate={{
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          }}
-          title="현재 내 위치"
-          description="현재 내 위치"
-        /> */}
         {stores.map((store) => (
           <Marker
             key={store.storeId}
@@ -166,7 +165,7 @@ const Map = () => {
       </View>
       <TouchableOpacity
         style={styles.reload}
-        onPress={() => fetchStoresData(currentRegion)}
+        onPress={() => fetchStoresData(currentRegion)} // 버튼 누르면 새로 데이터 가져오기
       >
         <Text>현 지도에서 검색</Text>
       </TouchableOpacity>
