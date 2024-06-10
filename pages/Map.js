@@ -6,12 +6,14 @@ import {
   Alert,
   ActivityIndicator,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import NavBar from "../component/NavBar";
 import { getRequest } from "../utils/api/api";
-import { Picker } from "@react-native-picker/picker";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
@@ -19,6 +21,7 @@ const Map = () => {
   const [region, setRegion] = useState(null);
   const [stores, setStores] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("waiting");
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [currentRegion, setCurrentRegion] = useState(null);
 
   useEffect(() => {
@@ -122,6 +125,11 @@ const Map = () => {
     longitudeDelta: 0.005,
   };
 
+  const handleFilterSelect = (filter) => {
+    setSelectedFilter(filter);
+    setFilterModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -153,20 +161,38 @@ const Map = () => {
       </MapView>
       <NavBar />
       <View style={styles.filterContainer}>
-        <Text style={styles.filterText}>필터 선택: </Text>
-        <Picker
-          selectedValue={selectedFilter}
-          style={styles.picker}
-          onValueChange={(itemValue) => setSelectedFilter(itemValue)}
+        <TouchableOpacity onPress={() => setFilterModalVisible(true)}>
+          <FontAwesomeIcon name="sliders" size={24} color="#000" />
+        </TouchableOpacity>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={filterModalVisible}
+          onRequestClose={() => setFilterModalVisible(false)}
         >
-          <Picker.Item label="웨이팅 현황" value="waiting" />
-          <Picker.Item label="빈자리 현황" value="empty" />
-        </Picker>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity
+                style={styles.filterOption}
+                onPress={() => handleFilterSelect("waiting")}
+              >
+                <Text style={styles.filterOptionText}>웨이팅 현황</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.filterOption}
+                onPress={() => handleFilterSelect("empty")}
+              >
+                <Text style={styles.filterOptionText}>빈자리 현황</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
       <TouchableOpacity
         style={styles.reload}
         onPress={() => fetchStoresData(currentRegion)} // 버튼 누르면 새로 데이터 가져오기
       >
+        <Icon name="refresh" size={24} color="#000" />
         <Text>현 지도에서 검색</Text>
       </TouchableOpacity>
     </View>
@@ -191,25 +217,43 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 100,
     left: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    padding: 10,
-    borderRadius: 5,
-  },
-  filterText: {
-    fontSize: 16,
-  },
-  picker: {
-    height: 50,
-    width: 150,
-  },
-  reload: {
-    position: "absolute",
-    top: 40,
-    backgroundColor: "#FFF9C4",
+    backgroundColor: "#FFFFFF",
     padding: 10,
     borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: 300,
+    padding: 10,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  filterOption: {
+    paddingVertical: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+  filterOptionText: {
+    fontSize: 18,
+  },
+  reload: {
+    flexDirection: "row",
+    position: "absolute",
+    top: 40,
+    gap: 5,
+    backgroundColor: "#FFFFFF",
+    padding: 10,
+    borderRadius: 100,
+    elevation: 8,
     justifyContent: "center",
     alignItems: "center",
   },
