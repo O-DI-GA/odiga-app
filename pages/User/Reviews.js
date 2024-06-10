@@ -1,14 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, FlatList } from "react-native";
 import NavBar from "../../component/NavBar";
 import ReviewBox from "../../component/ReviewBox";
+import { getTokenRequest } from "../../utils/api/api";
 
 const Reviews = ({ navigation }) => {
-  // 가상의 리뷰 데이터
-  const reviews = [
-    { id: 1, author: "John Doe", content: "Great restaurant!" },
-    { id: 2, author: "Jane Smith", content: "Excellent service!" },
-  ];
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await getTokenRequest("api/v1/user/reviews");
+        console.log("내가 쓴 리뷰 응답: ", response);
+        if (response.data) {
+          setReviews(response.data);
+        } else {
+          console.error("Error fetching reviews:", response.error);
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // "YYYY-MM-DD" 형식으로 변환
+  };
 
   return (
     <View style={styles.container}>
@@ -18,9 +38,13 @@ const Reviews = ({ navigation }) => {
         data={reviews}
         renderItem={({ item }) => (
           <ReviewBox
-            key={item.id}
-            author={item.author}
+            key={item.reviewId}
+            date={formatDate(item.createDate)}
+            star={item.rating}
             content={item.content}
+            photo={item.imageUrl}
+            nickname={item.userNickname}
+            store={item.store} // 가게이름
             navigation={navigation}
           />
         )}
