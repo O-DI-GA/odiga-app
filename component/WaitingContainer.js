@@ -46,6 +46,22 @@ const WaitingContainer = () => {
     setSelectedShop(null);
   };
 
+  if (!isLogged) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.loginPrompt}>로그인 후 이용해주세요</Text>
+      </View>
+    );
+  }
+
+  if (isLogged && shops.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.noShopsPrompt}>가게가 없습니다</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -123,6 +139,14 @@ const styles = StyleSheet.create({
   waitBold: {
     fontWeight: "bold",
     fontSize: 22,
+  },
+  loginPrompt: {
+    fontSize: 20,
+    textAlign: "center",
+  },
+  noShopsPrompt: {
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 
