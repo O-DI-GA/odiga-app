@@ -15,9 +15,7 @@ const MyPage = () => {
         // 마이페이지 API
         const getProfile = async () => {
             try {
-                const response = await getTokenRequest(
-                    "api/v1/user/auth/profile"
-                );
+                const response = await getTokenRequest("api/v1/user/profile");
                 console.log("마이페이지 응답 : ", response);
 
                 const { nickname, profileImageUrl } = response.data;
