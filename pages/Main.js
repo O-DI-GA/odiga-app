@@ -13,7 +13,6 @@ const Main = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      console.log("로그인?", isLogged);
       console.log("메인화면으로 이동 시 다시 데이터 불러옴");
     });
     return unsubscribe;

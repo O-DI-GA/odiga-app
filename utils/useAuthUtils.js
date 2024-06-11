@@ -1,5 +1,5 @@
 import { postRequest } from "./api/api";
-import { storeTokens } from "./tokenUtils";
+import { storeTokens, removeTokens } from "./tokenUtils";
 
 // 로그인 API
 export async function loginAPI(loginData, setIsLogged) {
@@ -14,6 +14,12 @@ export async function loginAPI(loginData, setIsLogged) {
   } else {
     return "notExist";
   }
+}
+
+// 로그아웃 API
+export async function logoutAPI(setIsLogged) {
+  await removeTokens(); // 토큰 제거
+  setIsLogged(false);
 }
 
 // 회원가입 API
