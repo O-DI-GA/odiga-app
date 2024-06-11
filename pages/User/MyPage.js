@@ -27,7 +27,7 @@ const MyPage = () => {
       const token = await getToken();
       if (token) {
         try {
-          const response = await getTokenRequest("api/v1/user/auth/profile");
+          const response = await getTokenRequest("api/v1/user/profile");
           console.log("마이페이지 응답 : ", response);
 
           const { nickname, profileImageUrl } = response.data;
