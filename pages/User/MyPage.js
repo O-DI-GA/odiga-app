@@ -11,21 +11,21 @@ import { useNavigation } from "@react-navigation/native";
 import NavBar from "../../component/NavBar";
 
 import { getTokenRequest } from "../../utils/api/api";
-import { getToken } from "../../utils/api/api";
 import defaultProfileImage from "../../assets/defaultProfileImage.png";
+import { useAuth } from "../../utils/AuthContext";
+import { logoutAPI } from "../../utils/useAuthUtils";
 
 const MyPage = () => {
   const navigation = useNavigation();
 
   const [nickname, setNickname] = React.useState();
   const [profileImageUrl, setProfileImageUrl] = React.useState();
-  const [isLogged, setIsLogged] = React.useState(false);
+  const { isLogged, setIsLogged } = useAuth();
 
   React.useEffect(() => {
     // 마이페이지 API
     const getProfile = async () => {
-      const token = await getToken();
-      if (token) {
+      if (isLogged) {
         try {
           const response = await getTokenRequest("api/v1/user/profile");
           console.log("마이페이지 응답 : ", response);
@@ -34,17 +34,19 @@ const MyPage = () => {
 
           setNickname(nickname);
           setProfileImageUrl(profileImageUrl);
-          setIsLogged(true);
         } catch (err) {
           console.log(err);
           setIsLogged(false);
         }
-      } else {
-        setIsLogged(false);
       }
     };
     getProfile();
-  }, []);
+  }, [isLogged]);
+
+  const handleLogout = async () => {
+    await logoutAPI(setIsLogged);
+    navigation.navigate("Main");
+  };
 
   const handleMenuPress = (screen) => {
     if (isLogged) {
@@ -72,7 +74,10 @@ const MyPage = () => {
             {isLogged ? (
               <>
                 <Text style={styles.nickname}>{nickname}</Text>
-                <TouchableOpacity style={styles.profileButton}>
+                <TouchableOpacity
+                  style={styles.profileButton}
+                  onPress={() => navigation.navigate("EditProfile")}
+                >
                   <Text style={styles.profileButtonText}>프로필 수정</Text>
                 </TouchableOpacity>
               </>
@@ -109,6 +114,11 @@ const MyPage = () => {
             <Text style={styles.menuItem}>설정</Text>
           </TouchableOpacity>
         </View>
+        {isLogged && (
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>로그아웃</Text>
+          </TouchableOpacity>
+        )}
       </View>
       <NavBar />
     </View>
@@ -181,6 +191,18 @@ const styles = StyleSheet.create({
   menuItem: {
     fontSize: 20,
     textAlign: "center",
+  },
+  logoutButton: {
+    marginTop: 20,
+    backgroundColor: "#FF6347",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  logoutButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

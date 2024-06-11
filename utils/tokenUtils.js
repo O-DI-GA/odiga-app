@@ -31,3 +31,12 @@ export const getTokenFromStorage = async () => {
     console.log("토큰 가져오기 오류 : ", err);
   }
 };
+
+// 토큰 제거
+export const removeTokens = async () => {
+  try {
+    await AsyncStorage.removeItem("tokens");
+  } catch (err) {
+    console.log("토큰 제거 오류 : ", err);
+  }
+};

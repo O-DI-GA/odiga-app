@@ -11,7 +11,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 const Header = () => {
   return (
     <View style={styles.headerContainer}>
-      <Image source={require("../assets/icon.png")} style={styles.logo} />
+      <Image
+        source={require("../assets/logoBackground.png")}
+        style={styles.logo}
+      />
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#888" style={styles.searchIcon} />
         <TextInput placeholder="Search" style={styles.searchInput} />
