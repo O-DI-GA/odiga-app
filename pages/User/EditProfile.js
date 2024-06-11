@@ -12,7 +12,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import * as ImagePicker from "expo-image-picker";
 
-import { getTokenRequest } from "../../utils/api/api";
+import { getTokenRequest, putRequest } from "../../utils/api/api";
+import { useNavigation } from "@react-navigation/native";
 
 // 화면 크기
 const screenWidth = Dimensions.get("window").width;
@@ -20,14 +21,17 @@ const imageWidth = screenWidth / 2;
 const imageHeight = imageWidth;
 
 export default function EditProfile() {
-    const [nickname, setNickname] = React.useState();
-    const [profileImageUrl, setProfileImageUrl] = React.useState();
+    const navigation = useNavigation();
+
+    const [nickname, setNickname] = React.useState(); // 현재 닉네임
+    const [profileImageUrl, setProfileImageUrl] = React.useState(); // 현재 이미지 주소
+
+    const [changeName, setChangeName] = React.useState(""); // 바꿀 닉네임
+    const [imageUrl, setImageUrl] = React.useState(""); // 바꿀 이미지 주소
 
     // 권한 요청
     const [status, requestPermission] =
         ImagePicker.useMediaLibraryPermissions();
-
-    const [imageUrl, setImageUrl] = React.useState(""); // 현재 이미지 주소
 
     const uploadImage = async () => {
         // 권한 확인
@@ -61,17 +65,14 @@ export default function EditProfile() {
         }
     };
 
+    // 현재 사용자 정보 불러오기
     React.useEffect(() => {
         // 마이페이지 API
         const getProfile = async () => {
             try {
-                const response = await getTokenRequest(
-                    "api/v1/user/auth/profile"
-                );
+                const response = await getTokenRequest("api/v1/user/profile");
                 console.log("프로필 수정 응답 : ", response);
-
                 const { nickname, profileImageUrl } = response.data;
-
                 setNickname(nickname);
                 setProfileImageUrl(profileImageUrl);
             } catch (err) {
@@ -80,6 +81,37 @@ export default function EditProfile() {
         };
         getProfile();
     }, []);
+
+    // 프로필 수정하기
+    const onProfileChange = async () => {
+        console.log("바꿀 이미지 주소 : ", imageUrl);
+        const formData = new FormData();
+        if (imageUrl) {
+            const filename = imageUrl.split("/").pop();
+            const match = /\.(\w+)$/.exec(filename);
+            const fileType = match ? `image/${match[1]}` : `image`;
+            formData.append("profileImageUrl", {
+                uri: imageUrl,
+                name: filename,
+                type: fileType,
+            });
+        }
+        formData.append("nickname", changeName || nickname);
+        console.log("formData: ", JSON.stringify(formData, null, 2));
+
+        try {
+            const response = await putRequest(
+                "api/v1/user/profile/edit",
+                formData
+            );
+            console.log("프로필 업데이트 응답 : ", response);
+            if (response.httpStatusCode) {
+                navigation.navigate("MyPage");
+            }
+        } catch (err) {
+            console.log("프로필 업데이트 오류 : ", err);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -103,16 +135,24 @@ export default function EditProfile() {
                 <Text style={styles.text}>닉네임</Text>
                 <TextInput
                     style={styles.textInput}
-                    onChange={setNickname}
+                    onChangeText={setChangeName}
                     placeholder={nickname}
                     placeholderTextColor="#8E8E93"
                 />
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.saveButton}>
+                <TouchableOpacity
+                    style={styles.saveButton}
+                    onPress={() => {
+                        onProfileChange();
+                    }}>
                     <Text> 저장하기 </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cancleButton}>
+                <TouchableOpacity
+                    style={styles.cancleButton}
+                    onPress={() => {
+                        navigation.navigate("MyPage");
+                    }}>
                     <Text> 취소하기 </Text>
                 </TouchableOpacity>
             </View>
