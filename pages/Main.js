@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Header from "../component/Header";
 import NavBar from "../component/NavBar";
 import WaitingContainer from "../component/WaitingContainer";
 import ShopContainer from "../component/ShopContainer";
+import { useAuth } from "../utils/AuthContext";
 
 const Main = () => {
+  const { isLogged, setIsLogged } = useAuth();
+
+  useEffect(() => {
+    // 로그인 상태가 변경될 때마다 데이터 다시 로드
+    if (isLogged) {
+      console.log("User is logged in, fetching data...");
+      // fetchData();
+    }
+  }, [isLogged]);
+
   return (
     <View style={styles.container}>
       <Header />
