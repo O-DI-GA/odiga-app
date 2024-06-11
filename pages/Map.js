@@ -1,19 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import NavBar from "../component/NavBar";
 import { getRequest } from "../utils/api/api";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [region, setRegion] = useState(null);
   const [stores, setStores] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("waiting");
+  const [filterModalVisible, setFilterModalVisible] = useState(false);
+  const [currentRegion, setCurrentRegion] = useState(null);
 
   useEffect(() => {
     (async () => {
-      // 위치 서비스가 활성화되어 있는지 확인
       const { locationServicesEnabled } =
         await Location.getProviderStatusAsync();
       if (!locationServicesEnabled) {
@@ -25,73 +37,67 @@ const Map = () => {
         return;
       }
 
-      // 위치 권한 요청
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
         return;
       }
 
-      // 현재 위치 가져오기
       let currentLocation = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.High,
       });
       setLocation(currentLocation.coords);
-      setRegion({
+      const initialRegion = {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
-        latitudeDelta: 0.01, // 줌 레벨
-        longitudeDelta: 0.01, // 줌 레벨
-      });
-      console.log("Current Location:", currentLocation.coords);
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      };
+      setRegion(initialRegion);
+      setCurrentRegion(initialRegion);
+      fetchStoresData(initialRegion); // 처음 지도 화면을 켰을 때 API 호출
+      console.log(
+        `현재 내 위치 위도: ${currentLocation.coords.latitude}, 경도: ${currentLocation.coords.longitude}`
+      );
     })();
   }, []);
 
-  useEffect(() => {
-    const fetchStoresData = async () => {
-      if (region) {
-        const radius = calculateRadius();
-        const fetchedStores = await fetchStores(
-          region.latitude,
-          region.longitude,
-          radius
-        );
-        setStores(fetchedStores);
-      }
-    };
-    fetchStoresData();
-  }, [region]);
+  const fetchStoresData = async (region) => {
+    if (region) {
+      const radius = calculateRadius(region);
+      const { latitude, longitude } = region;
+      console.log(`현재 지도의 위도: ${latitude}, 경도: ${longitude}`);
+      const fetchedStores = await fetchStores(
+        region.latitude,
+        region.longitude,
+        radius
+      );
+      setStores(fetchedStores);
+    }
+  };
 
-  const calculateRadius = () => {
-    // 현재 반경 계산
+  const calculateRadius = (region) => {
     if (!region) return null;
-
     const { latitudeDelta, longitudeDelta, latitude } = region;
-
-    // 위도와 경도를 거리로 변환하는 데 사용하는 상수
-    const LATITUDE_DEGREE_TO_KM = 111.32; // 1도 위도의 거리는 약 111.32킬로미터
+    const LATITUDE_DEGREE_TO_KM = 111.32;
     const longitudeDegreeToKm =
       LATITUDE_DEGREE_TO_KM * Math.cos((latitude * Math.PI) / 180);
-
-    // delta 값을 사용하여 화면의 반경 계산
     const radiusInKm =
       Math.sqrt(
         Math.pow(latitudeDelta * LATITUDE_DEGREE_TO_KM, 2) +
           Math.pow(longitudeDelta * longitudeDegreeToKm, 2)
       ) / 2;
-
-    return radiusInKm * 1000; // 미터로 변환
+    return radiusInKm * 1000;
   };
 
-  // 현재 위치와 반경 정보를 받아와서 가게 데이터를 가져오는 함수
   const fetchStores = async (latitude, longitude, radius) => {
     try {
       const fetchData = await getRequest(
-        `api/v1/stores?latitude=${latitude}&longitude=${longitude}&radius=${radius}`
+        `api/v1/store/map?latitude=${latitude}&longitude=${longitude}`
       );
       console.log("fetchData:", fetchData);
       if (fetchData && fetchData.data) {
-        return fetchData.data.stores;
+        return fetchData.data;
       } else {
         console.error("Valid data was not returned");
         return [];
@@ -101,8 +107,6 @@ const Map = () => {
       return [];
     }
   };
-
-  const radius = calculateRadius();
 
   if (location === null) {
     return (
@@ -117,8 +121,13 @@ const Map = () => {
   const userLocation = {
     latitude: location.latitude,
     longitude: location.longitude,
-    latitudeDelta: 0.005, // 초기 줌 레벨
-    longitudeDelta: 0.005, // 초기 줌 레벨
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
+  };
+
+  const handleFilterSelect = (filter) => {
+    setSelectedFilter(filter);
+    setFilterModalVisible(false);
   };
 
   return (
@@ -129,36 +138,63 @@ const Map = () => {
         region={region}
         showsUserLocation={true}
         followsUserLocation={true}
-        onRegionChangeComplete={(region) => setRegion(region)}
+        onRegionChangeComplete={(region) => {
+          setCurrentRegion(region);
+          // fetchStoresData(region); // 지도 위치나 반경 바뀌면 새로 데이터 가져오기
+        }}
       >
-        <Marker
-          coordinate={{
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          }}
-          title="Location"
-          description="location description"
-        />
-        {stores.map((store, index) => (
+        {stores.map((store) => (
           <Marker
-            key={index}
+            key={store.storeId}
             coordinate={{
               latitude: store.latitude,
               longitude: store.longitude,
             }}
-            title={store.name}
-            description={store.description}
+            title={store.storeName}
+            description={
+              selectedFilter === "waiting"
+                ? `웨이팅 수: ${store.waitingCount}`
+                : `빈자리 수: ${store.emptyTableCount}`
+            }
           />
         ))}
       </MapView>
       <NavBar />
-      {radius && (
-        <View style={styles.radiusContainer}>
-          <Text style={styles.radiusText}>
-            현재 반경: {radius.toFixed(2)} m
-          </Text>
-        </View>
-      )}
+      <View style={styles.filterContainer}>
+        <TouchableOpacity onPress={() => setFilterModalVisible(true)}>
+          <FontAwesomeIcon name="sliders" size={24} color="#000" />
+        </TouchableOpacity>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={filterModalVisible}
+          onRequestClose={() => setFilterModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity
+                style={styles.filterOption}
+                onPress={() => handleFilterSelect("waiting")}
+              >
+                <Text style={styles.filterOptionText}>웨이팅 현황</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.filterOption}
+                onPress={() => handleFilterSelect("empty")}
+              >
+                <Text style={styles.filterOptionText}>빈자리 현황</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
+      <TouchableOpacity
+        style={styles.reload}
+        onPress={() => fetchStoresData(currentRegion)} // 버튼 누르면 새로 데이터 가져오기
+      >
+        <Icon name="refresh" size={24} color="#000" />
+        <Text>현 지도에서 검색</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -177,16 +213,49 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  radiusContainer: {
+  filterContainer: {
     position: "absolute",
     bottom: 100,
     left: 10,
-    backgroundColor: "white",
+    backgroundColor: "#FFFFFF",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
-  radiusText: {
-    fontSize: 16,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: 300,
+    padding: 10,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  filterOption: {
+    paddingVertical: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+  filterOptionText: {
+    fontSize: 18,
+  },
+  reload: {
+    flexDirection: "row",
+    position: "absolute",
+    top: 40,
+    gap: 5,
+    backgroundColor: "#FFFFFF",
+    padding: 10,
+    borderRadius: 100,
+    elevation: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

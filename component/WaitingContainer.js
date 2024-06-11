@@ -1,38 +1,76 @@
-import React from "react";
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { getTokenRequest } from "../utils/api/api";
+import ModalComponent from "./ModalComponent";
 
 const WaitingContainer = () => {
+  const [shops, setShops] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedShop, setSelectedShop] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getTokenRequest("api/v1/user/waiting/my");
+        console.log("Fetched data:", response);
+        if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
+          setShops(response.data);
+        } else {
+          console.error("Unexpected data format:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handlePress = (shop) => {
+    setSelectedShop(shop);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedShop(null);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.box}>
-          <Text style={styles.waitCnt}>18</Text>
-          <View style={styles.textContainer}>
-            <Text style={styles.shopName}>가게 이름</Text>
-            <Text style={styles.waitText}>
-              지금 앞에 <Text style={styles.waitBold}>18팀</Text> 남았어요!
-            </Text>
-          </View>
-        </View>
-        <View style={styles.box}>
-          <Text style={styles.waitCnt}>18</Text>
-          <View style={styles.textContainer}>
-            <Text style={styles.shopName}>가게 이름</Text>
-            <Text style={styles.waitText}>
-              지금 앞에 <Text style={styles.waitBold}>18팀</Text> 남았어요!
-            </Text>
-          </View>
-        </View>
-        <View style={styles.box}>
-          <Text style={styles.waitCnt}>18</Text>
-          <View style={styles.textContainer}>
-            <Text style={styles.shopName}>가게 이름</Text>
-            <Text style={styles.waitText}>
-              지금 앞에 <Text style={styles.waitBold}>18팀</Text> 남았어요!
-            </Text>
-          </View>
-        </View>
+        {shops.map((shop) => (
+          <TouchableOpacity
+            key={shop.waitingId}
+            style={styles.box}
+            onPress={() => handlePress(shop)}
+          >
+            <Text style={styles.waitCnt}>{shop.previousWaitingCount}</Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.shopName}>{shop.storeName}</Text>
+              <Text style={styles.waitText}>
+                지금 앞에{" "}
+                <Text style={styles.waitBold}>
+                  {shop.previousWaitingCount}팀
+                </Text>{" "}
+                남았어요!
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
+      {selectedShop && (
+        <ModalComponent
+          modalVisible={modalVisible}
+          selectedShop={selectedShop}
+          onRequestClose={closeModal}
+        />
+      )}
     </View>
   );
 };
@@ -61,7 +99,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -20,
     bottom: -50,
-    letterSpacing: -15, // 숫자 간격 줄이기
+    letterSpacing: -15,
   },
   textContainer: {
     flex: 1,
