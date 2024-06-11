@@ -15,9 +15,7 @@ const MyPage = () => {
         // 마이페이지 API
         const getProfile = async () => {
             try {
-                const response = await getTokenRequest(
-                    "api/v1/user/auth/profile"
-                );
+                const response = await getTokenRequest("api/v1/user/profile");
                 console.log("마이페이지 응답 : ", response);
 
                 const { nickname, profileImageUrl } = response.data;
@@ -41,7 +39,11 @@ const MyPage = () => {
                     />
                     <View style={styles.profileInfo}>
                         <Text style={styles.nickname}>{nickname}</Text>
-                        <TouchableOpacity style={styles.profileButton}>
+                        <TouchableOpacity
+                            style={styles.profileButton}
+                            onPress={() => {
+                                navigation.navigate("EditProfile");
+                            }}>
                             <Text style={styles.profileButtonText}>
                                 프로필 수정
                             </Text>
