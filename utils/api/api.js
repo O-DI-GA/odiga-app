@@ -68,19 +68,22 @@ export const postRequest = async (endpoint, data) => {
 
 // PUT
 export const putRequest = async (endpoint, data) => {
-  try {
-    const response = await fetch(`${URL}/${endpoint}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    return await response.json();
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
+    const token = await getTokenFromStorage();
+    console.log("token : ", token);
+    try {
+        const response = await fetch(`${URL}/${endpoint}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
+        return await response.json();
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
 };
 
 // DELETE

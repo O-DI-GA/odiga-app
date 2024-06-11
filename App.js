@@ -11,6 +11,7 @@ import WaitingList from "./pages/Waiting/WaitingList";
 import QRScan from "./component/QRScan";
 import Map from "./pages/Map";
 import MyPage from "./pages/User/MyPage";
+import EditProfile from "./pages/User/EditProfile";
 import UsageHistory from "./pages/User/UsageHistory";
 import KeepHistory from "./pages/User/KeepHistory";
 import Reviews from "./pages/User/Reviews";
@@ -84,6 +85,11 @@ function App() {
           name="MyPage"
           component={MyPage}
           options={{ title: "마이페이지" }}
+        />
+        <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{ title: "프로필 수정" }}
         />
         <Stack.Screen
           name="UsageHistory"
