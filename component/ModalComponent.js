@@ -1,7 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from "react-native";
+import { getTokenRequest } from "../utils/api/api";
 
 const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
+  const [shops, setShops] = useState([]);
+  const type = "waiting";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getTokenRequest(
+          `api/v1/user/waiting/my/${selectedShop.waitingId}`
+        );
+        console.log("웨이팅 상세:", response);
+        if (response.httpStatusCode === 200 && response.data) {
+          setShops(response.data);
+        } else {
+          console.error("Unexpected data format:", response);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    if (selectedShop && modalVisible) {
+      fetchData();
+    }
+  }, [selectedShop, modalVisible]);
+
   return (
     <Modal
       animationType="slide"
@@ -14,23 +39,23 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
           <TouchableOpacity style={styles.closeButton} onPress={onRequestClose}>
             <Text style={styles.closeButtonText}>×</Text>
           </TouchableOpacity>
-          {selectedShop && selectedShop.type === "waiting" && (
+          {selectedShop && type === "waiting" && (
             <>
               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
+                <Text style={styles.modalTitle}>{selectedShop.storeName}</Text>
                 <Text style={styles.modalMessage}>
                   현재{" "}
                   <Text style={styles.highlightText}>
-                    {selectedShop.waitingCnt}팀{" "}
+                    {selectedShop.previousWaitingCount}팀{" "}
                   </Text>
                   남았어요!
                 </Text>
               </View>
               <Text style={styles.modalCodeLabel}>내 인증코드</Text>
-              <Text style={styles.modalCode}>{selectedShop.code}</Text>
+              <Text style={styles.modalCode}>{shops.waitingCode}</Text>
             </>
           )}
-          {selectedShop && selectedShop.type === "reservation" && (
+          {selectedShop && type === "reservation" && (
             <>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
@@ -45,7 +70,7 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
                 </Text>
               </View>
               <Text style={styles.modalCodeLabel}>내 인증코드</Text>
-              <Text style={styles.modalCode}>{selectedShop.code}</Text>
+              <Text style={styles.modalCode}>{shops.waitingCode}</Text>
             </>
           )}
         </View>
