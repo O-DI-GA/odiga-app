@@ -4,69 +4,49 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Animated,
   ActivityIndicator,
+  Linking,
+  Alert,
 } from "react-native";
 import NavBar from "../../component/NavBar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
+import * as Location from "expo-location";
+import { Camera } from "expo-camera";
 
-const ToggleSwitch = ({ isEnabled, onToggle }) => {
-  const [animation] = useState(new Animated.Value(isEnabled ? 1 : 0));
-
-  const toggleSwitch = () => {
-    Animated.timing(animation, {
-      toValue: isEnabled ? 0 : 1,
-      duration: 300,
-      useNativeDriver: false,
-    }).start(() => {
-      onToggle(!isEnabled);
-    });
-  };
-
-  const toggleColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["#f0f0f0", "#ffd600"],
-  });
-
-  const circlePosition = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 25],
-  });
-
-  return (
-    <TouchableOpacity onPress={toggleSwitch} style={styles.toggleContainer}>
-      <Animated.View
-        style={[styles.toggleBackground, { backgroundColor: toggleColor }]}
-      >
-        <Animated.View
-          style={[
-            styles.toggleCircle,
-            { transform: [{ translateX: circlePosition }] },
-          ]}
-        />
-      </Animated.View>
-    </TouchableOpacity>
-  );
+const getStatusText = (status) => {
+  switch (status) {
+    case "granted":
+      return "허용";
+    case "denied":
+    case "undetermined":
+    default:
+      return "허용 안함";
+  }
 };
 
 const Setting = () => {
-  const [isNotificationEnabled, setNotificationEnabled] = useState(false);
-  const [isLocationEnabled, setLocationEnabled] = useState(false);
-  const [isCameraEnabled, setCameraEnabled] = useState(false);
+  const [notificationStatus, setNotificationStatus] = useState("loading");
+  const [locationStatus, setLocationStatus] = useState("loading");
+  const [cameraStatus, setCameraStatus] = useState("loading");
   const [loading, setLoading] = useState(true);
+
+  const checkPermissions = async () => {
+    // 현재 권한 상태 가져오기
+    const { status: notifStatus } = await Notifications.getPermissionsAsync();
+    setNotificationStatus(notifStatus);
+
+    const { status: locStatus } =
+      await Location.getForegroundPermissionsAsync();
+    setLocationStatus(locStatus);
+
+    const { status: camStatus } = await Camera.getCameraPermissionsAsync();
+    setCameraStatus(camStatus);
+  };
 
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const notification = await AsyncStorage.getItem(
-          "isNotificationEnabled"
-        );
-        const location = await AsyncStorage.getItem("isLocationEnabled");
-        const camera = await AsyncStorage.getItem("isCameraEnabled");
-        if (notification !== null)
-          setNotificationEnabled(JSON.parse(notification));
-        if (location !== null) setLocationEnabled(JSON.parse(location));
-        if (camera !== null) setCameraEnabled(JSON.parse(camera));
+        await checkPermissions();
       } catch (error) {
         console.error("Failed to load settings", error);
       } finally {
@@ -77,19 +57,59 @@ const Setting = () => {
     loadSettings();
   }, []);
 
-  const handleToggleNotification = async (value) => {
-    setNotificationEnabled(value);
-    await AsyncStorage.setItem("isNotificationEnabled", JSON.stringify(value));
+  const handlePressNotification = async () => {
+    if (notificationStatus === "granted") {
+      openAppSettings();
+    } else {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status === "denied") {
+        openAppSettings();
+      } else {
+        setNotificationStatus(status);
+      }
+    }
   };
 
-  const handleToggleLocation = async (value) => {
-    setLocationEnabled(value);
-    await AsyncStorage.setItem("isLocationEnabled", JSON.stringify(value));
+  const handlePressLocation = async () => {
+    if (locationStatus === "granted") {
+      openAppSettings();
+    } else {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "denied") {
+        openAppSettings();
+      } else {
+        setLocationStatus(status);
+      }
+    }
   };
 
-  const handleToggleCamera = async (value) => {
-    setCameraEnabled(value);
-    await AsyncStorage.setItem("isCameraEnabled", JSON.stringify(value));
+  const handlePressCamera = async () => {
+    if (cameraStatus === "granted") {
+      openAppSettings();
+    } else {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      if (status === "denied") {
+        openAppSettings();
+      } else {
+        setCameraStatus(status);
+      }
+    }
+  };
+
+  const openAppSettings = () => {
+    Alert.alert(
+      "설정 열기",
+      "처음 권한 요청을 거부했거나, 이미 허용된 권한을 다시 거부하려는 경우 설정으로 이동해야 합니다.",
+      [
+        { text: "취소", style: "cancel" },
+        {
+          text: "설정 열기",
+          onPress: () => {
+            Linking.openSettings();
+          },
+        },
+      ]
+    );
   };
 
   if (loading) {
@@ -102,27 +122,27 @@ const Setting = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.settingItem}>
-        <Text style={styles.settingText}>알림</Text>
-        <ToggleSwitch
-          isEnabled={isNotificationEnabled}
-          onToggle={handleToggleNotification}
-        />
-      </View>
-      <View style={styles.settingItem}>
-        <Text style={styles.settingText}>위치 정보</Text>
-        <ToggleSwitch
-          isEnabled={isLocationEnabled}
-          onToggle={handleToggleLocation}
-        />
-      </View>
-      <View style={styles.settingItem}>
+      <TouchableOpacity
+        style={styles.settingItem}
+        onPress={handlePressNotification}
+      >
+        <Text style={styles.settingText}>알림 권한</Text>
+        <Text style={styles.statusText}>
+          {getStatusText(notificationStatus)}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.settingItem}
+        onPress={handlePressLocation}
+      >
+        <Text style={styles.settingText}>위치 권한</Text>
+        <Text style={styles.statusText}>{getStatusText(locationStatus)}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.settingItem} onPress={handlePressCamera}>
         <Text style={styles.settingText}>카메라 권한</Text>
-        <ToggleSwitch
-          isEnabled={isCameraEnabled}
-          onToggle={handleToggleCamera}
-        />
-      </View>
+        <Text style={styles.statusText}>{getStatusText(cameraStatus)}</Text>
+      </TouchableOpacity>
+
       <NavBar />
     </View>
   );
@@ -148,23 +168,9 @@ const styles = StyleSheet.create({
   settingText: {
     fontSize: 18,
   },
-  toggleContainer: {
-    width: 55,
-    height: 33,
-    borderRadius: 25,
-    justifyContent: "center",
-    padding: 3,
-  },
-  toggleBackground: {
-    flex: 1,
-    borderRadius: 25,
-    justifyContent: "center",
-  },
-  toggleCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "#ffffff",
+  statusText: {
+    fontSize: 18,
+    color: "#777",
   },
 });
 

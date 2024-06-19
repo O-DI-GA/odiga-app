@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, View, Text } from "react-native";
 import React, { useState, useEffect } from "react";
 import ReviewBox from "../../component/ReviewBox";
 import { getRequest } from "../../utils/api/api";
@@ -34,6 +34,14 @@ export default function ShopReview({ route, navigation }) {
     return date.toISOString().split("T")[0]; // "YYYY-MM-DD" 형식으로 변환
   };
 
+  if (reviews.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.noReviewPrompt}>등록된 리뷰가 없습니다.</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       style={styles.list}
@@ -58,5 +66,10 @@ export default function ShopReview({ route, navigation }) {
 const styles = StyleSheet.create({
   list: {
     padding: 20,
+  },
+  noReviewPrompt: {
+    fontSize: 20,
+    textAlign: "center",
+    paddingTop: 20,
   },
 });
