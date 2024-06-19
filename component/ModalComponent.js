@@ -7,6 +7,7 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
   const type = "waiting";
 
   useEffect(() => {
+    console.log(selectedShop);
     const fetchData = async () => {
       try {
         const response = await getTokenRequest(
@@ -42,11 +43,11 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
           {selectedShop && type === "waiting" && (
             <>
               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>{selectedShop.storeName}</Text>
+                <Text style={styles.modalTitle}>{shops.storeName}</Text>
                 <Text style={styles.modalMessage}>
                   현재{" "}
                   <Text style={styles.highlightText}>
-                    {selectedShop.previousWaitingCount}팀{" "}
+                    {shops.previousWaitingCount}팀{" "}
                   </Text>
                   남았어요!
                 </Text>
