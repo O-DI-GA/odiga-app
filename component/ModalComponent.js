@@ -4,7 +4,6 @@ import { getTokenRequest } from "../utils/api/api";
 
 const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
   const [shops, setShops] = useState([]);
-  const type = "waiting";
 
   useEffect(() => {
     console.log(selectedShop);
@@ -40,7 +39,7 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
           <TouchableOpacity style={styles.closeButton} onPress={onRequestClose}>
             <Text style={styles.closeButtonText}>×</Text>
           </TouchableOpacity>
-          {selectedShop && type === "waiting" && (
+          {selectedShop && selectedShop.type === "waiting" && (
             <>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>{shops.storeName}</Text>
@@ -56,7 +55,7 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
               <Text style={styles.modalCode}>{shops.waitingCode}</Text>
             </>
           )}
-          {selectedShop && type === "reservation" && (
+          {selectedShop && selectedShop.type === "reservation" && (
             <>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>{selectedShop.shopName}</Text>
