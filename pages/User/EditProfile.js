@@ -88,12 +88,12 @@ export default function EditProfile() {
         const formData = new FormData();
         if (imageUrl) {
             const filename = imageUrl.split("/").pop();
-            const match = /\.(\w+)$/.exec(filename);
-            const fileType = match ? `image/${match[1]}` : `image`;
+            // const match = /\.(\w+)$/.exec(filename);
+            // const fileType = match ? `image/${match[1]}` : `image`;
             formData.append("profileImageUrl", {
                 uri: imageUrl,
                 name: filename,
-                type: fileType,
+                type: "image/jpg",
             });
         }
         formData.append("nickname", changeName || nickname);

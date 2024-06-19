@@ -31,7 +31,6 @@ const MyPage = () => {
           console.log("마이페이지 응답 : ", response);
 
           const { nickname, profileImageUrl } = response.data;
-
           setNickname(nickname);
           setProfileImageUrl(profileImageUrl);
         } catch (err) {
@@ -76,8 +75,9 @@ const MyPage = () => {
                 <Text style={styles.nickname}>{nickname}</Text>
                 <TouchableOpacity
                   style={styles.profileButton}
-                  onPress={() => navigation.navigate("EditProfile")}
-                >
+                  onPress={() => {
+                    navigation.navigate("EditProfile");
+                  }}>
                   <Text style={styles.profileButtonText}>프로필 수정</Text>
                 </TouchableOpacity>
               </>
@@ -91,26 +91,22 @@ const MyPage = () => {
         <View style={styles.menuContainer}>
           <TouchableOpacity
             style={styles.menuItemContainer}
-            onPress={() => handleMenuPress("UsageHistory")}
-          >
+            onPress={() => handleMenuPress("UsageHistory")}>
             <Text style={styles.menuItem}>이용{"\n"}내역</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItemContainer}
-            onPress={() => handleMenuPress("KeepHistory")}
-          >
+            onPress={() => handleMenuPress("KeepHistory")}>
             <Text style={styles.menuItem}>찜{"\n"}내역</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItemContainer}
-            onPress={() => handleMenuPress("Reviews")}
-          >
+            onPress={() => handleMenuPress("Reviews")}>
             <Text style={styles.menuItem}>리뷰{"\n"}관리</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItemContainer}
-            onPress={() => handleMenuPress("Setting")}
-          >
+            onPress={() => handleMenuPress("Setting")}>
             <Text style={styles.menuItem}>설정</Text>
           </TouchableOpacity>
         </View>
