@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
+import { AuthProvider } from "./utils/AuthContext";
 
 import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
@@ -37,106 +38,108 @@ function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Main"
-        screenOptions={{
-          headerTitleAlign: "center", // 헤더 타이틀 가운데 정렬
-          headerTransparent: false, // 헤더 불투명하게
-        }}
-      >
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ title: "로그인" }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ title: "회원가입" }}
-        />
-        <Stack.Screen
-          name="Main"
-          component={Main}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="WaitingList"
-          component={WaitingList}
-          options={{ title: "웨이팅 목록" }}
-        />
-        <Stack.Screen
-          name="QRScan"
-          component={QRScan}
-          options={{
-            title: "QR 코드 스캔",
-            headerStyle: {
-              backgroundColor: "#ffffff",
-            },
-            headerTintColor: "#000000",
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Main"
+          screenOptions={{
+            headerTitleAlign: "center", // 헤더 타이틀 가운데 정렬
+            headerTransparent: false, // 헤더 불투명하게
           }}
-        />
-        <Stack.Screen
-          name="Map"
-          component={Map}
-          options={{ title: "", headerTransparent: true }} // Map 화면에서만 헤더 투명하게
-        />
-        <Stack.Screen
-          name="MyPage"
-          component={MyPage}
-          options={{ title: "마이페이지" }}
-        />
-        <Stack.Screen
+        >
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ title: "로그인" }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ title: "회원가입" }}
+          />
+          <Stack.Screen
+            name="Main"
+            component={Main}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="WaitingList"
+            component={WaitingList}
+            options={{ title: "웨이팅 목록" }}
+          />
+          <Stack.Screen
+            name="QRScan"
+            component={QRScan}
+            options={{
+              title: "QR 코드 스캔",
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+              headerTintColor: "#000000",
+            }}
+          />
+          <Stack.Screen
+            name="Map"
+            component={Map}
+            options={{ title: "", headerTransparent: true }} // Map 화면에서만 헤더 투명하게
+          />
+          <Stack.Screen
+            name="MyPage"
+            component={MyPage}
+            options={{ title: "마이페이지" }}
+          />
+          <Stack.Screen
             name="EditProfile"
             component={EditProfile}
             options={{ title: "프로필 수정" }}
-        />
-        <Stack.Screen
-          name="UsageHistory"
-          component={UsageHistory}
-          options={{ title: "이용 내역" }}
-        />
-        <Stack.Screen
-          name="KeepHistory"
-          component={KeepHistory}
-          options={{ title: "찜 내역" }}
-        />
-        <Stack.Screen
-          name="Reviews"
-          component={Reviews}
-          options={{ title: "리뷰 관리" }}
-        />
-        <Stack.Screen
-          name="Setting"
-          component={Setting}
-          options={{ title: "설정" }}
-        />
-        <Stack.Screen
-          name="ShopDetail"
-          component={ShopDetail}
-          options={{ title: "", headerTransparent: true }}
-        />
-        <Stack.Screen name="ShopHome" component={ShopHome} />
-        <Stack.Screen name="ShopImage" component={ShopImage} />
-        <Stack.Screen name="ShopMenu" component={ShopMenu} />
-        <Stack.Screen name="ShopReview" component={ShopReview} />
-        <Stack.Screen
-          name="Reservation"
-          component={Reservation}
-          options={{ title: "예약" }}
-        />
-        <Stack.Screen
-          name="Waiting"
-          component={Waiting}
-          options={{ title: "웨이팅" }}
-        />
-        <Stack.Screen
-          name="UsageDetail"
-          component={UsageDetail}
-          options={{ title: "이용 내역" }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          />
+          <Stack.Screen
+            name="UsageHistory"
+            component={UsageHistory}
+            options={{ title: "이용 내역" }}
+          />
+          <Stack.Screen
+            name="KeepHistory"
+            component={KeepHistory}
+            options={{ title: "찜 내역" }}
+          />
+          <Stack.Screen
+            name="Reviews"
+            component={Reviews}
+            options={{ title: "리뷰 관리" }}
+          />
+          <Stack.Screen
+            name="Setting"
+            component={Setting}
+            options={{ title: "설정" }}
+          />
+          <Stack.Screen
+            name="ShopDetail"
+            component={ShopDetail}
+            options={{ title: "", headerTransparent: true }}
+          />
+          <Stack.Screen name="ShopHome" component={ShopHome} />
+          <Stack.Screen name="ShopImage" component={ShopImage} />
+          <Stack.Screen name="ShopMenu" component={ShopMenu} />
+          <Stack.Screen name="ShopReview" component={ShopReview} />
+          <Stack.Screen
+            name="Reservation"
+            component={Reservation}
+            options={{ title: "예약" }}
+          />
+          <Stack.Screen
+            name="Waiting"
+            component={Waiting}
+            options={{ title: "웨이팅" }}
+          />
+          <Stack.Screen
+            name="UsageDetail"
+            component={UsageDetail}
+            options={{ title: "이용 내역" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 
