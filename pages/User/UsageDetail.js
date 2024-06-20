@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   listContainer: {
+    padding: 5,
     paddingBottom: 20,
   },
   item: {
@@ -155,7 +156,6 @@ const styles = StyleSheet.create({
   },
   paymentMethod: {
     fontSize: 16,
-    color: "#757575",
   },
 });
 

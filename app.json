@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/logoBackground.png",
     "userInterfaceStyle": "light",
+    "scheme": "odiga",
     "splash": {
       "image": "./assets/splashImg.png",
       "resizeMode": "contain",
