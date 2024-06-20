@@ -10,12 +10,15 @@ import React, { useState } from "react";
 import MenuBox from "../../component/MenuBox";
 import { useNavigation } from "@react-navigation/native";
 import { getRequest } from "../../utils/api/api";
+import useStore from "../../utils/store/store";
+import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 export default function ShopMenu({ route }) {
   const navigation = useNavigation();
   const { id } = route.params || {}; // 선택한 가게의 id
   const [menus, setMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const addMenu = useStore((state) => state.addMenu); // 장바구니에 메뉴 추가하기
 
   React.useEffect(() => {
     const fetchMenus = async () => {
@@ -47,28 +50,13 @@ export default function ShopMenu({ route }) {
         renderItem={renderCategory}
         keyExtractor={(category) => category.categoryName}
       />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Reservation")}
-        >
-          <Text style={styles.buttonText}>예약하기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Waiting")}
-        >
-          <Text style={styles.buttonText}>웨이팅하기</Text>
-        </TouchableOpacity>
-      </View>
 
       {selectedMenu && (
         <Modal
           animationType="slide"
           transparent={true}
           visible={!!selectedMenu}
-          onRequestClose={() => setSelectedMenu(null)}
-        >
+          onRequestClose={() => setSelectedMenu(null)}>
           <View style={styles.modalOverlay}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
@@ -78,14 +66,15 @@ export default function ShopMenu({ route }) {
                 <View style={styles.modalButtonContainer}>
                   <TouchableOpacity
                     style={styles.buttonAddMenu}
-                    onPress={() => setSelectedMenu(null)}
-                  >
+                    onPress={() => {
+                      addMenu(selectedMenu);
+                      setSelectedMenu(null);
+                    }}>
                     <Text style={styles.textStyle}>담기</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.buttonClose}
-                    onPress={() => setSelectedMenu(null)}
-                  >
+                    onPress={() => setSelectedMenu(null)}>
                     <Text style={styles.textStyle}>취소</Text>
                   </TouchableOpacity>
                 </View>
@@ -94,6 +83,11 @@ export default function ShopMenu({ route }) {
           </View>
         </Modal>
       )}
+      <TouchableOpacity
+        style={styles.cartIcon}
+        onPress={() => navigation.navigate("ShopCart")}>
+        <Icon name="bag" size={30} color={"#505050"} />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -103,6 +97,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
     height: "100%",
+    position: "relative",
   },
   categoryView: {
     flex: 1,
@@ -180,5 +175,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     marginBottom: 10,
+  },
+  cartIcon: {
+    position: "absolute",
+    bottom: 25,
+    right: 0,
+    backgroundColor: "#ffffff",
+    padding: 10,
+    borderRadius: 15,
+    elevation: 3,
   },
 });

@@ -26,6 +26,7 @@ import ShopHome from "./pages/Shop/ShopHome";
 import ShopImage from "./pages/Shop/ShopImage";
 import ShopMenu from "./pages/Shop/ShopMenu";
 import ShopReview from "./pages/Shop/ShopReview";
+import ShopCart from "./pages/Shop/ShopCart";
 
 const Stack = createStackNavigator();
 
@@ -45,8 +46,7 @@ function App() {
           screenOptions={{
             headerTitleAlign: "center", // 헤더 타이틀 가운데 정렬
             headerTransparent: false, // 헤더 불투명하게
-          }}
-        >
+          }}>
           <Stack.Screen
             name="Login"
             component={Login}
@@ -122,6 +122,11 @@ function App() {
           <Stack.Screen name="ShopImage" component={ShopImage} />
           <Stack.Screen name="ShopMenu" component={ShopMenu} />
           <Stack.Screen name="ShopReview" component={ShopReview} />
+          <Stack.Screen
+            name="ShopCart"
+            component={ShopCart}
+            options={{ title: "장바구니" }}
+          />
           <Stack.Screen
             name="Reservation"
             component={Reservation}

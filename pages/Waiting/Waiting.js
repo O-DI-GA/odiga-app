@@ -10,41 +10,21 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const generateRandomCode = () => {
-  const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // I,1,O,0 비슷해서 제외
-  let result = "";
-  for (let i = 0; i < 6; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    result += characters[randomIndex];
-  }
-  return result;
-};
+import useStore from "../../utils/store/store";
 
-const Waiting = () => {
+const Waiting = ({ route }) => {
+  const { storeId, storeName } = route.params;
+
   const [people, setPeople] = useState(2);
-  const [menu, setMenu] = useState([
-    {
-      id: 1,
-      name: "Tortilla Chips",
-      quantity: 2,
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 2,
-      name: "Avocado",
-      quantity: 1,
-      image: "https://via.placeholder.com/50",
-    },
-    {
-      id: 3,
-      name: "New Menu",
-      quantity: 3,
-      image: "https://via.placeholder.com/50",
-    },
-  ]);
+
   const [totalPrice, setTotalPrice] = useState(20000);
   const [modalVisible, setModalVisible] = useState(false);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState("123456");
+
+  // 확인용
+  React.useEffect(() => {
+    console.log(`가게 번호 : ${storeId}, 가게 이름 : ${storeName}`);
+  }, []);
 
   const handleQuantityChange = (id, amount) => {
     setMenu(
@@ -61,14 +41,13 @@ const Waiting = () => {
   };
 
   const toggleModal = () => {
-    setCode(generateRandomCode());
     setModalVisible(true);
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>가게 이름</Text>
+        <Text style={styles.headerText}>{storeName}</Text>
       </View>
       <View style={styles.sectionRow}>
         <Text style={styles.sectionTitle}>인원수</Text>
@@ -82,62 +61,22 @@ const Waiting = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>고른 메뉴</Text>
-        {menu.map((item) => (
-          <View key={item.id} style={styles.menuItemContainer}>
-            <View style={styles.menuItem}>
-              <View style={styles.menuItemLeft}>
-                <Image
-                  source={require("../../component/test_img/test_img2.jpg")}
-                  style={styles.menuItemImage}
-                />
-                <Text style={styles.menuItemText}>{item.name}</Text>
-              </View>
-              <View style={styles.row}>
-                <TouchableOpacity
-                  onPress={() => handleQuantityChange(item.id, -1)}
-                >
-                  <Ionicons name="remove-circle-outline" size={24} />
-                </TouchableOpacity>
-                <Text style={styles.menuItemQuantity}>{item.quantity}</Text>
-                <TouchableOpacity
-                  onPress={() => handleQuantityChange(item.id, 1)}
-                >
-                  <Ionicons name="add-circle-outline" size={24} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ))}
-        <TouchableOpacity style={styles.addMoreButton}>
-          <Text style={styles.addMoreButtonText}>+ 더 담으러 가기</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.totalPriceText}>총 주문금액</Text>
-        <Text style={styles.totalPriceAmount}>
-          {totalPrice.toLocaleString("ko-KR")}원
-        </Text>
-      </View>
       <TouchableOpacity style={styles.waitingButton} onPress={toggleModal}>
         <Text style={styles.waitingButtonText}>웨이팅하기</Text>
       </TouchableOpacity>
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
+        onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalCodeLabel}>내 인증코드</Text>
             <Text style={styles.modalCode}>{code}</Text>
             <TouchableOpacity
               style={styles.okButton}
-              onPress={() => setModalVisible(false)}
-            >
+              onPress={() => setModalVisible(false)}>
               <Text style={styles.okButtonText}>확인</Text>
             </TouchableOpacity>
           </View>

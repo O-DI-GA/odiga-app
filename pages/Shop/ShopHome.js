@@ -63,20 +63,6 @@ export default function ShopHome({ route }) {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Reservation")}
-        >
-          <Text style={styles.buttonText}>예약하기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Waiting")}
-        >
-          <Text style={styles.buttonText}>웨이팅하기</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
