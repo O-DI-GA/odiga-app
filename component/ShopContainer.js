@@ -27,8 +27,13 @@ const ShopContainer = ({ type }) => {
     console.log(type);
     const fetchData = async () => {
       try {
+        // 위치 : 경산
+        // const fetchList = await getRequest(
+        //   `api/v1/store?longitude=128.7544&latitude=35.8306&orderCondition=${type}`
+        // );
+        // 위치 : LA
         const fetchList = await getRequest(
-          `api/v1/store?longitude=128.7544&latitude=35.8306&orderCondition=${type}`
+          `api/v1/store?longitude=-122.084&latitude=37.4219983&orderCondition=${type}`
         );
         const storeList = fetchList.data;
         setStoreList(storeList);
@@ -44,8 +49,7 @@ const ShopContainer = ({ type }) => {
     <ScrollView
       horizontal={true}
       style={styles.scrollView}
-      showsHorizontalScrollIndicator={false}
-    >
+      showsHorizontalScrollIndicator={false}>
       {storeList.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>가게가 없습니다.</Text>
@@ -60,8 +64,7 @@ const ShopContainer = ({ type }) => {
                   navigation.navigate("ShopDetail", {
                     id: data.storeId,
                   })
-                }
-              >
+                }>
                 <Shadow key={data.storeId} startColor={"#06333610"}>
                   <View key={data.storeId} style={styles.container}>
                     <Image
