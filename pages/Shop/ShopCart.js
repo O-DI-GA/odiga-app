@@ -14,7 +14,11 @@ import { Swipeable } from "react-native-gesture-handler";
 
 export default function ShopCart() {
   const navigation = useNavigation();
+
   const cart = useStore((state) => state.cart);
+  const storeName = useStore((state) => state.storeName);
+  const storeId = useStore((state) => state.storeId);
+
   const updateMenuCount = useStore((state) => state.updateMenuCount);
   const removeMenu = useStore((state) => state.removeMenu);
 
@@ -62,30 +66,49 @@ export default function ShopCart() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.menuContainer}>
-        <Text style={styles.menuText}> 고른 메뉴 </Text>
-        <FlatList
-          data={cart}
-          renderItem={renderCartItem}
-          keyExtractor={(item) => item.menuId.toString()}
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>+ 더 담으러 가기</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.bottom}>
-        <View style={styles.totalPrice}>
-          <Text style={styles.totalPriceText}> 총 주문 금액</Text>
-          <Text style={styles.totalPriceText}>{getTotalPrice()}원 </Text>
+      {cart.length === 0 ? (
+        <View style={styles.emptyCart}>
+          <Text style={styles.emoji}> 😿 </Text>
+          <Text style={styles.emptyText}>장바구니가 비었습니다.</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.goBack()}>
+            <Text style={styles.buttonText}> 메뉴 담으러 가기</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.waitingButton}
-          onPress={() => navigation.navigate("Waiting")}>
-          <Text style={styles.goWaiting}>웨이팅 등록 하러 가기</Text>
-        </TouchableOpacity>
-      </View>
+      ) : (
+        <>
+          <View>
+            <Text style={styles.menuText}>고른 메뉴</Text>
+            <FlatList
+              data={cart}
+              renderItem={renderCartItem}
+              keyExtractor={(item) => item.menuId.toString()}
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.goBack()}>
+              <Text style={styles.buttonText}>+ 더 담으러 가기</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bottom}>
+            <View style={styles.totalPrice}>
+              <Text style={styles.totalPriceText}>총 주문 금액</Text>
+              <Text style={styles.totalPriceText}>{getTotalPrice()}원</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.waitingButton}
+              onPress={() => {
+                navigation.navigate("Waiting", {
+                  storeId: storeId,
+                  storeName: storeName,
+                });
+              }}>
+              <Text style={styles.goWaiting}>웨이팅 등록 하러 가기</Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -195,5 +218,18 @@ const styles = StyleSheet.create({
   },
   goWaiting: {
     fontWeight: "bold",
+  },
+  emptyCart: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  emoji: {
+    fontSize: 30,
+  },
+  emptyText: {
+    fontSize: 18,
+    marginTop: 20,
+    marginBottom: 50,
   },
 });

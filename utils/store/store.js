@@ -2,6 +2,14 @@ import { create } from "zustand";
 
 const useStore = create((set) => ({
   cart: [], // 장바구니 초기 상태
+  storeName: "", // 현재 가게 명
+  storeId: " ", // 현재 가게 id
+
+  // 가게명 저장
+  setStoreName: (name) => set({ storeName: name }),
+
+  // 가게 ID 저장
+  setStoreId: (id) => set({ storeId: id }),
 
   // 메뉴 추가
   addMenu: (menu) =>

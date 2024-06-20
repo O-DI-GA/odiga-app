@@ -12,12 +12,19 @@ import { Ionicons } from "@expo/vector-icons";
 
 import useStore from "../../utils/store/store";
 
-const Waiting = () => {
+const Waiting = ({ route }) => {
+  const { storeId, storeName } = route.params;
+
   const [people, setPeople] = useState(2);
 
   const [totalPrice, setTotalPrice] = useState(20000);
   const [modalVisible, setModalVisible] = useState(false);
   const [code, setCode] = useState("123456");
+
+  // 확인용
+  React.useEffect(() => {
+    console.log(`가게 번호 : ${storeId}, 가게 이름 : ${storeName}`);
+  }, []);
 
   const handleQuantityChange = (id, amount) => {
     setMenu(
@@ -40,7 +47,7 @@ const Waiting = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>가게 이름</Text>
+        <Text style={styles.headerText}>{storeName}</Text>
       </View>
       <View style={styles.sectionRow}>
         <Text style={styles.sectionTitle}>인원수</Text>
