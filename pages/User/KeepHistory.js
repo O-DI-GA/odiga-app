@@ -1,72 +1,66 @@
-import React from "react";
-import { View, StyleSheet, Text, Image, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import NavBar from "../../component/NavBar";
 import KeepBtn from "../../component/KeepBtn";
-
-const DATA = [
-  {
-    id: "1",
-    category: "양식",
-    name: "가게 이름",
-    image: require("../../assets/icon.png"),
-  },
-  {
-    id: "2",
-    category: "양식",
-    name: "가게 이름",
-    image: require("../../assets/icon.png"),
-  },
-  {
-    id: "3",
-    category: "양식",
-    name: "가게 이름",
-    image: require("../../assets/icon.png"),
-  },
-  {
-    id: "4",
-    category: "양식",
-    name: "가게 이름",
-    image: require("../../assets/icon.png"),
-  },
-  {
-    id: "5",
-    category: "양식",
-    name: "가게 이름",
-    image: require("../../assets/icon.png"),
-  },
-  {
-    id: "6",
-    category: "양식",
-    name: "가게 이름",
-    image: require("../../assets/icon.png"),
-  },
-  {
-    id: "7",
-    category: "양식",
-    name: "가게 이름",
-    image: require("../../assets/icon.png"),
-  },
-];
+import { getTokenRequest } from "../../utils/api/api";
 
 const KeepHistory = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getTokenRequest("api/v1/user/like/list");
+        console.log(response);
+        if (response && response.data) {
+          setData(response.data);
+        } else {
+          setData([]);
+        }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Image source={item.image} style={styles.image} />
+      <Image source={item.storeTitleImageUrl} style={styles.image} />
       <View style={styles.info}>
-        <Text style={styles.category}>{item.category}</Text>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.category}>{item.storeCategory}</Text>
+        <Text style={styles.name}>{item.storeName}</Text>
       </View>
       <KeepBtn />
     </View>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.totalCount}>총 {DATA.length}개</Text>
+      <Text style={styles.totalCount}>총 {data.length}개</Text>
       <FlatList
-        data={DATA}
+        data={data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.storeId.toString()}
         contentContainerStyle={styles.listContainer}
       />
       <NavBar />
