@@ -43,6 +43,7 @@ export default function ShopCart() {
     </Swipeable>
   );
 
+  // 삭제 버튼
   const renderRightActions = (item) => (
     <TouchableOpacity
       style={styles.deleteButton}
@@ -50,6 +51,14 @@ export default function ShopCart() {
       <Icon name="delete" color="#ffffff" size={20} />
     </TouchableOpacity>
   );
+
+  // 총 주문 금액
+  const getTotalPrice = () => {
+    return cart.reduce(
+      (total, item) => total + item.menuPrice * item.quantity,
+      0
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -62,16 +71,21 @@ export default function ShopCart() {
         />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("ShopMenu")}>
+          onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>+ 더 담으러 가기</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={styles.waitingButton}
-        onPress={() => navigation.navigate("Waiting")}>
-        <Text style={styles.buttonText}>웨이팅하기</Text>
-      </TouchableOpacity>
+      <View style={styles.bottom}>
+        <View style={styles.totalPrice}>
+          <Text style={styles.totalPriceText}> 총 주문 금액</Text>
+          <Text style={styles.totalPriceText}>{getTotalPrice()}원 </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.waitingButton}
+          onPress={() => navigation.navigate("Waiting")}>
+          <Text style={styles.goWaiting}>웨이팅 등록 하러 가기</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -79,6 +93,8 @@ export default function ShopCart() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
     backgroundColor: "#ffffff",
     padding: 16,
     flexGrow: 1,
@@ -130,11 +146,9 @@ const styles = StyleSheet.create({
   waitingButton: {
     backgroundColor: "#FFD600",
     padding: 10,
-
     borderRadius: 5,
     alignItems: "center",
     marginTop: 10,
-    marginHorizontal: 8,
   },
   quantityControl: {
     flex: 1,
@@ -166,5 +180,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginVertical: 18,
     marginRight: 5,
+  },
+  bottom: {
+    marginHorizontal: 8,
+  },
+  totalPrice: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 12,
+  },
+  totalPriceText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  goWaiting: {
+    fontWeight: "bold",
   },
 });
