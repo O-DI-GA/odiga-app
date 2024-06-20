@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
 import { AuthProvider } from "./utils/AuthContext";
+import * as Linking from "expo-linking";
 
 import Login from "./pages/User/Login";
 import Register from "./pages/User/Register";
@@ -20,6 +21,7 @@ import Setting from "./pages/User/Setting";
 import Reservation from "./pages/Waiting/Reservation";
 import Waiting from "./pages/Waiting/Waiting";
 import UsageDetail from "./pages/User/UsageDetail";
+import Payment from "./pages/User/Payment";
 
 import ShopDetail from "./pages/Shop/ShopDetail";
 import ShopHome from "./pages/Shop/ShopHome";
@@ -37,9 +39,18 @@ function App() {
     }, 2000);
   }, []);
 
+  const linking = {
+    prefixes: [Linking.createURL("/"), "odiga://"],
+    config: {
+      screens: {
+        Payment: "payment",
+      },
+    },
+  };
+
   return (
     <AuthProvider>
-      <NavigationContainer>
+      <NavigationContainer linking={linking}>
         <Stack.Navigator
           initialRouteName="Main"
           screenOptions={{
@@ -136,6 +147,11 @@ function App() {
             name="UsageDetail"
             component={UsageDetail}
             options={{ title: "이용 내역" }}
+          />
+          <Stack.Screen
+            name="Payment"
+            component={Payment}
+            options={{ title: "결제" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
