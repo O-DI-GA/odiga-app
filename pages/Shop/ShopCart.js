@@ -10,6 +10,7 @@ import {
 import Icon from "react-native-vector-icons/AntDesign";
 import useStore from "../../utils/store/store";
 import { useNavigation } from "@react-navigation/native";
+import { Swipeable } from "react-native-gesture-handler";
 
 export default function ShopCart() {
   const navigation = useNavigation();
@@ -18,26 +19,36 @@ export default function ShopCart() {
   const removeMenu = useStore((state) => state.removeMenu);
 
   const renderCartItem = ({ item }) => (
-    <View style={styles.cartItem}>
-      <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
-      <View style={styles.menuInfo}>
-        <Text style={styles.bold}>{item.menuName}</Text>
-        <Text style={styles.text}>{item.menuPrice}원</Text>
+    <Swipeable renderRightActions={() => renderRightActions(item)}>
+      <View style={styles.cartItem}>
+        <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
+        <View style={styles.menuInfo}>
+          <Text style={styles.bold}>{item.menuName}</Text>
+          <Text style={styles.text}>{item.menuPrice}원</Text>
+        </View>
+        <View style={styles.quantityControl}>
+          <TouchableOpacity
+            style={styles.quantityMinusBox}
+            onPress={() => updateMenuCount(item.menuId, item.quantity - 1)}>
+            <Icon name="minus" size={13} color={"#CCD4DE"} />
+          </TouchableOpacity>
+          <Text>{item.quantity}</Text>
+          <TouchableOpacity
+            style={styles.quantityPlusBox}
+            onPress={() => updateMenuCount(item.menuId, item.quantity + 1)}>
+            <Icon name="plus" size={13} color={"#70B9BE"} />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.quantityControl}>
-        <TouchableOpacity
-          style={styles.quantityMinusBox}
-          onPress={() => updateMenuCount(item.menuId, item.quantity - 1)}>
-          <Icon name="minus" size={13} color={"#CCD4DE"} />
-        </TouchableOpacity>
-        <Text>{item.quantity}</Text>
-        <TouchableOpacity
-          style={styles.quantityPlusBox}
-          onPress={() => updateMenuCount(item.menuId, item.quantity + 1)}>
-          <Icon name="plus" size={13} color={"#70B9BE"} />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </Swipeable>
+  );
+
+  const renderRightActions = (item) => (
+    <TouchableOpacity
+      style={styles.deleteButton}
+      onPress={() => removeMenu(item.menuId)}>
+      <Icon name="delete" color="#ffffff" size={20} />
+    </TouchableOpacity>
   );
 
   return (
@@ -110,7 +121,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     marginHorizontal: 8,
-    marginVertical : 5,
+    marginVertical: 5,
   },
   buttonText: {
     color: "#000000",
@@ -119,7 +130,6 @@ const styles = StyleSheet.create({
   waitingButton: {
     backgroundColor: "#FFD600",
     padding: 10,
-
 
     borderRadius: 5,
     alignItems: "center",
@@ -145,5 +155,16 @@ const styles = StyleSheet.create({
     borderColor: "#70B9BE",
     padding: 2,
     borderRadius: 5,
+  },
+  deleteButton: {
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    borderRadius: 5,
+    borderColor: "red",
+    borderWidth: 1,
+    marginVertical: 18,
+    marginRight: 5,
   },
 });
