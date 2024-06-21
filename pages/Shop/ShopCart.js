@@ -33,13 +33,13 @@ export default function ShopCart() {
         <View style={styles.quantityControl}>
           <TouchableOpacity
             style={styles.quantityMinusBox}
-            onPress={() => updateMenuCount(item.menuId, item.quantity - 1)}>
+            onPress={() => updateMenuCount(item.menuId, item.menuCount - 1)}>
             <Icon name="minus" size={13} color={"#CCD4DE"} />
           </TouchableOpacity>
-          <Text>{item.quantity}</Text>
+          <Text>{item.menuCount}</Text>
           <TouchableOpacity
             style={styles.quantityPlusBox}
-            onPress={() => updateMenuCount(item.menuId, item.quantity + 1)}>
+            onPress={() => updateMenuCount(item.menuId, item.menuCount + 1)}>
             <Icon name="plus" size={13} color={"#70B9BE"} />
           </TouchableOpacity>
         </View>
@@ -59,7 +59,7 @@ export default function ShopCart() {
   // 총 주문 금액
   const getTotalPrice = () => {
     return cart.reduce(
-      (total, item) => total + item.menuPrice * item.quantity,
+      (total, item) => total + item.menuPrice * item.menuCount,
       0
     );
   };
@@ -78,19 +78,22 @@ export default function ShopCart() {
         </View>
       ) : (
         <>
-          <View>
+          <View style={styles.cartContainer}>
             <Text style={styles.menuText}>고른 메뉴</Text>
+
             <FlatList
               data={cart}
               renderItem={renderCartItem}
               keyExtractor={(item) => item.menuId.toString()}
             />
+
             <TouchableOpacity
               style={styles.button}
               onPress={() => navigation.goBack()}>
               <Text style={styles.buttonText}>+ 더 담으러 가기</Text>
             </TouchableOpacity>
           </View>
+
           <View style={styles.bottom}>
             <View style={styles.totalPrice}>
               <Text style={styles.totalPriceText}>총 주문 금액</Text>
@@ -122,6 +125,9 @@ const styles = StyleSheet.create({
     padding: 16,
     flexGrow: 1,
   },
+  cartContainer: {
+    flex: 1,
+  },
   menuText: {
     marginVertical: 10,
     fontSize: 15,
@@ -148,6 +154,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   menuInfo: {
+    flex: 1,
     gap: 5,
   },
   bold: {
