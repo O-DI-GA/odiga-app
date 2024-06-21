@@ -29,7 +29,7 @@ const ReserveContainer = ({
   return (
     <View style={styles.container}>
       <View style={styles.shopContainer}>
-        <Image source={require("../assets/icon.png")} style={styles.image} />
+        <Image source={imageUrl} style={styles.image} />
         <View style={styles.textContainer}>
           <Text style={styles.shopName}>{shopName}</Text>
           <Text style={styles.statusMsg}>

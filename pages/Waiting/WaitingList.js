@@ -52,7 +52,7 @@ const WaitingList = () => {
         <Text style={styles.label}>내 웨이팅 정보</Text>
         {shops.map((shop) => (
           <ReserveContainer
-            imageUrl={require("../../assets/icon.png")}
+            imageUrl={{ uri: shop.storeTitleImage }}
             shopName={shop.storeName}
             type="waiting"
             waitingCnt={shop.previousWaitingCount}
