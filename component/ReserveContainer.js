@@ -1,6 +1,7 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
+import { deleteRequest } from "../utils/api/api";
 
 const ReserveContainer = ({
   imageUrl,
@@ -11,11 +12,24 @@ const ReserveContainer = ({
   time,
   numPeople,
   onPress,
+  waitingId,
 }) => {
+  // 웨이팅 || 예약 취소하기
+  const handleCancleClick = async () => {
+    console.log(type === "reservation" ? "예약 취소" : "웨이팅 취소");
+    // console.log(`waiting id : ${waitingId}`); // 웨이팅 아이디 확인
+    try {
+      const response = await deleteRequest(`api/v1/user/waiting/${waitingId}`);
+      console.log("웨이팅 취소 응답:", response);
+    } catch (error) {
+      console.error("웨이팅 취소 에러:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.shopContainer}>
-        <Image source={require("../assets/icon.png")} style={styles.image} />
+        <Image source={imageUrl} style={styles.image} />
         <View style={styles.textContainer}>
           <Text style={styles.shopName}>{shopName}</Text>
           <Text style={styles.statusMsg}>
@@ -36,8 +50,7 @@ const ReserveContainer = ({
               time,
               numPeople,
             })
-          }
-        >
+          }>
           <Icon name="arrow-right" style={styles.arrowIcon} />
         </TouchableOpacity>
       </View>
@@ -46,16 +59,12 @@ const ReserveContainer = ({
           styles.button,
           type === "reservation" && styles.reservationCancelButton,
         ]}
-        onPress={() =>
-          console.log(type === "reservation" ? "예약 취소" : "웨이팅 취소")
-        }
-      >
+        onPress={handleCancleClick}>
         <Text
           style={[
             styles.buttonText,
             type === "reservation" && styles.reservationCancelButtonText,
-          ]}
-        >
+          ]}>
           {type === "reservation" ? "예약 취소" : "웨이팅 취소"}
         </Text>
       </TouchableOpacity>

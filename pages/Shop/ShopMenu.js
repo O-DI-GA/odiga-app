@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import MenuBox from "../../component/MenuBox";
 import { useNavigation } from "@react-navigation/native";
 import { getRequest } from "../../utils/api/api";
-import useStore from "../../utils/store/store";
+import useCartStore from "../../utils/store/cartStore";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 export default function ShopMenu({ route }) {
@@ -18,7 +18,15 @@ export default function ShopMenu({ route }) {
   const { id } = route.params || {}; // 선택한 가게의 id
   const [menus, setMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
-  const addMenu = useStore((state) => state.addMenu); // 장바구니에 메뉴 추가하기
+  const addMenu = useCartStore((state) => state.addMenu); // 장바구니에 메뉴 추가하기
+
+  const cart = useCartStore((state) => state.cart);
+
+  // 메뉴 총합
+  const totalMenuCount = cart.reduce(
+    (total, item) => total + item.menuCount,
+    0
+  );
 
   React.useEffect(() => {
     const fetchMenus = async () => {
@@ -86,6 +94,11 @@ export default function ShopMenu({ route }) {
       <TouchableOpacity
         style={styles.cartIcon}
         onPress={() => navigation.navigate("ShopCart")}>
+        {totalMenuCount > 0 && (
+          <View style={styles.cartCount}>
+            <Text>{totalMenuCount}</Text>
+          </View>
+        )}
         <Icon name="bag" size={30} color={"#505050"} />
       </TouchableOpacity>
     </View>
@@ -184,5 +197,17 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 15,
     elevation: 3,
+  },
+  cartCount: {
+    position: "absolute",
+    bottom: 35,
+    right: -12,
+    fontSize: 13,
+    backgroundColor: "#FFD600",
+    borderRadius: 100,
+    width: 25,
+    height: 25,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

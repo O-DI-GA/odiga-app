@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const useStore = create((set) => ({
+const useCartStore = create((set) => ({
   cart: [], // 장바구니 초기 상태
   storeName: "", // 현재 가게 명
   storeId: " ", // 현재 가게 id
@@ -22,14 +22,14 @@ const useStore = create((set) => ({
         return {
           cart: state.cart.map((item) =>
             item.menuId === menu.menuId
-              ? { ...item, quantity: item.quantity + 1 }
+              ? { ...item, menuCount: item.menuCount + 1 }
               : item
           ),
         };
       }
       // 개수 초기화, 메뉴 사진 추가
       return {
-        cart: [...state.cart, { ...menu, quantity: 1 }],
+        cart: [...state.cart, { ...menu, menuCount: 1 }],
       };
     }),
 
@@ -40,15 +40,15 @@ const useStore = create((set) => ({
     })),
 
   // 메뉴 개수 설정
-  updateMenuCount: (menuId, quantity) =>
+  updateMenuCount: (menuId, menuCount) =>
     set((state) => ({
       cart: state.cart
-        .map((item) => (item.menuId === menuId ? { ...item, quantity } : item))
-        .filter((item) => item.quantity > 0), // 수량이 0인 항목은 제거
+        .map((item) => (item.menuId === menuId ? { ...item, menuCount } : item))
+        .filter((item) => item.menuCount > 0), // 수량이 0인 항목은 제거
     })),
 
   // 장바구니 비우기
   clearCart: () => set({ cart: [] }),
 }));
 
-export default useStore;
+export default useCartStore;
