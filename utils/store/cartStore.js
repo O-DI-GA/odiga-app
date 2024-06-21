@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const useStore = create((set) => ({
+const useCartStore = create((set) => ({
   cart: [], // 장바구니 초기 상태
   storeName: "", // 현재 가게 명
   storeId: " ", // 현재 가게 id
@@ -51,4 +51,4 @@ const useStore = create((set) => ({
   clearCart: () => set({ cart: [] }),
 }));
 
-export default useStore;
+export default useCartStore;

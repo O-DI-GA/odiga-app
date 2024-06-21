@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import MenuBox from "../../component/MenuBox";
 import { useNavigation } from "@react-navigation/native";
 import { getRequest } from "../../utils/api/api";
-import useStore from "../../utils/store/store";
+import useCartStore from "../../utils/store/cartStore";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 
 export default function ShopMenu({ route }) {
@@ -18,7 +18,7 @@ export default function ShopMenu({ route }) {
   const { id } = route.params || {}; // 선택한 가게의 id
   const [menus, setMenus] = useState([]);
   const [selectedMenu, setSelectedMenu] = useState(null);
-  const addMenu = useStore((state) => state.addMenu); // 장바구니에 메뉴 추가하기
+  const addMenu = useCartStore((state) => state.addMenu); // 장바구니에 메뉴 추가하기
 
   React.useEffect(() => {
     const fetchMenus = async () => {

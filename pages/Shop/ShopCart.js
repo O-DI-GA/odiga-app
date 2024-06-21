@@ -8,19 +8,19 @@ import {
   Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import useStore from "../../utils/store/store";
+import useCartStore from "../../utils/store/cartStore";
 import { useNavigation } from "@react-navigation/native";
 import { Swipeable } from "react-native-gesture-handler";
 
 export default function ShopCart() {
   const navigation = useNavigation();
 
-  const cart = useStore((state) => state.cart);
-  const storeName = useStore((state) => state.storeName);
-  const storeId = useStore((state) => state.storeId);
+  const cart = useCartStore((state) => state.cart);
+  const storeName = useCartStore((state) => state.storeName);
+  const storeId = useCartStore((state) => state.storeId);
 
-  const updateMenuCount = useStore((state) => state.updateMenuCount);
-  const removeMenu = useStore((state) => state.removeMenu);
+  const updateMenuCount = useCartStore((state) => state.updateMenuCount);
+  const removeMenu = useCartStore((state) => state.removeMenu);
 
   const renderCartItem = ({ item }) => (
     <Swipeable renderRightActions={() => renderRightActions(item)}>

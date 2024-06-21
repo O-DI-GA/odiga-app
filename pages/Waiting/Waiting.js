@@ -11,14 +11,14 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 
-import useStore from "../../utils/store/store";
+import useCartStore from "../../utils/store/cartStore";
 import { postTokenRequest } from "../../utils/api/api";
 
 import { useNavigation } from "@react-navigation/native";
 
 const Waiting = ({ route }) => {
   const { storeId, storeName } = route.params;
-  const cart = useStore((state) => state.cart);
+  const cart = useCartStore((state) => state.cart);
 
   const [people, setPeople] = useState(1);
 
@@ -28,10 +28,10 @@ const Waiting = ({ route }) => {
   const navigation = useNavigation();
 
   // 확인용
-  React.useEffect(() => {
-    console.log(`가게 번호 : ${storeId}, 가게 이름 : ${storeName}`);
-    console.log(`장바구니 : ${JSON.stringify(cart, null, 2)}`);
-  }, []);
+  // React.useEffect(() => {
+  //   console.log(`가게 번호 : ${storeId}, 가게 이름 : ${storeName}`);
+  //   console.log(`장바구니 : ${JSON.stringify(cart, null, 2)}`);
+  // }, []);
 
   // 인원 수 변경
   const handlePeopleChange = (amount) => {

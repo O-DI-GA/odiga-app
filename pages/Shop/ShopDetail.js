@@ -20,7 +20,7 @@ import ShopImage from "./ShopImage";
 import ShopReview from "./ShopReview";
 
 import { getRequest } from "../../utils/api/api";
-import useStore from "../../utils/store/store";
+import useCartStore from "../../utils/store/cartStore";
 
 const ShopDetail = ({ route, navigation }) => {
   const { id } = route.params; // 선택한 가게의 id
@@ -34,8 +34,8 @@ const ShopDetail = ({ route, navigation }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const setStoreName = useStore((state) => state.setStoreName);
-  const setStoreId = useStore((state) => state.setStoreId);
+  const setStoreName = useCartStore((state) => state.setStoreName);
+  const setStoreId = useCartStore((state) => state.setStoreId);
 
   useEffect(() => {
     const fetchData = async () => {
