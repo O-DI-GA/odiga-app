@@ -105,13 +105,16 @@ export const putRequest = async (endpoint, data) => {
   }
 };
 
-// DELETE
+// DELETE with token
 export const deleteRequest = async (endpoint) => {
+  const token = await getTokenFromStorage();
+  // console.log("token : ", token);
   try {
     const response = await fetch(`${URL}/${endpoint}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     return await response.json();
