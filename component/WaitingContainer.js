@@ -69,8 +69,14 @@ const WaitingContainer = () => {
           <TouchableOpacity
             key={shop.waitingId}
             style={styles.box}
-            onPress={() => handlePress(shop)}
-          >
+            onPress={() =>
+              handlePress({
+                shopName: shop.storeName,
+                type: "waiting",
+                waitingCnt: shop.previousWaitingCount,
+                waitingId: shop.waitingId,
+              })
+            }>
             <Text style={styles.waitCnt}>{shop.previousWaitingCount}</Text>
             <View style={styles.textContainer}>
               <Text style={styles.shopName}>{shop.storeName}</Text>
@@ -90,6 +96,7 @@ const WaitingContainer = () => {
           modalVisible={modalVisible}
           selectedShop={selectedShop}
           onRequestClose={closeModal}
+          isMain={true}
         />
       )}
     </View>

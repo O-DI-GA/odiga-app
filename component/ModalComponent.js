@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from "react-native";
-import { getTokenRequest } from "../utils/api/api";
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import { getTokenRequest, deleteRequest } from "../utils/api/api";
 
-const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
+const ModalComponent = ({
+  modalVisible,
+  selectedShop,
+  onRequestClose,
+  isMain,
+}) => {
   const [shops, setShops] = useState([]);
 
   useEffect(() => {
@@ -27,13 +39,45 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
     }
   }, [selectedShop, modalVisible]);
 
+  // 웨이팅 취소
+  const handleCancleClick = async () => {
+    Alert.alert(
+      "웨이팅 취소 확인",
+      "정말 웨이팅을 취소하시겠습니까?",
+      [
+        {
+          text: "예",
+          onPress: async () => {
+            try {
+              const response = await deleteRequest(
+                `api/v1/user/waiting/${shops.waitingId}`
+              );
+              console.log("웨이팅 취소 응답:", response);
+              if (response.httpStatusCode === 200) {
+                Alert.alert("웨이팅이 취소 되었습니다.");
+                onRequestClose(); // 모달 창 닫기
+              }
+            } catch (err) {
+              console.error("웨이팅 취소 에러:", err);
+            }
+          },
+        },
+        {
+          text: "아니요",
+          onPress: () => console.log("웨이팅 취소 동작 취소"),
+          style: "cancel",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={modalVisible}
-      onRequestClose={onRequestClose}
-    >
+      onRequestClose={onRequestClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={onRequestClose}>
@@ -51,8 +95,17 @@ const ModalComponent = ({ modalVisible, selectedShop, onRequestClose }) => {
                   남았어요!
                 </Text>
               </View>
-              <Text style={styles.modalCodeLabel}>내 인증코드</Text>
-              <Text style={styles.modalCode}>{shops.waitingCode}</Text>
+              <View>
+                <Text style={styles.modalCodeLabel}>내 인증코드</Text>
+                <Text style={styles.modalCode}>{shops.waitingCode}</Text>
+              </View>
+              {isMain && (
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={handleCancleClick}>
+                  <Text style={styles.cancelText}>웨이팅 취소</Text>
+                </TouchableOpacity>
+              )}
             </>
           )}
           {selectedShop && selectedShop.type === "reservation" && (
@@ -92,6 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
+    gap: 10,
   },
   closeButton: {
     alignSelf: "flex-end",
@@ -110,7 +164,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   modalTitle: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
   },
@@ -118,18 +172,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   modalCodeLabel: {
+    textAlign: "center",
     fontSize: 16,
-    marginVertical: 15,
+    marginVertical: 25,
   },
   modalCode: {
-    fontSize: 25,
+    fontSize: 40,
     fontWeight: "bold",
-    marginBottom: 30,
+    marginBottom: 40,
     textAlign: "center",
   },
   highlightText: {
     color: "#FF9900",
     fontWeight: "bold",
+  },
+  deleteButton: {
+    backgroundColor: "#FFD600",
+    width: "80%",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    borderRadius: 16,
+    marginBottom: 30,
   },
 });
 
