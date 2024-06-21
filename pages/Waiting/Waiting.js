@@ -23,7 +23,7 @@ const Waiting = ({ route }) => {
   const [people, setPeople] = useState(1);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [code, setCode] = useState();
+  const [code, setCode] = useState("111111");
 
   const navigation = useNavigation();
 
@@ -264,6 +264,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
+    gap: 10,
   },
   okButton: {
     alignSelf: "center",
@@ -273,6 +274,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 10,
   },
   okButtonText: {
     fontSize: 15,
