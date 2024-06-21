@@ -9,14 +9,14 @@ import {
 import ModalComponent from "./ModalComponent";
 import { useAuth } from "../utils/AuthContext";
 
-const WaitingContainer = ({ fetchData }) => {
+const WaitingContainer = ({ waitingData }) => {
   const [shops, setShops] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
   const { isLogged } = useAuth();
 
   const loadData = async () => {
-    const data = await fetchData();
+    const data = waitingData;
     setShops(data);
   };
 
@@ -24,7 +24,7 @@ const WaitingContainer = ({ fetchData }) => {
     if (isLogged) {
       loadData();
     }
-  }, [isLogged, fetchData]);
+  }, [isLogged, waitingData]);
 
   useEffect(() => {
     if (!modalVisible && isLogged) {

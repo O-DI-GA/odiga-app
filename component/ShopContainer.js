@@ -9,9 +9,7 @@ import {
 } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 import { useNavigation } from "@react-navigation/native";
-
 import KeepBtn from "./KeepBtn";
-import { getRequest } from "../utils/api/api";
 
 /* 추가할 기능
     1. API url props 추가하기
@@ -19,43 +17,22 @@ import { getRequest } from "../utils/api/api";
     3. 가게 이름 길면은 어떡함? ㅠㅜ
 */
 
-const ShopContainer = ({ type }) => {
+const ShopContainer = ({ type, shops }) => {
   const navigation = useNavigation();
-  const [storeList, setStoreList] = useState([]);
-
-  useEffect(() => {
-    console.log(type);
-    const fetchData = async () => {
-      try {
-        // 위치 : 경산
-        // const fetchList = await getRequest(
-        //   `api/v1/store?longitude=128.7544&latitude=35.8306&orderCondition=${type}`
-        // );
-        // 위치 : LA
-        const fetchList = await getRequest(
-          `api/v1/store?longitude=-122.084&latitude=37.4219983&orderCondition=${type}`
-        );
-        const storeList = fetchList.data;
-        setStoreList(storeList);
-        console.log(fetchList);
-      } catch (error) {
-        console.error("Fetching error:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   return (
     <ScrollView
       horizontal={true}
       style={styles.scrollView}
-      showsHorizontalScrollIndicator={false}>
-      {storeList.length === 0 ? (
+      contentContainerStyle={shops.length === 0 ? styles.emptyScrollView : null}
+      showsHorizontalScrollIndicator={false}
+    >
+      {shops.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>가게가 없습니다.</Text>
         </View>
       ) : (
-        storeList.map((data) => {
+        shops.map((data) => {
           return (
             <View key={data.storeId} style={styles.shadowWrapper}>
               <TouchableOpacity
@@ -64,7 +41,8 @@ const ShopContainer = ({ type }) => {
                   navigation.navigate("ShopDetail", {
                     id: data.storeId,
                   })
-                }>
+                }
+              >
                 <Shadow key={data.storeId} startColor={"#06333610"}>
                   <View key={data.storeId} style={styles.container}>
                     <Image
@@ -100,6 +78,11 @@ const styles = StyleSheet.create({
   scrollView: {
     marginTop: 10,
     marginBottom: 10,
+  },
+  emptyScrollView: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   shadowWrapper: {
     marginHorizontal: 10,
@@ -144,6 +127,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 
