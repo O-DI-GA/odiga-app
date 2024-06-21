@@ -9,7 +9,7 @@ import {
 import ModalComponent from "./ModalComponent";
 import { useAuth } from "../utils/AuthContext";
 
-const WaitingContainer = ({ waitingData }) => {
+const WaitingContainer = ({ waitingData, onWaitingCanceled }) => {
   const [shops, setShops] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
@@ -100,6 +100,7 @@ const WaitingContainer = ({ waitingData }) => {
           selectedShop={selectedShop}
           onRequestClose={closeModal}
           isMain={true}
+          onWaitingCanceled={onWaitingCanceled}
         />
       )}
     </View>

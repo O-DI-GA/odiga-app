@@ -78,20 +78,20 @@ const Main = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchAllData = async () => {
-      console.log("메인화면으로 이동 시 다시 데이터 불러옴");
-      const waitingData = await fetchData();
-      setWaitingData(waitingData);
-      clearCart();
-      const waitingShops = await fetchShopData("WAITING");
-      setWaitingShops(waitingShops);
-      const reviewShops = await fetchShopData("REVIEW");
-      setReviewShops(reviewShops);
-      const likeShops = await fetchShopData("LIKE");
-      setLikeShops(likeShops);
-    };
+  const fetchAllData = async () => {
+    console.log("메인화면으로 이동 시 다시 데이터 불러옴");
+    const waitingData = await fetchData();
+    setWaitingData(waitingData);
+    clearCart();
+    const waitingShops = await fetchShopData("WAITING");
+    setWaitingShops(waitingShops);
+    const reviewShops = await fetchShopData("REVIEW");
+    setReviewShops(reviewShops);
+    const likeShops = await fetchShopData("LIKE");
+    setLikeShops(likeShops);
+  };
 
+  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", fetchAllData);
     return unsubscribe;
   }, [navigation]);
@@ -101,7 +101,10 @@ const Main = () => {
       <Header />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.label}>내 웨이팅</Text>
-        <WaitingContainer waitingData={waitingData} />
+        <WaitingContainer
+          waitingData={waitingData}
+          onWaitingCanceled={fetchAllData}
+        />
         <Text style={styles.label}>현재 내 주변에서 웨이팅 가장 많은 곳</Text>
         <ShopContainer type="WAITING" shops={waitingShops} />
         <Text style={styles.label}>리뷰 많은 순</Text>
