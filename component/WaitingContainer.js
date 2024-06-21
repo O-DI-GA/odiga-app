@@ -15,11 +15,22 @@ const WaitingContainer = ({ fetchData }) => {
   const [selectedShop, setSelectedShop] = useState(null);
   const { isLogged } = useAuth();
 
+  const loadData = async () => {
+    const data = await fetchData();
+    setShops(data);
+  };
+
   useEffect(() => {
     if (isLogged) {
-      fetchData().then((data) => setShops(data));
+      loadData();
     }
   }, [isLogged, fetchData]);
+
+  useEffect(() => {
+    if (!modalVisible && isLogged) {
+      loadData();
+    }
+  }, [modalVisible, isLogged]);
 
   const handlePress = (shop) => {
     setSelectedShop(shop);
