@@ -6,14 +6,20 @@ import WaitingContainer from "../component/WaitingContainer";
 import ShopContainer from "../component/ShopContainer";
 import { useAuth } from "../utils/AuthContext";
 import { useNavigation } from "@react-navigation/native";
+import useCartStore from "../utils/store/cartStore";
 
 const Main = () => {
   const { isLogged } = useAuth();
+  const clearCart = useCartStore((state) => state.clearCart);
   const navigation = useNavigation();
+
+  //확인용
+  const cart = useCartStore((state) => state.cart);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       console.log("메인화면으로 이동 시 다시 데이터 불러옴");
+      clearCart();
     });
     return unsubscribe;
   }, [navigation]);
