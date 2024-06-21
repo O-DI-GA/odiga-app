@@ -6,35 +6,31 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { getTokenRequest } from "../utils/api/api";
 import ModalComponent from "./ModalComponent";
 import { useAuth } from "../utils/AuthContext";
 
-const WaitingContainer = () => {
+const WaitingContainer = ({ waitingData, onWaitingCanceled }) => {
   const [shops, setShops] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
   const { isLogged } = useAuth();
 
-  const fetchData = async () => {
-    try {
-      const response = await getTokenRequest("api/v1/user/waiting/my");
-      console.log("Fetched data:", response);
-      if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
-        setShops(response.data);
-      } else {
-        console.error("Unexpected data format:", response);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+  const loadData = async () => {
+    const data = waitingData;
+    setShops(data);
   };
 
   useEffect(() => {
     if (isLogged) {
-      fetchData();
+      loadData();
     }
-  }, [isLogged]);
+  }, [isLogged, waitingData]);
+
+  useEffect(() => {
+    if (!modalVisible && isLogged) {
+      loadData();
+    }
+  }, [modalVisible, isLogged]);
 
   const handlePress = (shop) => {
     setSelectedShop(shop);
@@ -76,10 +72,17 @@ const WaitingContainer = () => {
                 waitingCnt: shop.previousWaitingCount,
                 waitingId: shop.waitingId,
               })
-            }>
+            }
+          >
             <Text style={styles.waitCnt}>{shop.previousWaitingCount}</Text>
             <View style={styles.textContainer}>
-              <Text style={styles.shopName}>{shop.storeName}</Text>
+              <Text
+                style={styles.shopName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {shop.storeName}
+              </Text>
               <Text style={styles.waitText}>
                 지금 앞에{" "}
                 <Text style={styles.waitBold}>
@@ -97,6 +100,7 @@ const WaitingContainer = () => {
           selectedShop={selectedShop}
           onRequestClose={closeModal}
           isMain={true}
+          onWaitingCanceled={onWaitingCanceled}
         />
       )}
     </View>

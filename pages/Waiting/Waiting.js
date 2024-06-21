@@ -82,6 +82,8 @@ const Waiting = ({ route }) => {
       if (response.httpStatusCode === 201) {
         setCode(responseData.waitingCode);
         toggleModal();
+      } else if (response.httpStatusCode === 409) {
+        Alert.alert(`이미 웨이팅을 등록한 가게입니다.`);
       } else {
         Alert.alert(`웨이팅 등록에 실패했습니다. \n재시도 해주세요`);
       }
@@ -101,13 +103,15 @@ const Waiting = ({ route }) => {
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.quantityMinusBox}
-            onPress={() => handlePeopleChange(-1)}>
+            onPress={() => handlePeopleChange(-1)}
+          >
             <Icon name="minus" size={13} color={"#CCD4DE"} />
           </TouchableOpacity>
           <Text style={styles.peopleCount}>{people}</Text>
           <TouchableOpacity
             style={styles.quantityPlusBox}
-            onPress={() => handlePeopleChange(1)}>
+            onPress={() => handlePeopleChange(1)}
+          >
             <Icon name="plus" size={13} color={"#70B9BE"} />
           </TouchableOpacity>
         </View>
@@ -129,7 +133,8 @@ const Waiting = ({ route }) => {
         </View>
         <TouchableOpacity
           style={styles.waitingButton}
-          onPress={() => postWaiting()}>
+          onPress={() => postWaiting()}
+        >
           <Text style={styles.waitingButtonText}>웨이팅하기</Text>
         </TouchableOpacity>
       </View>
@@ -138,7 +143,8 @@ const Waiting = ({ route }) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
+        onRequestClose={() => setModalVisible(false)}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalCodeLabel}>내 인증코드</Text>
@@ -148,7 +154,8 @@ const Waiting = ({ route }) => {
               onPress={() => {
                 setModalVisible(false);
                 navigation.navigate("Main");
-              }}>
+              }}
+            >
               <Text style={styles.okButtonText}>확인</Text>
             </TouchableOpacity>
           </View>

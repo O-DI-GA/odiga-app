@@ -13,6 +13,7 @@ const ReserveContainer = ({
   numPeople,
   onPress,
   waitingId,
+  onCancel,
 }) => {
   // 웨이팅 || 예약 취소하기
   const handleCancleClick = async () => {
@@ -21,6 +22,7 @@ const ReserveContainer = ({
     try {
       const response = await deleteRequest(`api/v1/user/waiting/${waitingId}`);
       console.log("웨이팅 취소 응답:", response);
+      onCancel(); // 취소 후 새로고침
     } catch (error) {
       console.error("웨이팅 취소 에러:", error);
     }
@@ -31,7 +33,9 @@ const ReserveContainer = ({
       <View style={styles.shopContainer}>
         <Image source={imageUrl} style={styles.image} />
         <View style={styles.textContainer}>
-          <Text style={styles.shopName}>{shopName}</Text>
+          <Text style={styles.shopName} numberOfLines={1} ellipsizeMode="tail">
+            {shopName}
+          </Text>
           <Text style={styles.statusMsg}>
             {type === "waiting"
               ? `현재 ${waitingCnt}팀 남았어요!`
@@ -50,7 +54,8 @@ const ReserveContainer = ({
               time,
               numPeople,
             })
-          }>
+          }
+        >
           <Icon name="arrow-right" style={styles.arrowIcon} />
         </TouchableOpacity>
       </View>
@@ -59,12 +64,14 @@ const ReserveContainer = ({
           styles.button,
           type === "reservation" && styles.reservationCancelButton,
         ]}
-        onPress={handleCancleClick}>
+        onPress={handleCancleClick}
+      >
         <Text
           style={[
             styles.buttonText,
             type === "reservation" && styles.reservationCancelButtonText,
-          ]}>
+          ]}
+        >
           {type === "reservation" ? "예약 취소" : "웨이팅 취소"}
         </Text>
       </TouchableOpacity>

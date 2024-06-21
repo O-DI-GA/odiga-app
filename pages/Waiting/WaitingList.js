@@ -5,6 +5,7 @@ import ReserveContainer from "../../component/ReserveContainer";
 import ModalComponent from "../../component/ModalComponent";
 import { getTokenRequest } from "../../utils/api/api";
 import { useAuth } from "../../utils/AuthContext";
+import { deleteRequest } from "../../utils/api/api";
 
 const WaitingList = () => {
   const [shops, setShops] = useState([]);
@@ -37,6 +38,15 @@ const WaitingList = () => {
     setModalVisible(true);
   };
 
+  const handleCancel = async (waitingId) => {
+    try {
+      await deleteRequest(`api/v1/user/waiting/${waitingId}`);
+      fetchData(); // 웨이팅 취소 후 데이터를 다시 불러옴
+    } catch (error) {
+      console.error("웨이팅 취소 에러:", error);
+    }
+  };
+
   if (!isLogged) {
     return (
       <View style={styles.container}>
@@ -50,23 +60,30 @@ const WaitingList = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.label}>내 웨이팅 정보</Text>
-        {shops.map((shop) => (
-          <ReserveContainer
-            imageUrl={{ uri: shop.storeTitleImage }}
-            shopName={shop.storeName}
-            type="waiting"
-            waitingCnt={shop.previousWaitingCount}
-            waitingId={shop.waitingId}
-            onPress={() =>
-              handlePress({
-                shopName: shop.storeName,
-                type: "waiting",
-                waitingCnt: shop.previousWaitingCount,
-                waitingId: shop.waitingId,
-              })
-            }
-          />
-        ))}
+        {shops.length > 0 ? (
+          shops.map((shop) => (
+            <ReserveContainer
+              imageUrl={{ uri: shop.storeTitleImage }}
+              shopName={shop.storeName}
+              type="waiting"
+              waitingCnt={shop.previousWaitingCount}
+              waitingId={shop.waitingId}
+              onPress={() =>
+                handlePress({
+                  shopName: shop.storeName,
+                  type: "waiting",
+                  waitingCnt: shop.previousWaitingCount,
+                  waitingId: shop.waitingId,
+                })
+              }
+              onCancel={() => handleCancel(shop.waitingId)}
+            />
+          ))
+        ) : (
+          <Text style={styles.noShopsText}>
+            현재 웨이팅 중인 가게가 없습니다.
+          </Text>
+        )}
         <Text style={styles.label}>내 예약 정보</Text>
         <ReserveContainer
           imageUrl={require("../../assets/icon.png")}
@@ -116,6 +133,11 @@ const styles = StyleSheet.create({
   loginPrompt: {
     fontSize: 20,
     textAlign: "center",
+  },
+  noShopsText: {
+    fontSize: 16,
+    textAlign: "center",
+    padding: 10,
   },
 });
 

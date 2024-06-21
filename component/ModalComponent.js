@@ -14,6 +14,7 @@ const ModalComponent = ({
   selectedShop,
   onRequestClose,
   isMain,
+  onWaitingCanceled,
 }) => {
   const [shops, setShops] = useState([]);
 
@@ -55,6 +56,9 @@ const ModalComponent = ({
               console.log("웨이팅 취소 응답:", response);
               if (response.httpStatusCode === 200) {
                 Alert.alert("웨이팅이 취소 되었습니다.");
+                if (onWaitingCanceled) {
+                  onWaitingCanceled();
+                }
                 onRequestClose(); // 모달 창 닫기
               }
             } catch (err) {
@@ -77,7 +81,8 @@ const ModalComponent = ({
       animationType="slide"
       transparent={true}
       visible={modalVisible}
-      onRequestClose={onRequestClose}>
+      onRequestClose={onRequestClose}
+    >
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={onRequestClose}>
@@ -102,7 +107,8 @@ const ModalComponent = ({
               {isMain && (
                 <TouchableOpacity
                   style={styles.deleteButton}
-                  onPress={handleCancleClick}>
+                  onPress={handleCancleClick}
+                >
                   <Text style={styles.cancelText}>웨이팅 취소</Text>
                 </TouchableOpacity>
               )}
