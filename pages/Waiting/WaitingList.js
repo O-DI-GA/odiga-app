@@ -56,7 +56,7 @@ const WaitingList = () => {
             shopName={shop.storeName}
             type="waiting"
             waitingCnt={shop.previousWaitingCount}
-            code="ABC123"
+            waitingId={shop.waitingId}
             onPress={() =>
               handlePress({
                 shopName: shop.storeName,
