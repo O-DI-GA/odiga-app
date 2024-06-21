@@ -6,35 +6,20 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { getTokenRequest } from "../utils/api/api";
 import ModalComponent from "./ModalComponent";
 import { useAuth } from "../utils/AuthContext";
 
-const WaitingContainer = () => {
+const WaitingContainer = ({ fetchData }) => {
   const [shops, setShops] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
   const { isLogged } = useAuth();
 
-  const fetchData = async () => {
-    try {
-      const response = await getTokenRequest("api/v1/user/waiting/my");
-      console.log("Fetched data:", response);
-      if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
-        setShops(response.data);
-      } else {
-        console.error("Unexpected data format:", response);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
     if (isLogged) {
-      fetchData();
+      fetchData().then((data) => setShops(data));
     }
-  }, [isLogged]);
+  }, [isLogged, fetchData]);
 
   const handlePress = (shop) => {
     setSelectedShop(shop);
@@ -76,7 +61,8 @@ const WaitingContainer = () => {
                 waitingCnt: shop.previousWaitingCount,
                 waitingId: shop.waitingId,
               })
-            }>
+            }
+          >
             <Text style={styles.waitCnt}>{shop.previousWaitingCount}</Text>
             <View style={styles.textContainer}>
               <Text style={styles.shopName}>{shop.storeName}</Text>

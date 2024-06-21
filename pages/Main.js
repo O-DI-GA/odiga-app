@@ -7,6 +7,7 @@ import ShopContainer from "../component/ShopContainer";
 import { useAuth } from "../utils/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import useCartStore from "../utils/store/cartStore";
+import { getTokenRequest } from "../utils/api/api";
 
 const Main = () => {
   const { isLogged } = useAuth();
@@ -16,9 +17,26 @@ const Main = () => {
   //확인용
   const cart = useCartStore((state) => state.cart);
 
+  const fetchData = async () => {
+    try {
+      const response = await getTokenRequest("api/v1/user/waiting/my");
+      console.log("Fetched data:", response);
+      if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        console.error("Unexpected data format:", response);
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+  };
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       console.log("메인화면으로 이동 시 다시 데이터 불러옴");
+      fetchData();
       clearCart();
     });
     return unsubscribe;
@@ -29,7 +47,7 @@ const Main = () => {
       <Header />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.label}>내 웨이팅</Text>
-        <WaitingContainer />
+        <WaitingContainer fetchData={fetchData} />
         <Text style={styles.label}>현재 내 주변에서 웨이팅 가장 많은 곳</Text>
         <ShopContainer type="WAITING" />
         <Text style={styles.label}>리뷰 많은 순</Text>
