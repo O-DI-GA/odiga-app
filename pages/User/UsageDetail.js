@@ -30,7 +30,9 @@ const UsageDetail = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.box}>
         <View style={styles.row}>
-          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+            {name}
+          </Text>
           <Text style={typeTextStyle}>{item.type}</Text>
         </View>
         <Text style={styles.visitDate}>방문 날짜: {date}</Text>
@@ -76,6 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
+    width: "80%",
   },
   typeText: {
     fontSize: 14,

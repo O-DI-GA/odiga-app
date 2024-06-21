@@ -33,7 +33,9 @@ const ReserveContainer = ({
       <View style={styles.shopContainer}>
         <Image source={imageUrl} style={styles.image} />
         <View style={styles.textContainer}>
-          <Text style={styles.shopName}>{shopName}</Text>
+          <Text style={styles.shopName} numberOfLines={1} ellipsizeMode="tail">
+            {shopName}
+          </Text>
           <Text style={styles.statusMsg}>
             {type === "waiting"
               ? `현재 ${waitingCnt}팀 남았어요!`

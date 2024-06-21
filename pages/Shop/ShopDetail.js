@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from "react-native";
 import { Linking } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -93,7 +94,8 @@ const ShopDetail = ({ route, navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.infoBtn}
-        onPress={() => setModalVisible(true)}>
+        onPress={() => setModalVisible(true)}
+      >
         <Icons name="map-outline" size={23} color={"#424242"} />
         <Text style={styles.infoTxt}> 주소 </Text>
       </TouchableOpacity>
@@ -110,7 +112,8 @@ const ShopDetail = ({ route, navigation }) => {
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -119,7 +122,8 @@ const ShopDetail = ({ route, navigation }) => {
               </Text>
               <TouchableOpacity
                 style={styles.buttonClose}
-                onPress={() => setModalVisible(!modalVisible)}>
+                onPress={() => setModalVisible(!modalVisible)}
+              >
                 <Text style={styles.textStyle}>X</Text>
               </TouchableOpacity>
             </View>
@@ -146,7 +150,8 @@ const ShopDetail = ({ route, navigation }) => {
           styles.menuBox,
           selectedMenu === "home" && styles.activeMenuBoxStart,
         ]}
-        onPress={() => setSelectedMenu("home")}>
+        onPress={() => setSelectedMenu("home")}
+      >
         <Text style={styles.menuText}>홈</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -154,7 +159,8 @@ const ShopDetail = ({ route, navigation }) => {
           styles.menuBox,
           selectedMenu === "menu" && styles.activeMenuBox,
         ]}
-        onPress={() => setSelectedMenu("menu")}>
+        onPress={() => setSelectedMenu("menu")}
+      >
         <Text style={styles.menuText}>메뉴</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -162,7 +168,8 @@ const ShopDetail = ({ route, navigation }) => {
           styles.menuBox,
           selectedMenu === "image" && styles.activeMenuBox,
         ]}
-        onPress={() => setSelectedMenu("image")}>
+        onPress={() => setSelectedMenu("image")}
+      >
         <Text style={styles.menuText}>사진</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -170,7 +177,8 @@ const ShopDetail = ({ route, navigation }) => {
           styles.menuBox,
           selectedMenu === "review" && styles.activeMenuBoxEnd,
         ]}
-        onPress={() => setSelectedMenu("review")}>
+        onPress={() => setSelectedMenu("review")}
+      >
         <Text style={styles.menuText}>리뷰</Text>
       </TouchableOpacity>
     </View>
@@ -198,7 +206,9 @@ const ShopDetail = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.infoContainer}>
         <Text style={styles.category}>{storeInfo.category}</Text>
-        <Text style={styles.name}>{storeInfo.storeName}</Text>
+        <ScrollView horizontal style={styles.nameScroll}>
+          <Text style={styles.name}>{storeInfo.storeName}</Text>
+        </ScrollView>
         <View style={styles.starContainer}>
           {stars}
           <Text style={styles.star}>{storeInfo.averageRating}</Text>
@@ -212,14 +222,16 @@ const ShopDetail = ({ route, navigation }) => {
             marginTop: 15,
             marginLeft: -50,
             width: "150%",
-          }}></View>
+          }}
+        ></View>
         <MenuBtn setSelectedMenu={setSelectedMenu} />
         <View
           style={{
             flex: 1,
             backgroundColor: "white",
             width: "100%",
-          }}>
+          }}
+        >
           <RenderComponent route={route} />
         </View>
       </View>
@@ -246,13 +258,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
     padding: 30,
   },
+  nameScroll: {
+    maxHeight: 35,
+  },
   category: {
     marginBottom: 6,
   },
   name: {
     fontWeight: "bold",
     fontSize: 28,
-    margin: -5,
   },
   starContainer: {
     marginTop: 20,

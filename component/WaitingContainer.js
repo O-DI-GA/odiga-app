@@ -76,7 +76,13 @@ const WaitingContainer = ({ waitingData }) => {
           >
             <Text style={styles.waitCnt}>{shop.previousWaitingCount}</Text>
             <View style={styles.textContainer}>
-              <Text style={styles.shopName}>{shop.storeName}</Text>
+              <Text
+                style={styles.shopName}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {shop.storeName}
+              </Text>
               <Text style={styles.waitText}>
                 지금 앞에{" "}
                 <Text style={styles.waitBold}>

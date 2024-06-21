@@ -51,7 +51,13 @@ const ShopContainer = ({ type, shops }) => {
                     />
                     <View style={styles.textContainer}>
                       <Text style={{ fontSize: 10 }}> {data.category} </Text>
-                      <Text style={styles.shopName}> {data.storeName} </Text>
+                      <Text
+                        style={styles.shopName}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {data.storeName}
+                      </Text>
                       {type === "WAITING" && (
                         <Text> 현재 {data.waitingCount}팀 웨이팅 중 </Text>
                       )}
