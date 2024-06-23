@@ -31,6 +31,7 @@ export default function App() {
     navigation.navigate("Payment", {
       storeId: paymentInfo.order.storeId,
       orderId: paymentInfo.order.orderId,
+      storeName: paymentInfo.order.storeName,
     });
   };
 
