@@ -2,12 +2,15 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { LogBox } from "react-native";
 
 export default function App() {
   const navigation = useNavigation();
 
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+
+  LogBox.ignoreAllLogs(); // 경고 메세지 차단
 
   useEffect(() => {
     (async () => {
