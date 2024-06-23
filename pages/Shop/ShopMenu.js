@@ -56,7 +56,7 @@ export default function ShopMenu({ route }) {
       <FlatList
         data={menus}
         renderItem={renderCategory}
-        keyExtractor={(category) => category.categoryName}
+        keyExtractor={(item, index) => item.categoryName + index.toString()}
       />
 
       {selectedMenu && (

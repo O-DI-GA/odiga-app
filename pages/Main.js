@@ -44,11 +44,11 @@ const Main = () => {
       if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
         return response.data;
       } else {
-        console.error("Unexpected data format:", response);
+        console.log("Unexpected data format:", response);
         return [];
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.log("Error fetching data:", error);
       return [];
     }
   };
@@ -84,11 +84,11 @@ const Main = () => {
       if (response && response.data) {
         return response.data;
       } else {
-        console.error("Valid data was not returned");
+        console.log("Valid data was not returned");
         return [];
       }
     } catch (error) {
-      console.error("Fetching error:", error);
+      console.log("Fetching error:", error);
       return [];
     }
   };
@@ -119,8 +119,7 @@ const Main = () => {
         contentContainerStyle={styles.scrollContent}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }
-      >
+        }>
         <Text style={styles.label}>내 웨이팅</Text>
         <WaitingContainer
           waitingData={waitingData}

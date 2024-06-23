@@ -13,12 +13,16 @@ import { getTokenRequest } from "../../utils/api/api";
 import { useAuth } from "../../utils/AuthContext";
 import { deleteRequest } from "../../utils/api/api";
 
+import { LogBox } from "react-native";
+
 const WaitingList = () => {
   const [shops, setShops] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
   const { isLogged } = useAuth();
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  LogBox.ignoreAllLogs(); // 경고 메세지 차단
 
   const handleRefresh = async () => {
     console.log("당겨서 새로고침");
@@ -76,8 +80,7 @@ const WaitingList = () => {
         contentContainerStyle={styles.content}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }
-      >
+        }>
         <Text style={styles.label}>내 웨이팅 정보</Text>
         {shops.length > 0 ? (
           shops.map((shop) => (
