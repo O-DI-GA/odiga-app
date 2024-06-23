@@ -11,12 +11,6 @@ import { Shadow } from "react-native-shadow-2";
 import { useNavigation } from "@react-navigation/native";
 import KeepBtn from "./KeepBtn";
 
-/* 추가할 기능
-    1. API url props 추가하기
-    2. 각 컨테이너 클릭 시 해당 가게의 상세페이지로 이동 link 추가하기
-    3. 가게 이름 길면은 어떡함? ㅠㅜ
-*/
-
 const ShopContainer = ({ type, shops }) => {
   const navigation = useNavigation();
 
@@ -50,7 +44,7 @@ const ShopContainer = ({ type, shops }) => {
                       source={{ uri: data.storeTitleImage }}
                     />
                     <View style={styles.textContainer}>
-                      <Text style={{ fontSize: 10 }}> {data.category} </Text>
+                      <Text style={{ fontSize: 10 }}>{data.storeCategory}</Text>
                       <Text
                         style={styles.shopName}
                         numberOfLines={1}
@@ -118,8 +112,7 @@ const styles = StyleSheet.create({
   shopName: {
     fontSize: 20,
     fontWeight: "bold",
-    marginLeft: -5,
-    marginBottom: 30,
+    marginBottom: 10,
     flexWrap: "wrap",
   },
   keepBtnContainer: {
