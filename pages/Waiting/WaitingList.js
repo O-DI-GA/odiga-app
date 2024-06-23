@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import NavBar from "../../component/NavBar";
 import ReserveContainer from "../../component/ReserveContainer";
 import ModalComponent from "../../component/ModalComponent";
@@ -12,6 +18,14 @@ const WaitingList = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
   const { isLogged } = useAuth();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    console.log("당겨서 새로고침");
+    setIsRefreshing(true);
+    await fetchData();
+    setIsRefreshing(false);
+  };
 
   const fetchData = async () => {
     try {
@@ -58,7 +72,12 @@ const WaitingList = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
+      >
         <Text style={styles.label}>내 웨이팅 정보</Text>
         {shops.length > 0 ? (
           shops.map((shop) => (

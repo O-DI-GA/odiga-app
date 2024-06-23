@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -20,7 +20,7 @@ const DATA = [
   {
     id: "1",
     type: "웨이팅",
-    name: "이름이 엄청 긴 가게 이름 이름이 엄청 긴 가게 이름",
+    name: "이름이 엄청 긴 가게 이름 이름이 엄청 긴 가게 이름ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
     date: "2024년 5월 12일",
     time: "18시 45분 23초",
     details: USAGE_DETAILS,
@@ -28,7 +28,7 @@ const DATA = [
   {
     id: "2",
     type: "웨이팅",
-    name: "이름 적당히 긴 가게 이름",
+    name: "이름 적당히 긴 가게 이름 적당히 적당히 적당히",
     date: "2024년 5월 12일",
     time: "18시 45분 23초",
     details: USAGE_DETAILS,
@@ -45,6 +45,14 @@ const DATA = [
 
 const UsageHistory = () => {
   const navigation = useNavigation();
+  const [infoWidth, setInfoWidth] = useState(0);
+  const [layoutWidth, setLayoutWidth] = useState(0);
+
+  useEffect(() => {
+    if (layoutWidth > 0) {
+      setInfoWidth(layoutWidth);
+    }
+  }, [layoutWidth]);
 
   const renderItem = ({ item }) => {
     const isWaiting = item.type === "웨이팅";
@@ -56,8 +64,13 @@ const UsageHistory = () => {
       },
     ];
 
-    const isLongName = item.name.length > 12; // 길이를 기준으로 스타일 적용
-    const nameStyle = isLongName ? styles.longName : styles.name;
+    const handleLayout = (event) => {
+      const { width } = event.nativeEvent.layout;
+      setLayoutWidth(width);
+    };
+
+    const isLongName = infoWidth > 0 && item.name.length > infoWidth / 15; // infoWidth 기준으로 이름 길이 결정
+    const nameStyle = isLongName ? styles.longName : styles.name; // 길이를 기준으로 스타일 적용
 
     return (
       <TouchableOpacity
@@ -65,7 +78,7 @@ const UsageHistory = () => {
         onPress={() => navigation.navigate("UsageDetail", { item })}
       >
         <Image source={require("../../assets/icon.png")} style={styles.image} />
-        <View style={styles.info}>
+        <View style={styles.info} onLayout={handleLayout}>
           <View style={styles.nameRow}>
             <Text
               style={nameStyle}

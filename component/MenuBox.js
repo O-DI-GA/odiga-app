@@ -20,7 +20,7 @@ export default function MenuBox({ menuItems, onPress }) {
         <View style={styles.nameRow}>
           <Text style={styles.name}>{item.menuName}</Text>
         </View>
-        <Text style={styles.price}>{item.menuPrice}원</Text>
+        <Text style={styles.price}>{item.menuPrice.toLocaleString()}원</Text>
       </View>
     </TouchableOpacity>
   );

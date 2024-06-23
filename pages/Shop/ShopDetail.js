@@ -117,9 +117,7 @@ const ShopDetail = ({ route, navigation }) => {
         <View style={styles.modalOverlay}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>
-                경상북도 경산시 북부동 청운로 13-2
-              </Text>
+              <Text style={styles.modalText}>{storeInfo.address}</Text>
               <TouchableOpacity
                 style={styles.buttonClose}
                 onPress={() => setModalVisible(!modalVisible)}
@@ -205,7 +203,7 @@ const ShopDetail = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
-        <Text style={styles.category}>{storeInfo.category}</Text>
+        <Text style={styles.category}>{storeInfo.storeCategory}</Text>
         <ScrollView horizontal style={styles.nameScroll}>
           <Text style={styles.name}>{storeInfo.storeName}</Text>
         </ScrollView>

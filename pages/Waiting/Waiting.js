@@ -49,7 +49,7 @@ const Waiting = ({ route }) => {
       <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
       <View style={styles.menuInfo}>
         <Text style={styles.bold}>{item.menuName}</Text>
-        <Text style={styles.text}>{item.menuPrice}원</Text>
+        <Text style={styles.text}>{item.menuPrice.toLocaleString()}원</Text>
       </View>
       <View style={styles.quantityBox}>
         <Text>{item.menuCount}</Text>
@@ -129,7 +129,9 @@ const Waiting = ({ route }) => {
       <View style={styles.bottom}>
         <View style={styles.totalPrice}>
           <Text style={styles.totalPriceText}>총 주문 금액</Text>
-          <Text style={styles.totalPriceText}>{getTotalPrice()}원</Text>
+          <Text style={styles.totalPriceText}>
+            {getTotalPrice().toLocaleString()}원
+          </Text>
         </View>
         <TouchableOpacity
           style={styles.waitingButton}
