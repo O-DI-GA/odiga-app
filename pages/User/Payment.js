@@ -8,21 +8,40 @@ import {
   TouchableOpacity,
 } from "react-native";
 import NavBar from "../../component/NavBar";
+import { getRequest } from "../../utils/api/api";
+
+// 더미 데이터
+const dummyOrder = {
+  type: "웨이팅",
+  name: "가게 이름",
+  date: "2024년 5월 12일",
+  time: "18시 45분 23초",
+  items: [
+    { id: 1, name: "Red Cabbage", quantity: 2, price: 180000 },
+    { id: 2, name: "Red Cabbage", quantity: 2, price: 180000 },
+    { id: 3, name: "Red Cabbage", quantity: 2, price: 180000 },
+  ],
+  total: 540000,
+};
 
 function Payment({ route }) {
-  // 더미 데이터
-  const dummyOrder = {
-    type: "웨이팅",
-    name: "가게 이름",
-    date: "2024년 5월 12일",
-    time: "18시 45분 23초",
-    items: [
-      { id: 1, name: "Red Cabbage", quantity: 2, price: 180000 },
-      { id: 2, name: "Red Cabbage", quantity: 2, price: 180000 },
-      { id: 3, name: "Red Cabbage", quantity: 2, price: 180000 },
-    ],
-    total: 540000,
-  };
+  const { storeId, orderId } = route.params;
+  console.log(`받아온 데이터 = storeId : ${storeId}, orderId : ${orderId}`);
+
+  // React.useEffect(() => {
+  //   const fetchPaymentData = async () => {
+  //     try {
+  //       const response = await getRequest(
+  //         `api/v1/table/${storeId}/order/${orderId}/payments`
+  //       );
+  //       console.log("결제 내역 데이터:", response);
+  //     } catch (err) {
+  //       console.log(`결제 내역 요청 에러 : ${err}`);
+  //     }
+  //   };
+
+  //   fetchPaymentData();
+  // }, [storeId, orderId]);
 
   const { order = JSON.stringify(dummyOrder) } = route.params || {};
   const orderDetails = order ? JSON.parse(order) : {};
@@ -41,7 +60,7 @@ function Payment({ route }) {
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Image source={require("../../assets/icon.png")} style={styles.image} />
+      <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
       <View style={styles.info}>
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.quantity}>{item.quantity}개</Text>
@@ -77,8 +96,7 @@ function Payment({ route }) {
         <View style={styles.paymentMethods}>
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setSelectedPaymentMethod("카카오페이")}
-          >
+            onPress={() => setSelectedPaymentMethod("카카오페이")}>
             <View
               style={[
                 styles.radioCircle,
@@ -89,8 +107,7 @@ function Payment({ route }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setSelectedPaymentMethod("네이버페이")}
-          >
+            onPress={() => setSelectedPaymentMethod("네이버페이")}>
             <View
               style={[
                 styles.radioCircle,
