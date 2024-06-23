@@ -28,18 +28,20 @@ export default function ShopCart() {
         <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
         <View style={styles.menuInfo}>
           <Text style={styles.bold}>{item.menuName}</Text>
-          <Text style={styles.text}>{item.menuPrice}원</Text>
+          <Text style={styles.text}>{item.menuPrice.toLocaleString()}원</Text>
         </View>
         <View style={styles.quantityControl}>
           <TouchableOpacity
             style={styles.quantityMinusBox}
-            onPress={() => updateMenuCount(item.menuId, item.menuCount - 1)}>
+            onPress={() => updateMenuCount(item.menuId, item.menuCount - 1)}
+          >
             <Icon name="minus" size={13} color={"#CCD4DE"} />
           </TouchableOpacity>
           <Text>{item.menuCount}</Text>
           <TouchableOpacity
             style={styles.quantityPlusBox}
-            onPress={() => updateMenuCount(item.menuId, item.menuCount + 1)}>
+            onPress={() => updateMenuCount(item.menuId, item.menuCount + 1)}
+          >
             <Icon name="plus" size={13} color={"#70B9BE"} />
           </TouchableOpacity>
         </View>
@@ -51,7 +53,8 @@ export default function ShopCart() {
   const renderRightActions = (item) => (
     <TouchableOpacity
       style={styles.deleteButton}
-      onPress={() => removeMenu(item.menuId)}>
+      onPress={() => removeMenu(item.menuId)}
+    >
       <Icon name="delete" color="#ffffff" size={20} />
     </TouchableOpacity>
   );
@@ -72,7 +75,8 @@ export default function ShopCart() {
           <Text style={styles.emptyText}>장바구니가 비었습니다.</Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.goBack()}>
+            onPress={() => navigation.goBack()}
+          >
             <Text style={styles.buttonText}> 메뉴 담으러 가기</Text>
           </TouchableOpacity>
         </View>
@@ -89,7 +93,8 @@ export default function ShopCart() {
 
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.goBack()}>
+              onPress={() => navigation.goBack()}
+            >
               <Text style={styles.buttonText}>+ 더 담으러 가기</Text>
             </TouchableOpacity>
           </View>
@@ -97,7 +102,9 @@ export default function ShopCart() {
           <View style={styles.bottom}>
             <View style={styles.totalPrice}>
               <Text style={styles.totalPriceText}>총 주문 금액</Text>
-              <Text style={styles.totalPriceText}>{getTotalPrice()}원</Text>
+              <Text style={styles.totalPriceText}>
+                {getTotalPrice().toLocaleString()}원
+              </Text>
             </View>
             <TouchableOpacity
               style={styles.waitingButton}
@@ -106,7 +113,8 @@ export default function ShopCart() {
                   storeId: storeId,
                   storeName: storeName,
                 });
-              }}>
+              }}
+            >
               <Text style={styles.goWaiting}>웨이팅 등록 하러 가기</Text>
             </TouchableOpacity>
           </View>
