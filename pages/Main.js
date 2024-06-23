@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  RefreshControl,
+} from "react-native";
 import Header from "../component/Header";
 import NavBar from "../component/NavBar";
 import WaitingContainer from "../component/WaitingContainer";
@@ -18,6 +25,14 @@ const Main = () => {
   const [waitingShops, setWaitingShops] = useState([]);
   const [reviewShops, setReviewShops] = useState([]);
   const [likeShops, setLikeShops] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    console.log("당겨서 새로고침");
+    setIsRefreshing(true);
+    await fetchAllData();
+    setIsRefreshing(false);
+  };
 
   //확인용
   const cart = useCartStore((state) => state.cart);
@@ -93,13 +108,19 @@ const Main = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", fetchAllData);
+    fetchAllData();
     return unsubscribe;
   }, [navigation]);
 
   return (
     <View style={styles.container}>
       <Header />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
+      >
         <Text style={styles.label}>내 웨이팅</Text>
         <WaitingContainer
           waitingData={waitingData}
