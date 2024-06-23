@@ -12,48 +12,36 @@ import { getRequest } from "../../utils/api/api";
 
 // 더미 데이터
 const dummyOrder = {
-  type: "웨이팅",
-  name: "가게 이름",
   date: "2024년 5월 12일",
   time: "18시 45분 23초",
-  items: [
-    { id: 1, name: "Red Cabbage", quantity: 2, price: 180000 },
-    { id: 2, name: "Red Cabbage", quantity: 2, price: 180000 },
-    { id: 3, name: "Red Cabbage", quantity: 2, price: 180000 },
-  ],
-  total: 540000,
 };
 
 function Payment({ route }) {
-  const { storeId, orderId } = route.params;
-  console.log(`받아온 데이터 = storeId : ${storeId}, orderId : ${orderId}`);
+  const { storeId, orderId, storeName } = route.params;
 
-  // React.useEffect(() => {
-  //   const fetchPaymentData = async () => {
-  //     try {
-  //       const response = await getRequest(
-  //         `api/v1/table/${storeId}/order/${orderId}/payments`
-  //       );
-  //       console.log("결제 내역 데이터:", response);
-  //     } catch (err) {
-  //       console.log(`결제 내역 요청 에러 : ${err}`);
-  //     }
-  //   };
+  const [tableOrderMenu, setTableOrderMenu] = React.useState();
+  const [totalPrice, setTotalPrice] = React.useState();
 
-  //   fetchPaymentData();
-  // }, [storeId, orderId]);
+  React.useEffect(() => {
+    const fetchPaymentData = async () => {
+      try {
+        const response = await getRequest(
+          `api/v1/table/${storeId}/order/${orderId}/payment`
+        );
+        console.log("결제 내역 데이터:", response);
+        setTableOrderMenu(response.data.tableOrderMenuListDtoList);
+        setTotalPrice(response.data.totalOrderPrice);
+      } catch (err) {
+        console.log("결제 요청 에러 : ", err);
+      }
+    };
 
+    fetchPaymentData();
+  }, [storeId, orderId]);
+
+  // 더미데이터
   const { order = JSON.stringify(dummyOrder) } = route.params || {};
   const orderDetails = order ? JSON.parse(order) : {};
-
-  const isWaiting = orderDetails.type === "웨이팅";
-  const typeTextStyle = [
-    styles.typeText,
-    {
-      color: isWaiting ? "#000000" : "#FFFFFF",
-      backgroundColor: isWaiting ? "#FFF9C4" : "#E57373",
-    },
-  ];
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState("네이버페이");
@@ -62,9 +50,9 @@ function Payment({ route }) {
     <View style={styles.item}>
       <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
       <View style={styles.info}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.quantity}>{item.quantity}개</Text>
-        <Text style={styles.price}>{item.price}원</Text>
+        <Text style={styles.itemName}>{item.menuName}</Text>
+        <Text style={styles.quantity}>{item.menuCount}개</Text>
+        <Text style={styles.price}>{item.menuTotalPrice}원</Text>
       </View>
     </View>
   );
@@ -73,22 +61,21 @@ function Payment({ route }) {
     <View style={styles.container}>
       <View style={styles.box}>
         <View style={styles.row}>
-          <Text style={styles.title}>{orderDetails.name}</Text>
-          <Text style={typeTextStyle}>{orderDetails.type}</Text>
+          <Text style={styles.title}>{storeName}</Text>
         </View>
         <Text style={styles.visitDate}>방문 날짜: {orderDetails.date}</Text>
         <Text style={styles.paymentTime}>결제 시간: {orderDetails.time}</Text>
         <Text style={styles.title}>결제 내역</Text>
         <FlatList
-          data={orderDetails.items}
+          data={tableOrderMenu}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
         />
         <View style={styles.totalContainer}>
           <View style={styles.rowSpace}>
             <Text style={styles.totalText}>총 이용 금액</Text>
-            <Text style={styles.totalAmount}>{orderDetails.total}원</Text>
+            <Text style={styles.totalAmount}>{totalPrice}원</Text>
           </View>
         </View>
 
@@ -168,6 +155,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     height: 80,
     backgroundColor: "#ffffff",
     borderRadius: 16,
