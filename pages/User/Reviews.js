@@ -48,7 +48,7 @@ const Reviews = ({ navigation }) => {
             navigation={navigation}
           />
         )}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
       />
       <NavBar />
     </View>

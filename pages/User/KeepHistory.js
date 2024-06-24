@@ -37,12 +37,12 @@ const KeepHistory = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Image source={item.storeTitleImageUrl} style={styles.image} />
+      <Image source={{ uri: item.storeTitleImageUrl }} style={styles.image} />
       <View style={styles.info}>
         <Text style={styles.category}>{item.storeCategory}</Text>
         <Text style={styles.name}>{item.storeName}</Text>
       </View>
-      <KeepBtn />
+      {/* <KeepBtn/> */}
     </View>
   );
 
