@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   ScrollView,
@@ -61,7 +61,7 @@ const ShopContainer = ({ type, shops }) => {
                       {type === "LIKE" && <Text> 찜 {data.likeCount}개 </Text>}
                     </View>
                     <View style={styles.keepBtnContainer}>
-                      <KeepBtn />
+                      <KeepBtn storeId={data.storeId} />
                     </View>
                   </View>
                 </Shadow>

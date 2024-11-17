@@ -119,7 +119,8 @@ const Main = () => {
         contentContainerStyle={styles.scrollContent}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-        }>
+        }
+      >
         <Text style={styles.label}>내 웨이팅</Text>
         <WaitingContainer
           waitingData={waitingData}

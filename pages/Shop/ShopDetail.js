@@ -100,7 +100,15 @@ const ShopDetail = ({ route, navigation }) => {
         <Text style={styles.infoTxt}> 주소 </Text>
       </TouchableOpacity>
       <View style={styles.infoBtn}>
-        <KeepBtn />
+        <KeepBtn
+          storeId={id}
+          onLikeCountChange={(change) => {
+            setStoreInfo((prev) => ({
+              ...prev,
+              likeCount: prev.likeCount + change,
+            }));
+          }}
+        />
         <Text style={{ fontSize: 18, marginLeft: 10 }}>
           {storeInfo.likeCount}
         </Text>
