@@ -17,6 +17,7 @@ import { LogBox } from "react-native";
 
 const WaitingList = () => {
   const [shops, setShops] = useState([]);
+  const [reservation , setReservation] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedShop, setSelectedShop] = useState(null);
   const { isLogged } = useAuth();
@@ -31,6 +32,7 @@ const WaitingList = () => {
     setIsRefreshing(false);
   };
 
+  // 웨이팅 목록, 예약 목록 fetch
   const fetchData = async () => {
     try {
       const response = await getTokenRequest("api/v1/user/waiting/my");
@@ -45,9 +47,24 @@ const WaitingList = () => {
     }
   };
 
+  // 예약 목록
+  const fetchReservation = async () => {
+    try {
+      const response = await getTokenRequest("api/v1/user/reservation");
+      if (response.httpStatusCode === 201 && Array.isArray(response.data)) {
+        setReservation(response.data); // 예약 데이터를 상태로 저장
+      } else {
+        console.error("Unexpected reservation data format:", response);
+      }
+    } catch (err) {
+      console.error("예약 목록 조회 에러:", err);
+    }
+  };
+
   useEffect(() => {
     if (isLogged) {
       fetchData();
+      fetchReservation();
     }
   }, [isLogged]);
 
@@ -107,24 +124,37 @@ const WaitingList = () => {
           </Text>
         )}
         <Text style={styles.label}>내 예약 정보</Text>
-        <ReserveContainer
-          imageUrl={require("../../assets/icon.png")}
-          shopName="가게 이름"
-          type="reservation"
-          date="5월 5일"
-          time="18시"
-          numPeople="6명"
-          code="RES456"
-          onPress={() =>
-            handlePress({
-              shopName: "가게 이름",
-              type: "reservation",
-              date: "5월 5일",
-              time: "18시",
-              numPeople: "6명",
+        {reservation.length > 0 ? (
+            reservation.map((res) => {
+              const date = new Date(res.reservationDateTime);
+              const formattedDate = `${date.getMonth() + 1}월 ${date.getDate()}일`;
+              const formattedTime = `${date.getHours()}시 ${date.getMinutes()}분`;
+
+              return (
+                  <ReserveContainer
+                      key={res.reservationId} // 고유 키 설정
+                      imageUrl={require("../../assets/icon.png")}
+                      shopName={`가게 ID: ${res.storeId}`} // 실제 데이터에 따라 가게 이름을 대체해야 함
+                      type="reservation"
+                      date={formattedDate}
+                      time={formattedTime}
+                      numPeople={`${res.peopleCount}명`}
+                      code={`RES${res.reservationId}`}
+                      onPress={() =>
+                          handlePress({
+                            shopName: `가게 ID: ${res.storeId}`, // 실제 데이터에 따라 가게 이름을 대체해야 함
+                            type: "reservation",
+                            date: formattedDate,
+                            time: formattedTime,
+                            numPeople: `${res.peopleCount}명`,
+                          })
+                      }
+                  />
+              );
             })
-          }
-        />
+        ) : (
+            <Text style={styles.noShopsText}>현재 예약 중인 정보가 없습니다.</Text>
+        )}
       </ScrollView>
       <NavBar />
 
