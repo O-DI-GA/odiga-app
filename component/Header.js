@@ -15,10 +15,13 @@ const Header = () => {
         source={require("../assets/logoBackground.png")}
         style={styles.logo}
       />
+      {/* 검색 바 */}
+      {/*
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#888" style={styles.searchIcon} />
         <TextInput placeholder="Search" style={styles.searchInput} />
       </View>
+      */}
       <TouchableOpacity>
         <Icon
           name="bell-o"
