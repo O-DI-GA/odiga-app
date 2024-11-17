@@ -217,7 +217,9 @@ const ShopDetail = ({ route, navigation }) => {
         </ScrollView>
         <View style={styles.starContainer}>
           {stars}
-          <Text style={styles.star}>{storeInfo.averageRating}</Text>
+          <Text style={styles.star}>
+            {(Math.round(storeInfo.averageRating * 10) / 10).toFixed(1)}
+          </Text>
         </View>
         <ShopInfoButton />
         <View

@@ -62,6 +62,15 @@ export default function ShopHome({ route }) {
             <Text style={styles.info}>일 </Text>
           </View>
         </View>
+        <TouchableOpacity
+            style={styles.waitingButton}
+            onPress={() => {
+              navigation.navigate("Reservation", {
+                storeId: id,
+              });
+            }}>
+          <Text style={styles.goWaiting}>예약 하러 가기</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -128,5 +137,16 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  goWaiting: {
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  waitingButton: {
+    backgroundColor: "#FFD600",
+    padding: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
   },
 });

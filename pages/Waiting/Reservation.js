@@ -10,7 +10,9 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 
-const Reservation = () => {
+const Reservation = ({route}) => {
+  const { storeId } = route.params;
+
   const [people, setPeople] = useState(2);
   const [menu, setMenu] = useState([
     {
@@ -96,38 +98,7 @@ const Reservation = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>고른 메뉴</Text>
-        {menu.map((item) => (
-          <View key={item.id} style={styles.menuItemContainer}>
-            <View style={styles.menuItem}>
-              <View style={styles.menuItemLeft}>
-                <Image
-                  source={require("../../component/test_img/test_img2.jpg")}
-                  style={styles.menuItemImage}
-                />
-                <Text style={styles.menuItemText}>{item.name}</Text>
-              </View>
-              <View style={styles.row}>
-                <TouchableOpacity
-                  onPress={() => handleQuantityChange(item.id, -1)}
-                >
-                  <Ionicons name="remove-circle-outline" size={24} />
-                </TouchableOpacity>
-                <Text style={styles.menuItemQuantity}>{item.quantity}</Text>
-                <TouchableOpacity
-                  onPress={() => handleQuantityChange(item.id, 1)}
-                >
-                  <Ionicons name="add-circle-outline" size={24} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ))}
-        <TouchableOpacity style={styles.addMoreButton}>
-          <Text style={styles.addMoreButtonText}>+ 더 담으러 가기</Text>
-        </TouchableOpacity>
-      </View>
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>예약 일시</Text>
         <TouchableOpacity
@@ -175,12 +146,6 @@ const Reservation = () => {
             </View>
           ))}
         </View>
-      </View>
-      <View style={styles.footer}>
-        <Text style={styles.totalPriceText}>총 주문금액</Text>
-        <Text style={styles.totalPriceAmount}>
-          {totalPrice.toLocaleString("ko-KR")}원
-        </Text>
       </View>
       <TouchableOpacity
         style={styles.reserveButton}

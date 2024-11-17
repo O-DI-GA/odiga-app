@@ -5,7 +5,7 @@ import {
   Text,
   Image,
   FlatList,
-  TouchableOpacity,
+  TouchableOpacity, ScrollView,
 } from "react-native";
 import NavBar from "../../component/NavBar";
 import { getRequest } from "../../utils/api/api";
@@ -29,8 +29,8 @@ function Payment({ route }) {
           `api/v1/table/${storeId}/order/${orderId}/payment`
         );
         console.log("결제 내역 데이터:", response);
-        setTableOrderMenu(response.data.tableOrderMenuListDtoList);
-        setTotalPrice(response.data.totalOrderPrice);
+        setTableOrderMenu(response.data.tableOrderMenus);
+        setTotalPrice(response.data.totalTableOrderPrice);
       } catch (err) {
         console.log("결제 요청 에러 : ", err);
       }
@@ -51,15 +51,15 @@ function Payment({ route }) {
       <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
       <View style={styles.info}>
         <Text style={styles.itemName}>{item.menuName}</Text>
-        <Text style={styles.quantity}>{item.menuCount}개</Text>
         <Text style={styles.price}>{item.menuTotalPrice}원</Text>
       </View>
+      <Text style={styles.quantity}>{item.menuCount}개</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
+      <ScrollView style={styles.box}>
         <View style={styles.row}>
           <Text style={styles.title}>{storeName}</Text>
         </View>
@@ -108,7 +108,7 @@ function Payment({ route }) {
         <TouchableOpacity style={styles.paymentButton}>
           <Text style={styles.paymentButtonText}>결제하기</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
       <NavBar />
     </View>
   );
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: 5,
     paddingBottom: 20,
+
   },
   item: {
     flexDirection: "row",
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: "#ffffff",
     borderRadius: 16,
-    padding: 15,
+    padding: 10,
     marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 0 },
@@ -175,11 +176,11 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    flexDirection: "row",
-    gap: 30,
+    flexDirection: "column",
+    gap: 5,
   },
   itemName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
   },

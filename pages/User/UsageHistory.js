@@ -21,6 +21,8 @@ const UsageHistory = () => {
   const fetchHistory = async () => {
     try {
       const response = await getTokenRequest("api/v1/user/history");
+
+      console.log("이용 내역 : ", response.data);
       if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
         const formattedData = response.data.map((item) => ({
           id: item.historyId.toString(),
@@ -28,7 +30,7 @@ const UsageHistory = () => {
           date: new Date(item.visitedAt).toLocaleDateString("ko-KR"),
           time: new Date(item.visitedAt).toLocaleTimeString("ko-KR"),
           type: "웨이팅", // 기본값. 필요 시 조건에 따라 변경 가능.
-          details: item.menus.map((menu) => ({
+          menuList: item.menus.map((menu) => ({
             id: menu.menuId.toString(),
             name: menu.menuName,
             quantity: menu.menuCount,
@@ -66,9 +68,15 @@ const UsageHistory = () => {
     return (
         <TouchableOpacity
             style={styles.item}
-            onPress={() => navigation.navigate("UsageDetail", { item })}
+            onPress={() =>
+                navigation.navigate("UsageDetail", {
+                  name: item.name, // 가게 이름
+                  date: item.date, // 방문 날짜
+                  type: item.type, // 타입 (웨이팅 등)
+                  menuList: item.menuList, // 메뉴 리스트 전달
+                })}
         >
-          <Image source={{ uri: item.details[0]?.image }} style={styles.image} />
+          <Image source={{ uri: item.menuList[0]?.image }} style={styles.image} />
           <View style={styles.info} onLayout={handleLayout}>
             <View style={styles.nameRow}>
               <Text
