@@ -21,9 +21,10 @@ export default function App() {
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
-    console.log(`Scanned QR code with data: ${data}`);
-    const parsedData = JSON.parse(data); // Parse the JSON string
-    toPaymentScreen(parsedData);
+      console.log(`Scanned QR code with data: ${data}`);
+      const parsedData = JSON.parse(data); // Parse the JSON string
+      toPaymentScreen(parsedData);
+
   };
 
   // 결제 화면으로 이동

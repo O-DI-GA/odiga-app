@@ -3,10 +3,9 @@ import { View, StyleSheet, Text, Image, FlatList } from "react-native";
 import NavBar from "../../component/NavBar";
 
 const UsageDetail = ({ route }) => {
-  const { item } = route.params;
-  const { name, date, time, details } = item;
+  const { name, date, type, menuList } = route.params; // menuList 받아옴
 
-  const isWaiting = item.type === "웨이팅";
+  const isWaiting = type === "웨이팅";
   const typeTextStyle = [
     styles.typeText,
     {
@@ -16,47 +15,51 @@ const UsageDetail = ({ route }) => {
   ];
 
   const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Image source={require("../../assets/icon.png")} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.quantity}>{item.quantity}개</Text>
-        <Text style={styles.price}>{item.price}원</Text>
+      <View style={styles.item}>
+        <Image source={{ uri: item.image }} style={styles.image} />
+        <View style={styles.info}>
+          <Text style={styles.itemName}>{item.name}</Text>
+          <Text style={styles.quantity}>{item.quantity}개</Text>
+          <Text style={styles.price}>{item.price}원</Text>
+        </View>
       </View>
-    </View>
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.box}>
-        <View style={styles.row}>
-          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-            {name}
-          </Text>
-          <Text style={typeTextStyle}>{item.type}</Text>
-        </View>
-        <Text style={styles.visitDate}>방문 날짜: {date}</Text>
-        <Text style={styles.visitTime}>결제 시간: {time}</Text>
-        <Text style={styles.title}>결제 내역</Text>
-        <FlatList
-          data={details}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
-        />
-        <View style={styles.totalContainer}>
-          <View style={styles.rowSpace}>
-            <Text style={styles.totalText}>총 이용 금액</Text>
-            <Text style={styles.totalAmount}>540,000원</Text>
+      <View style={styles.container}>
+        <View style={styles.box}>
+          <View style={styles.row}>
+            <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+              {name}
+            </Text>
+            <Text style={typeTextStyle}>{type}</Text>
           </View>
-          <View style={styles.rowSpace}>
-            <Text style={styles.paymentMethod}>결제 방식</Text>
-            <Text style={styles.paymentMethod}>카카오페이</Text>
+          <Text style={styles.visitDate}>방문 날짜: {date}</Text>
+          <Text style={styles.title}>결제 내역</Text>
+          <FlatList
+              data={menuList} // menuList 사용
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContainer}
+          />
+          <View style={styles.totalContainer}>
+            <View style={styles.rowSpace}>
+              <Text style={styles.totalText}>총 이용 금액</Text>
+              <Text style={styles.totalAmount}>
+                {(menuList || []).reduce(
+                    (sum, menu) => sum + menu.price * menu.quantity,
+                    0
+                ).toLocaleString()}원
+              </Text>
+            </View>
+            <View style={styles.rowSpace}>
+              <Text style={styles.paymentMethod}>결제 방식</Text>
+              <Text style={styles.paymentMethod}>카카오페이</Text>
+            </View>
           </View>
         </View>
+        <NavBar />
       </View>
-      <NavBar />
-    </View>
   );
 };
 
