@@ -1,23 +1,36 @@
 import React from "react";
 import { StyleSheet, View, Image, FlatList, Dimensions } from "react-native";
 
-import shushi_01 from "../../component/test_img/sushi_01.jpg";
-import test_img from "../../component/test_img/test_img.jpg";
-import test_img2 from "../../component/test_img/test_img2.jpg";
+import { getRequest } from "../../utils/api/api";
 
 const { width } = Dimensions.get("window");
 
-const images = [
-    { id: 1, src: shushi_01 },
-    { id: 2, src: test_img },
-    { id: 3, src: test_img2 },
-    { id: 4, src: shushi_01 },
-    { id: 5, src: test_img2 },
-    { id: 6, src: test_img },
-    { id: 7, src: shushi_01 },
-];
+export default function ShopImage({ route }) {
+    const { id } = route.params || {}; // 선택한 가게의 id
+    const [images, setImages] = React.useState([]); // 받아온 이미지를 상태로 관리
 
-export default function ShopImage() {
+    const fetchShopImage = async () => {
+        try {
+            const response = await getRequest(`api/v1/store/${id}/images`);
+            // console.log("가게 이미지 조회 api:", response);
+
+            if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
+                // API 응답의 이미지를 상태로 설정
+                const formattedImages = response.data.map((item, index) => ({
+                    id: index.toString(), // 각 이미지의 고유 ID
+                    src: { uri: item.storeImagesUrl }, // 네트워크 이미지를 위한 URI 객체
+                }));
+                setImages(formattedImages);
+            }
+        } catch (err) {
+            console.error("가게 이미지 불러오기 오류:", err);
+        }
+    };
+
+    React.useEffect(() => {
+        fetchShopImage();
+    }, [id]);
+
     return (
         <FlatList
             data={images}
@@ -26,7 +39,7 @@ export default function ShopImage() {
                     <Image source={item.src} style={styles.image} />
                 </View>
             )}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id}
             numColumns={2}
             contentContainerStyle={styles.listContainer}
         />
