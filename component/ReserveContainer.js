@@ -17,7 +17,7 @@ const ReserveContainer = ({
 }) => {
   // 웨이팅 || 예약 취소하기
   const handleCancleClick = async () => {
-    console.log(type === "reservation" ? "예약 취소" : "웨이팅 취소");
+    // console.log(type === "reservation" ? "예약 취소" : "웨이팅 취소");
     // console.log(`waiting id : ${waitingId}`); // 웨이팅 아이디 확인
     try {
       const response = await deleteRequest(`api/v1/user/waiting/${waitingId}`);

@@ -24,7 +24,7 @@ export default function ShopHome({ route }) {
         const fetchInfo = await getRequest(`api/v1/store/${id}`);
         const storeInfo = fetchInfo.data;
         setStoreInfo(storeInfo);
-        console.log(storeInfo);
+        // console.log(storeInfo);
       } catch (error) {
         console.error("Fetching error:", error);
       }

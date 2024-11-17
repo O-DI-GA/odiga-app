@@ -28,7 +28,7 @@ const Main = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
-    console.log("당겨서 새로고침");
+    // console.log("당겨서 새로고침");
     setIsRefreshing(true);
     await fetchAllData();
     setIsRefreshing(false);
@@ -40,11 +40,11 @@ const Main = () => {
   const fetchData = async () => {
     try {
       const response = await getTokenRequest("api/v1/user/waiting/my");
-      console.log("Fetched data:", response);
+      // console.log("Fetched data:", response);
       if (response.httpStatusCode === 200 && Array.isArray(response.data)) {
         return response.data;
       } else {
-        console.log("Unexpected data format:", response);
+        // console.log("Unexpected data format:", response);
         return [];
       }
     } catch (error) {
@@ -80,7 +80,7 @@ const Main = () => {
       const response = await getRequest(
         `api/v1/store?longitude=${longitude}&latitude=${latitude}&orderCondition=${type}`
       );
-      console.log(`메인에서 불러온 가게 목록 (${type}):`, response.data);
+      // console.log(`메인에서 불러온 가게 목록 (${type}):`, response.data);
       if (response && response.data) {
         return response.data;
       } else {
@@ -94,7 +94,7 @@ const Main = () => {
   };
 
   const fetchAllData = async () => {
-    console.log("메인화면으로 이동 시 다시 데이터 불러옴");
+    // console.log("메인화면으로 이동 시 다시 데이터 불러옴");
     const waitingData = await fetchData();
     setWaitingData(waitingData);
     clearCart();

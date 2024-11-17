@@ -10,7 +10,7 @@ import React from "react";
 
 export default function MenuBox({ menuItems, onPress }) {
   React.useEffect(() => {
-    console.log("메뉴박스 : ", menuItems);
+    // console.log("메뉴박스 : ", menuItems);
   }, []);
 
   const renderMenuItem = ({ item }) => (

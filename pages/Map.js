@@ -56,9 +56,9 @@ const Map = () => {
       setRegion(initialRegion);
       setCurrentRegion(initialRegion);
       fetchStoresData(initialRegion); // 처음 지도 화면을 켰을 때 API 호출
-      console.log(
-        `현재 내 위치 위도: ${currentLocation.coords.latitude}, 경도: ${currentLocation.coords.longitude}`
-      );
+      // console.log(
+      //   `현재 내 위치 위도: ${currentLocation.coords.latitude}, 경도: ${currentLocation.coords.longitude}`
+      // );
     })();
   }, []);
 
@@ -66,7 +66,7 @@ const Map = () => {
     if (region) {
       const radius = calculateRadius(region);
       const { latitude, longitude } = region;
-      console.log(`현재 지도의 위도: ${latitude}, 경도: ${longitude}`);
+      // console.log(`현재 지도의 위도: ${latitude}, 경도: ${longitude}`);
       const fetchedStores = await fetchStores(
         region.latitude,
         region.longitude,
@@ -95,7 +95,7 @@ const Map = () => {
       const fetchData = await getRequest(
         `api/v1/store/map?latitude=${latitude}&longitude=${longitude}`
       );
-      console.log("fetchData:", fetchData);
+      // console.log("fetchData:", fetchData);
       if (fetchData && fetchData.data) {
         return fetchData.data;
       } else {

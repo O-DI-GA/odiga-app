@@ -3,7 +3,7 @@ import { storeTokens, removeTokens } from "./tokenUtils";
 
 // 로그인 API
 export async function loginAPI(loginData, setIsLogged) {
-  console.log(`로그인 :`, loginData); // login Data 콘솔 확인
+  // console.log(`로그인 :`, loginData); // login Data 콘솔 확인
   const response = await postRequest("api/v1/user/auth/login", loginData);
   if (response.httpStatusCode === 200) {
     await storeTokens(response.data.accessToken, response.data.refreshToken);
@@ -24,5 +24,5 @@ export async function logoutAPI(setIsLogged) {
 
 // 회원가입 API
 export async function registerAPI(registerData) {
-  console.log(`회원가입 : `, registerData);
+  // console.log(`회원가입 : `, registerData);
 }

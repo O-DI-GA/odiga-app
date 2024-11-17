@@ -28,7 +28,7 @@ const MyPage = () => {
       if (isLogged) {
         try {
           const response = await getTokenRequest("api/v1/user/profile");
-          console.log("마이페이지 응답 : ", response);
+          // console.log("마이페이지 응답 : ", response);
 
           const { nickname, profileImageUrl } = response.data;
           setNickname(nickname);

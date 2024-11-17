@@ -21,7 +21,7 @@ export const getRequest = async (endpoint) => {
 // GET with Token
 export const getTokenRequest = async (endpoint) => {
   const token = await getTokenFromStorage();
-  console.log("token : ", token);
+  // console.log("token : ", token);
   try {
     const response = await fetch(`${URL}/${endpoint}`, {
       method: "GET",

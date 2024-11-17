@@ -32,7 +32,8 @@ export default function ShopMenu({ route }) {
     const fetchMenus = async () => {
       try {
         // 가게 메뉴 API
-        const response = await getRequest(`api/v1/store/${id}/menus`);
+        const response = await getRequest(`api/v1/store/${id}/menu`);
+        // console.log("가게 메뉴 : ", response )
         setMenus(response.data);
       } catch (error) {
         console.log("가게 메뉴 에러 : ", error);

@@ -11,8 +11,8 @@ export default function ShopReview({ route, navigation }) {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await getRequest(`api/v1/guest/store/${id}/reviews`);
-        console.log("API Response:", response);
+        const response = await getRequest(`api/v1/store/${id}/reviews`);
+        // console.log("API Response:", response);
         if (response.data) {
           const validReviews = response.data.filter(
             (review) => review.reviewId

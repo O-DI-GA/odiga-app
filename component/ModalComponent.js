@@ -19,13 +19,13 @@ const ModalComponent = ({
   const [shops, setShops] = useState([]);
 
   useEffect(() => {
-    console.log(selectedShop);
+    // console.log(selectedShop);
     const fetchData = async () => {
       try {
         const response = await getTokenRequest(
           `api/v1/user/waiting/my/${selectedShop.waitingId}`
         );
-        console.log("웨이팅 상세:", response);
+        // console.log("웨이팅 상세:", response);
         if (response.httpStatusCode === 200 && response.data) {
           setShops(response.data);
         } else {
@@ -53,7 +53,7 @@ const ModalComponent = ({
               const response = await deleteRequest(
                 `api/v1/user/waiting/${shops.waitingId}`
               );
-              console.log("웨이팅 취소 응답:", response);
+              // console.log("웨이팅 취소 응답:", response);
               if (response.httpStatusCode === 200) {
                 Alert.alert("웨이팅이 취소 되었습니다.");
                 if (onWaitingCanceled) {
@@ -68,7 +68,7 @@ const ModalComponent = ({
         },
         {
           text: "아니요",
-          onPress: () => console.log("웨이팅 취소 동작 취소"),
+          // onPress: () => console.log("웨이팅 취소 동작 취소"),
           style: "cancel",
         },
       ],
