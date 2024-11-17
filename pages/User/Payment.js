@@ -5,15 +5,15 @@ import {
   Text,
   Image,
   FlatList,
-  TouchableOpacity, ScrollView,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import NavBar from "../../component/NavBar";
 import { getRequest } from "../../utils/api/api";
 
 // 더미 데이터
 const dummyOrder = {
-  date: "2024년 5월 12일",
-  time: "18시 45분 23초",
+  date: "2024년 11월 18일",
 };
 
 function Payment({ route }) {
@@ -43,9 +43,6 @@ function Payment({ route }) {
   const { order = JSON.stringify(dummyOrder) } = route.params || {};
   const orderDetails = order ? JSON.parse(order) : {};
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] =
-    useState("네이버페이");
-
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Image source={{ uri: item.menuImageUrl }} style={styles.image} />
@@ -64,7 +61,6 @@ function Payment({ route }) {
           <Text style={styles.title}>{storeName}</Text>
         </View>
         <Text style={styles.visitDate}>방문 날짜: {orderDetails.date}</Text>
-        <Text style={styles.paymentTime}>결제 시간: {orderDetails.time}</Text>
         <Text style={styles.title}>결제 내역</Text>
         <FlatList
           data={tableOrderMenu}
@@ -78,33 +74,6 @@ function Payment({ route }) {
             <Text style={styles.totalAmount}>{totalPrice}원</Text>
           </View>
         </View>
-
-        <Text style={styles.paymentMethodTitle}>결제 방식 선택</Text>
-        <View style={styles.paymentMethods}>
-          <TouchableOpacity
-            style={styles.radioButton}
-            onPress={() => setSelectedPaymentMethod("카카오페이")}>
-            <View
-              style={[
-                styles.radioCircle,
-                selectedPaymentMethod === "카카오페이" && styles.selectedRadio,
-              ]}
-            />
-            <Text style={styles.radioText}>카카오페이</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.radioButton}
-            onPress={() => setSelectedPaymentMethod("네이버페이")}>
-            <View
-              style={[
-                styles.radioCircle,
-                selectedPaymentMethod === "네이버페이" && styles.selectedRadio,
-              ]}
-            />
-            <Text style={styles.radioText}>네이버페이</Text>
-          </TouchableOpacity>
-        </View>
-
         <TouchableOpacity style={styles.paymentButton}>
           <Text style={styles.paymentButtonText}>결제하기</Text>
         </TouchableOpacity>
@@ -122,6 +91,7 @@ const styles = StyleSheet.create({
   box: {
     paddingHorizontal: 20,
     paddingTop: 10,
+    marginBottom: 70,
   },
   row: {
     flexDirection: "row",
@@ -151,7 +121,6 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: 5,
     paddingBottom: 20,
-
   },
   item: {
     flexDirection: "row",
@@ -245,6 +214,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
+    marginBottom: 55,
   },
   paymentButtonText: {
     fontSize: 18,
